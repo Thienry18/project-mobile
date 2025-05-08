@@ -74,9 +74,7 @@ class SetPinScreen extends StatelessWidget {
                           child: StatefulBuilder(
                             builder: (context, setState) {
                               provider.pinFocusNodes[index].addListener(() {
-                                setState(
-                                  () {},
-                                ); // Perbarui tampilan saat fokus berubah
+                                setState(() {});
                               });
 
                               return CustomTextField(
