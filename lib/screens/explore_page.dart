@@ -77,6 +77,11 @@ class _ExplorePageState extends State<ExplorePage> {
                 MaterialPageRoute(builder: (_) => MyCoursePage()),
               );
               break;
+            case 2:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => MyCoursePage()),
+              );
           }
         },
       ),

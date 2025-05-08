@@ -7,6 +7,7 @@ import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/favscreen.dart';
 import 'package:projek_mobile/screens/interest.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
+import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/reset_password.dart';
 import 'package:projek_mobile/screens/set_pin.dart';
 import 'package:projek_mobile/screens/verify_code.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: Interest());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: NotificationPage(),
+    );
   }
 }

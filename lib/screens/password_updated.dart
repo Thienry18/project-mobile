@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/screens/sign_in.dart';
-import 'package:projek_mobile/widgets/custom_button.dart'; // pastikan ini diimport
+import 'package:projek_mobile/widgets/custom_button.dart';
 
 class PasswordUpdated extends StatelessWidget {
   const PasswordUpdated({super.key});
