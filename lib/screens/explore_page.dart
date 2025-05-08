@@ -61,7 +61,7 @@ class _ExplorePageState extends State<ExplorePage> {
         actions: [
           IconCircleButton(icon: Icons.event_available, onTap: () {}),
           const SizedBox(width: 10),
-          IconCircleButton(icon: Icons.notifications, onTap: () {}),
+          IconCircleButton(icon: Icons.shopping_cart, onTap: () {}),
           const SizedBox(width: 10),
         ],
       ),
