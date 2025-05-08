@@ -86,6 +86,12 @@ class _NotificationPageState extends State<NotificationPage> {
           }
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Color(0xff324eaf),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
     );
   }
 }

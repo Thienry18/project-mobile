@@ -204,3 +204,28 @@ final List<Course> trendingCourses = [
     category: 'Kotlin',
   ),
 ];
+
+List<Course> getTrendingTop5() {
+  double extractRating(String ratingText) {
+    return double.tryParse(ratingText.split(" ").first) ?? 0.0;
+  }
+
+  List<Course> sorted =
+      trendingCourses.where((c) => c.isBestseller).toList()..sort(
+        (a, b) => extractRating(b.rating).compareTo(extractRating(a.rating)),
+      );
+
+  return sorted.take(5).toList();
+}
+
+List<Course> getRecommendedForYou(String selectedCategory) {
+  String keyword = selectedCategory.toLowerCase();
+
+  List<Course> filtered =
+      trendingCourses.where((course) {
+        return course.title.toLowerCase().contains(keyword) ||
+            course.category.toLowerCase().contains(keyword);
+      }).toList();
+
+  return filtered.take(5).toList();
+}

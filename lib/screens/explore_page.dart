@@ -3,8 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
+import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
+import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/icon_circle_button.dart';
@@ -26,7 +28,6 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Filter courses by selected category
     List<Course> filteredCourses =
         selectedCategoryIndex != null
             ? trendingCourses
@@ -80,7 +81,7 @@ class _ExplorePageState extends State<ExplorePage> {
             case 2:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => MyCoursePage()),
+                MaterialPageRoute(builder: (_) => NotificationPage()),
               );
           }
         },
@@ -173,37 +174,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                SizedBox(
-                  height: 250,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      _buildCourseCard(
-                        imageUrl:
-                            'https://img-c.udemycdn.com/course/240x135/2776760_f176_10.jpg',
-                        title:
-                            '100 Days of Code: The Complete Python Pro Bootcamp',
-                        duration: '55h 21m',
-                        rating: '4.7 (365,859)',
-                        price: '\$38.69',
-                        isBestseller: true,
-                        index: 10,
-                      ),
-                      const SizedBox(width: 16),
-                      _buildCourseCard(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1581090700227-1e8d1a5640f4',
-                        title:
-                            'Machine Learning A-Z: AI, Python & R + ChatGPT Prize [2025]',
-                        duration: '42h 44m',
-                        rating: '4.5 (196,112)',
-                        price: '\$36.29',
-                        isBestseller: true,
-                        index: 11,
-                      ),
-                    ],
-                  ),
-                ),
+                _buildCourseCardList(getTrendingTop5()),
               ],
 
               const SizedBox(height: 30),
@@ -229,7 +200,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             ),
                           ),
                           TextSpan(
-                            text: widget.selectedCategory,
+                            text: categoryselected,
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -253,33 +224,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                SizedBox(
-                  height: 250,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      _buildCourseCard(
-                        imageUrl:
-                            'https://img-c.udemycdn.com/course/240x135/1565838_e2c9_10.jpg',
-                        title: 'AI for Beginners: Learn the Basics of AI',
-                        duration: '20h 10m',
-                        rating: '4.6 (102,232)',
-                        price: '\$29.99',
-                        index: 8,
-                      ),
-                      const SizedBox(width: 16),
-                      _buildCourseCard(
-                        imageUrl:
-                            'https://m.media-amazon.com/images/I/61gXbcERKZL._AC_UF1000,1000_QL80_.jpg',
-                        title: 'Deep Learning with Python: Build AI Models',
-                        duration: '35h 22m',
-                        rating: '4.8 (56,324)',
-                        price: '\$48.99',
-                        index: 9,
-                      ),
-                    ],
-                  ),
-                ),
+                _buildCourseCardList(getRecommendedForYou(categoryselected)),
               ],
 
               const SizedBox(height: 20),

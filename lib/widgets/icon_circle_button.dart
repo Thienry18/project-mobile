@@ -14,15 +14,15 @@ class IconCircleButton extends StatelessWidget {
       child: Ink(
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: Color(0xFFE0ECFF),
+          color: Colors.white,
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(100),
-          splashColor: const Color(0xFF324EAF),
+          splashColor: Colors.white,
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: Icon(icon, color: const Color(0xFF324EAF), size: 20),
+            child: Icon(icon, color: Colors.black, size: 20),
           ),
         ),
       ),

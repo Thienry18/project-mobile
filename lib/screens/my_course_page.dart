@@ -36,9 +36,9 @@ class _MyCoursePageState extends State<MyCoursePage> {
         ),
         centerTitle: false,
         actions: [
-          IconCircleButton(icon: Icons.event_available, onTap: () {}),
+          IconCircleButton(icon: Icons.search, onTap: () {}),
           const SizedBox(width: 10),
-          IconCircleButton(icon: Icons.notifications, onTap: () {}),
+          IconCircleButton(icon: Icons.shopping_cart, onTap: () {}),
           const SizedBox(width: 10),
         ],
       ),
