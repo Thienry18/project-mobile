@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/data/cart_data.dart';
+import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
+import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/screens/cart.dart';
+import 'package:projek_mobile/widgets/category_chips.dart';
+import 'package:projek_mobile/widgets/icon_circle_button.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
+import 'package:projek_mobile/widgets/search_bar.dart';
 
 class ExplorePage extends StatefulWidget {
-  ExplorePage({super.key, required this.selectedCategory});
-
+  const ExplorePage({super.key, required this.selectedCategory});
   final String selectedCategory;
 
   @override
@@ -15,38 +20,22 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   Set<int> favoriteCourses = {};
-  final List<String> categoryList = [
-    'Python',
-    'Java',
-    'JavaScript',
-    'C++',
-    'C',
-    'C#',
-    'PHP',
-    'Swift',
-    'Kotlin',
-    'Dart',
-    'TypeScript',
-    'Go',
-    'SQL',
-    'HTML',
-    'CSS',
-    'Scala',
-    'R',
-    'React.js',
-    'Next.js',
-    'Vue.js',
-    'Express.js',
-    'Angular',
-    'Django',
-    'Flask',
-    'Laravel',
-  ];
 
   int? selectedCategoryIndex;
 
   @override
   Widget build(BuildContext context) {
+    // Filter courses by selected category
+    List<Course> filteredCourses =
+        selectedCategoryIndex != null
+            ? trendingCourses
+                .where(
+                  (course) =>
+                      course.category == categoryList[selectedCategoryIndex!],
+                )
+                .toList()
+            : trendingCourses;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -63,15 +52,15 @@ class _ExplorePageState extends State<ExplorePage> {
               "Hi, Moon!",
               style: GoogleFonts.poppins(
                 fontSize: 15,
-                color: Color(0xFF324EAF),
+                color: const Color(0xFF324EAF),
               ),
             ),
           ],
         ),
         actions: [
-          _inkCircleButton(Icons.event_available, () {}),
+          IconCircleButton(icon: Icons.event_available, onTap: () {}),
           const SizedBox(width: 10),
-          _inkCircleButton(Icons.shopping_cart_outlined, () {}),
+          IconCircleButton(icon: Icons.notifications, onTap: () {}),
           const SizedBox(width: 10),
         ],
       ),
@@ -80,7 +69,6 @@ class _ExplorePageState extends State<ExplorePage> {
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
         currentIndex: 0,
-        selectedLabelStyle: GoogleFonts.poppins(fontSize: 10),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(
@@ -88,8 +76,8 @@ class _ExplorePageState extends State<ExplorePage> {
             label: 'My Course',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.favorite_border),
+            label: 'Wishlist',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
@@ -109,9 +97,8 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildSearchBar(),
+              SearchBarWidget(),
               const SizedBox(height: 40),
-
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
@@ -121,9 +108,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   fit: BoxFit.cover,
                 ),
               ),
-
               const SizedBox(height: 30),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -282,7 +267,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       const SizedBox(width: 16),
                       _buildCourseCard(
                         imageUrl:
-                            'https://images.unsplash.com/photo-1581090700227-1e8d1a5640f4',
+                            'https://m.media-amazon.com/images/I/61gXbcERKZL._AC_UF1000,1000_QL80_.jpg',
                         title: 'Deep Learning with Python: Build AI Models',
                         duration: '35h 22m',
                         rating: '4.8 (56,324)',
@@ -320,9 +305,15 @@ class _ExplorePageState extends State<ExplorePage> {
                 ],
               ),
               const SizedBox(height: 12),
-              _buildCategoryChips(),
+              CategoryChips(
+                categoryList: categoryList,
+                selectedIndex: selectedCategoryIndex,
+                onCategorySelected: (index) {
+                  setState(() => selectedCategoryIndex = index);
+                },
+              ),
               const SizedBox(height: 16),
-              _buildCourseCardList(),
+              _buildCourseCardList(filteredCourses),
             ],
           ),
         ),
@@ -330,114 +321,15 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
-  Widget _inkCircleButton(IconData icon, VoidCallback onTap) {
-    return Material(
-      color: Colors.transparent,
-      shape: const CircleBorder(),
-      child: Ink(
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(100),
-          splashColor: Colors.white,
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Icon(icon, color: Colors.grey, size: 20),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Search for a course',
-              hintStyle: GoogleFonts.poppins(fontSize: 12, color: Colors.grey),
-              suffixIcon: const Icon(Icons.search, color: Colors.grey),
-              filled: true,
-              fillColor: const Color(0xFFE3E8FB),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 0,
-                horizontal: 14,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: const Color(0xFF324EAF),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(Icons.tune, color: Colors.white, size: 20),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCategoryChips() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(categoryList.length, (index) {
-          final isSelected = selectedCategoryIndex == index;
-          return Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedCategoryIndex = isSelected ? null : index;
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      isSelected
-                          ? const Color(0xFF324EAF)
-                          : const Color(0xFFEFEFEF),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  categoryList[index],
-                  style: GoogleFonts.poppins(
-                    color: isSelected ? Colors.white : Colors.grey,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buildCourseCardList() {
+  Widget _buildCourseCardList(List<Course> courses) {
     return SizedBox(
       height: 250,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: trendingCourses.length,
+        itemCount: courses.length,
         separatorBuilder: (context, index) => const SizedBox(width: 16),
         itemBuilder: (context, index) {
-          final course = trendingCourses[index];
+          final course = courses[index];
           return _buildCourseCard(
             imageUrl: course.imageUrl,
             title: course.title,
@@ -480,7 +372,6 @@ class _ExplorePageState extends State<ExplorePage> {
               fit: BoxFit.cover,
             ),
           ),
-
           Positioned(
             bottom: 60,
             left: 8,
@@ -529,7 +420,6 @@ class _ExplorePageState extends State<ExplorePage> {
               ],
             ),
           ),
-
           Positioned(
             bottom: 30,
             right: 8,
@@ -555,13 +445,11 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
             ),
           ),
-
           Positioned(
             bottom: 0,
             left: 0,
             right: 5,
             child: Container(
-              padding: const EdgeInsets.symmetric(),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(10),
@@ -579,7 +467,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                       decoration: BoxDecoration(
                         color: Colors.yellow,
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
                         ),
