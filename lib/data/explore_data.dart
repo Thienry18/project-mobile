@@ -143,7 +143,8 @@ final List<Course> trendingCourses = [
     category: 'Flutter',
   ),
   Course(
-    imageUrl: 'https://img-c.udemycdn.com/course/240x135/921208_99da_8.jpg',
+    imageUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFSgdkuQqfYssyfEM91oF0l2nDDrtb95HYtg&s',
     title: 'Go: The Complete Guide for Beginners',
     duration: '45h 10m',
     rating: '4.7 (150,500)',

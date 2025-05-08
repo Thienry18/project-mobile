@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:projek_mobile/constants/app_text_style.dart';
+import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
+import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/widgets/cart_item_tile.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
-import 'package:projek_mobile/widgets/cart_item_tile.dart';
-import 'package:projek_mobile/data/cart_data.dart';
-import 'package:projek_mobile/constants/app_text_style.dart';
-import 'package:projek_mobile/models/explore_model.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -15,29 +15,34 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  int? selectedCategoryIndex;
+  int? selectedCategoryIndex = 0; // Default to 'All'
   bool selectAll = false;
   Set<int> selectedIndexes = {};
 
   @override
   void initState() {
     super.initState();
-    selectedIndexes = cartCourses.map((e) => e.index).toSet();
-    selectAll = selectedIndexes.length == cartCourses.length;
+    _selectAllVisibleItems();
   }
 
-  void _onSelectAllChanged(bool? value) {
-    setState(() {
-      selectAll = value ?? false;
-      selectedIndexes =
-          selectAll ? cartCourses.map((e) => e.index).toSet() : {};
-    });
+  void _selectAllVisibleItems() {
+    final items = _getFilteredCartItems();
+    selectedIndexes = items.map((e) => e.index).toSet();
+    selectAll = selectedIndexes.length == items.length;
+  }
+
+  List<Course> _getFilteredCartItems() {
+    if (selectedCategoryIndex == null || selectedCategoryIndex == 0) {
+      return cartCourses;
+    }
+    final category = categoryList[selectedCategoryIndex! - 1];
+    return cartCourses.where((e) => e.category == category).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Course> cartItems = cartCourses;
-    final bool isEmpty = cartItems.isEmpty;
+    final cartItems = _getFilteredCartItems();
+    final isEmpty = cartItems.isEmpty;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -64,7 +69,13 @@ class _CartPageState extends State<CartPage> {
         total: _calculateTotal(cartItems),
         cartCount: selectedIndexes.length,
         selectAll: selectAll,
-        onSelectAllChanged: _onSelectAllChanged,
+        onSelectAllChanged: (value) {
+          setState(() {
+            selectAll = value ?? false;
+            selectedIndexes =
+                selectAll ? cartItems.map((e) => e.index).toSet() : {};
+          });
+        },
       ),
       body: Column(
         children: [
@@ -73,7 +84,10 @@ class _CartPageState extends State<CartPage> {
             categoryList: ['All', ...categoryList],
             selectedIndex: selectedCategoryIndex,
             onCategorySelected: (index) {
-              setState(() => selectedCategoryIndex = index);
+              setState(() {
+                selectedCategoryIndex = index;
+                _selectAllVisibleItems();
+              });
             },
           ),
           const SizedBox(height: 10),
@@ -96,7 +110,7 @@ class _CartPageState extends State<CartPage> {
           isSelected: selectedIndexes.contains(course.index),
           onChanged: (isSelected) {
             setState(() {
-              if (isSelected) {
+              if (isSelected == true) {
                 selectedIndexes.add(course.index);
               } else {
                 selectedIndexes.remove(course.index);

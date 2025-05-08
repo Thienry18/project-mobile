@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projek_mobile/data/cart_data.dart';
+import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -430,83 +432,22 @@ class _ExplorePageState extends State<ExplorePage> {
   Widget _buildCourseCardList() {
     return SizedBox(
       height: 250,
-      child: ListView(
+      child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        children: [
-          _buildCourseCard(
-            imageUrl:
-                'https://img-c.udemycdn.com/course/240x135/2776760_f176_10.jpg',
-            title: '100 Days of Code: The Complete Python Pro Bootcamp',
-            duration: '55h 21m',
-            rating: '4.7 (365,859)',
-            price: '\$38.69',
-            isBestseller: true,
-            index: 1,
-          ),
-          const SizedBox(width: 16),
-          _buildCourseCard(
-            imageUrl:
-                'https://images.unsplash.com/photo-1581090700227-1e8d1a5640f4',
-            title:
-                'Machine Learning A-Z: AI, Python & R + ChatGPT Prize [2025]',
-            duration: '42h 44m',
-            rating: '4.5 (196,112)',
-            price: '\$36.29',
-            isBestseller: true,
-            index: 2,
-          ),
-          const SizedBox(width: 16),
-          _buildCourseCard(
-            imageUrl:
-                'https://img-c.udemycdn.com/course/240x135/394676_ce3d_5.jpg',
-            title: 'The Web Developer Bootcamp 2024',
-            duration: '63h 0m',
-            rating: '4.7 (200,000)',
-            price: '\$29.99',
-            index: 3,
-          ),
-          const SizedBox(width: 16),
-          _buildCourseCard(
-            imageUrl:
-                'https://img-c.udemycdn.com/course/240x135/567828_67d0.jpg',
-            title: 'iOS & Swift - The Complete iOS App Development Bootcamp',
-            duration: '60h 30m',
-            rating: '4.8 (150,000)',
-            price: '\$39.99',
-            index: 4,
-          ),
-          const SizedBox(width: 16),
-          _buildCourseCard(
-            imageUrl:
-                'https://img-c.udemycdn.com/course/240x135/1561458_7f3f_16.jpg',
-            title: 'The Complete JavaScript Course 2024: From Zero to Expert!',
-            duration: '68h 12m',
-            rating: '4.7 (210,300)',
-            price: '\$35.00',
-            isBestseller: true,
-            index: 5,
-          ),
-          const SizedBox(width: 16),
-          _buildCourseCard(
-            imageUrl:
-                'https://img-c.udemycdn.com/course/240x135/437398_46c3_9.jpg',
-            title: 'The Complete Node.js Developer Course (3rd Edition)',
-            duration: '35h 45m',
-            rating: '4.6 (180,000)',
-            price: '\$32.50',
-            index: 6,
-          ),
-          const SizedBox(width: 16),
-          _buildCourseCard(
-            imageUrl:
-                'https://img-c.udemycdn.com/course/240x135/851712_fc61_6.jpg',
-            title: 'Docker and Kubernetes: The Complete Guide',
-            duration: '22h 15m',
-            rating: '4.8 (120,000)',
-            price: '\$42.00',
-            index: 7,
-          ),
-        ],
+        itemCount: trendingCourses.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 16),
+        itemBuilder: (context, index) {
+          final course = trendingCourses[index];
+          return _buildCourseCard(
+            imageUrl: course.imageUrl,
+            title: course.title,
+            duration: course.duration,
+            rating: course.rating,
+            price: course.price,
+            isBestseller: course.isBestseller,
+            index: course.index,
+          );
+        },
       ),
     );
   }
@@ -597,8 +538,13 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   if (isFavorited) {
                     favoriteCourses.remove(index);
+                    cartCourses.removeWhere((course) => course.index == index);
                   } else {
                     favoriteCourses.add(index);
+                    final course = trendingCourses.firstWhere(
+                      (c) => c.index == index,
+                    );
+                    cartCourses.add(course);
                   }
                 });
               },
