@@ -111,7 +111,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
                 context,
                 MaterialPageRoute(
                   builder:
-                      (_) => ExplorePage(selectedCategory: selectedcategory!),
+                      (_) => ExplorePage(selectedCategory: categoryselected),
                 ),
               );
               break;

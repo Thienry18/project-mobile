@@ -4,7 +4,6 @@ import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
-import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';

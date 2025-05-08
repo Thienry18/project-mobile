@@ -42,7 +42,7 @@ class Success extends StatelessWidget {
                   MaterialPageRoute(
                     builder:
                         (context) =>
-                            ExplorePage(selectedCategory: selectedcategory!),
+                            ExplorePage(selectedCategory: categoryselected),
                   ),
                 );
               },

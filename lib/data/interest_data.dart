@@ -24,4 +24,4 @@ final List<InterestModel> interestsList = [
   ),
 ];
 
-final String? selectedcategory = "artificial intelligence";
+String categoryselected = "artificial intelligence";
