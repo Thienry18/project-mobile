@@ -43,15 +43,11 @@ class _AutoSlideImageWidgetState extends State<_AutoSlideImageWidget> {
   }
 
   void _startAutoSwitch() {
-    _timer = Timer.periodic(
-      widget.duration,
-      () {
-            setState(() {
-              _currentIndex = (_currentIndex + 1) % widget.images.length;
-            });
-          }
-          as void Function(Timer timer),
-    );
+    _timer = Timer.periodic(widget.duration, (_) {
+      setState(() {
+        _currentIndex = (_currentIndex + 1) % widget.images.length;
+      });
+    });
   }
 
   @override

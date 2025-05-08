@@ -8,7 +8,7 @@ class BuildStepCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 127,
+      width: 120,
       height: 9,
       margin: EdgeInsets.symmetric(horizontal: 7),
       decoration: BoxDecoration(

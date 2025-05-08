@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/interest_data.dart';
-import 'package:projek_mobile/screens/set_pin.dart';
+import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 
@@ -13,14 +13,14 @@ class Interest extends StatefulWidget {
 }
 
 class InterestState extends State<Interest> {
-  final List<String> selectedInterests = [];
+  String? selectedInterest;
 
   void toggleInterest(String interest) {
     setState(() {
-      if (selectedInterests.contains(interest)) {
-        selectedInterests.remove(interest);
+      if (selectedInterest == interest) {
+        selectedInterest = null;
       } else {
-        selectedInterests.add(interest);
+        selectedInterest = interest;
       }
     });
   }
@@ -68,23 +68,33 @@ class InterestState extends State<Interest> {
                 childAspectRatio: 1.2,
                 children:
                     interestsList.map((interest) {
-                      final isSelected = selectedInterests.contains(
-                        interest.name,
-                      );
+                      final isSelected = selectedInterest == interest.name;
 
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ChoiceChip(
+                            showCheckmark: false, // <== Hilangkan ceklis
                             padding: EdgeInsets.all(15),
-                            label: Image.asset(
-                              interest.iconPath,
-                              width: 80,
-                              height: 80,
-                              color: isSelected ? Colors.white : null,
+                            label: ColorFiltered(
+                              colorFilter:
+                                  isSelected
+                                      ? ColorFilter.mode(
+                                        Colors.grey.withOpacity(0.6),
+                                        BlendMode.srcATop,
+                                      )
+                                      : ColorFilter.mode(
+                                        Colors.transparent,
+                                        BlendMode.multiply,
+                                      ),
+                              child: Image.asset(
+                                interest.iconPath,
+                                width: 80,
+                                height: 80,
+                              ),
                             ),
                             selected: isSelected,
-                            selectedColor: Colors.green,
+                            selectedColor: Colors.green.withOpacity(0.2),
                             backgroundColor: Color(0xFFE3E8FB),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -114,13 +124,27 @@ class InterestState extends State<Interest> {
                 width: 250,
                 child: CustomButton(
                   text: 'Continue',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SetPinScreen()),
-                    );
-                  },
                   padding: const EdgeInsets.symmetric(vertical: 14),
+                  onPressed: () {
+                    if (selectedInterest != null) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => ExplorePage(
+                                selectedCategory: selectedInterest!,
+                              ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please select at least one interest.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ),

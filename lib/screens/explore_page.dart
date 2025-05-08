@@ -78,13 +78,17 @@ class _ExplorePageState extends State<ExplorePage> {
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
         currentIndex: 0,
+        selectedLabelStyle: GoogleFonts.poppins(fontSize: 10),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
             label: 'My Course',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: ''),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
