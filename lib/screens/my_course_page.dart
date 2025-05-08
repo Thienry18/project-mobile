@@ -47,7 +47,6 @@ class _MyCoursePageState extends State<MyCoursePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Chips
             CategoryChips(
               categoryList: alllist,
               selectedIndex: selectedIndex,
@@ -58,17 +57,14 @@ class _MyCoursePageState extends State<MyCoursePage> {
               },
             ),
             const SizedBox(height: 32),
-            // Image
             Center(
               child: Image.asset('assets/images/empty_course.png', height: 200),
             ),
             const SizedBox(height: 24),
-            // Title
             Center(
               child: Text("Find Your Course", style: AppTextStyles.heading),
             ),
             const SizedBox(height: 12),
-            // Description
             Center(
               child: Text(
                 "Discover courses you're actually into and start learning in a way that feels easy and fun.",
@@ -77,7 +73,6 @@ class _MyCoursePageState extends State<MyCoursePage> {
               ),
             ),
             const SizedBox(height: 20),
-            // Explore Button
             Center(
               child: ElevatedButton(
                 onPressed: () {},

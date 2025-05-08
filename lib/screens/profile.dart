@@ -5,7 +5,7 @@ import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/gender_picker.dart';
 import 'package:projek_mobile/widgets/profile_image.dart';
-import 'package:projek_mobile/widgets/custom_button.dart'; // pastikan ini diimport
+import 'package:projek_mobile/widgets/custom_button.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

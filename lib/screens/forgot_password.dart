@@ -3,7 +3,7 @@ import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/screens/email_notification.dart';
 import 'package:projek_mobile/widgets/custom_shape_clipper.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
-import 'package:projek_mobile/widgets/custom_button.dart'; // Pastikan ini diimport
+import 'package:projek_mobile/widgets/custom_button.dart';
 
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({super.key});

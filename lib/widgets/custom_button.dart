@@ -5,14 +5,14 @@ class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final IconData? icon;
-  final EdgeInsetsGeometry? padding; // Tambahkan parameter padding
+  final EdgeInsetsGeometry? padding;
 
   const CustomButton({
     Key? key,
     required this.text,
     required this.onPressed,
     this.icon,
-    this.padding, // Tambahkan padding ke konstruktor
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -22,11 +22,7 @@ class CustomButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
         padding:
-            padding ??
-            const EdgeInsets.symmetric(
-              horizontal: 40,
-              vertical: 12,
-            ), // Gunakan padding jika disediakan
+            padding ?? const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       child: Row(
