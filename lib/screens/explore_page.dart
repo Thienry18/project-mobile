@@ -279,7 +279,7 @@ class _ExplorePageState extends State<ExplorePage> {
         itemBuilder: (context, index) {
           final course = courses[index];
           return _buildCourseCard(
-            imageUrl: course.imageUrl,
+            imageUrl: course.images,
             title: course.title,
             duration: course.duration,
             rating: course.rating,

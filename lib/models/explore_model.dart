@@ -1,5 +1,5 @@
 class Course {
-  final String imageUrl;
+  final String images;
   final String title;
   final String duration;
   final String rating;
@@ -9,7 +9,7 @@ class Course {
   final String category; // Optional category field
 
   Course({
-    required this.imageUrl,
+    required this.images,
     required this.title,
     required this.duration,
     required this.rating,
