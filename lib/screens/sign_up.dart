@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
-import 'package:projek_mobile/screens/profile.dart';
+import 'package:projek_mobile/screens/build_profile.dart';
 import 'package:projek_mobile/screens/sign_in.dart';
 import 'package:projek_mobile/widgets/login_tab_bar.dart';
 import 'package:projek_mobile/widgets/social_button.dart';
@@ -142,7 +142,7 @@ class _SignUpState extends State<SignUp> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Profile()),
+                        MaterialPageRoute(builder: (context) => BuildProfile()),
                       );
                     },
                     padding: const EdgeInsets.symmetric(

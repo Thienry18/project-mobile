@@ -1,36 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:projek_mobile/providers/password_provider.dart';
-import 'package:projek_mobile/providers/set_pin_provider.dart';
-import 'package:projek_mobile/providers/verify_code_provider.dart';
-import 'package:projek_mobile/screens/cart.dart';
-import 'package:projek_mobile/screens/explore_page.dart';
-import 'package:projek_mobile/screens/favscreen.dart';
-import 'package:projek_mobile/screens/interest.dart';
-import 'package:projek_mobile/screens/my_course_page.dart';
-import 'package:projek_mobile/screens/notification_page.dart';
-import 'package:projek_mobile/screens/reset_password.dart';
-import 'package:projek_mobile/screens/set_pin.dart';
-import 'package:projek_mobile/screens/verify_code.dart';
 import 'package:provider/provider.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:projek_mobile/screens/explore_page.dart';
 
 void main() {
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => VerifyCodeProvider()),
-        ChangeNotifierProvider(create: (_) => SetPinProvider()),
-        ChangeNotifierProvider(create: (_) => PasswordProvider()),
-      ],
+    ChangeNotifierProvider(
+      create: (context) => ThemeNotifier(),
       child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: Interest());
+    // Dapatkan mode yang dipilih dari ThemeNotifier
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
+
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      debugShowCheckedModeBanner: false, // Mematikan banner debug
+      home: const ExplorePage(selectedCategory: 'Category1'),
+    );
   }
 }
