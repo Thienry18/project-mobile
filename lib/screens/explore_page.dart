@@ -24,11 +24,12 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   Set<int> favoriteCourses = {};
-
   int? selectedCategoryIndex;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     List<Course> filteredCourses =
         selectedCategoryIndex != null
             ? trendingCourses
@@ -40,10 +41,10 @@ class _ExplorePageState extends State<ExplorePage> {
             : trendingCourses;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         title: Row(
           children: [
             const CircleAvatar(
@@ -55,7 +56,10 @@ class _ExplorePageState extends State<ExplorePage> {
               "Hi, Moon!",
               style: GoogleFonts.poppins(
                 fontSize: 15,
-                color: const Color(0xFF324EAF),
+                color:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : const Color(0xff324eaf),
               ),
             ),
           ],
@@ -105,7 +109,10 @@ class _ExplorePageState extends State<ExplorePage> {
                 style: GoogleFonts.poppins(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF324EAF),
+                  color:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xff324eaf),
                 ),
               ),
               const SizedBox(height: 20),
@@ -121,62 +128,16 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
               ),
               const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Trending Now",
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF324EAF),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "See All",
-                      style: GoogleFonts.poppins(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildSectionHeader("Trending Now"),
               const SizedBox(height: 12),
               autoSlideCourseBanner(courses: getTrendingTop5()),
-
               const SizedBox(height: 30),
 
               if (widget.selectedCategory.isNotEmpty) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Recommended for You",
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF324EAF),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "See All",
-                        style: GoogleFonts.poppins(
-                          color: Colors.green,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                _buildSectionHeader("Recommended for You"),
                 const SizedBox(height: 12),
                 _buildCourseCardList(getTrendingTop5()),
               ],
-
               const SizedBox(height: 30),
 
               if (widget.selectedCategory.isNotEmpty) ...[
@@ -188,15 +149,17 @@ class _ExplorePageState extends State<ExplorePage> {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF324EAF),
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                         children: [
                           TextSpan(
                             text: "Popular for ",
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF324EAF),
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : const Color(0xff324eaf),
                             ),
                           ),
                           TextSpan(
@@ -210,7 +173,6 @@ class _ExplorePageState extends State<ExplorePage> {
                         ],
                       ),
                     ),
-
                     TextButton(
                       onPressed: () {},
                       child: Text(
@@ -228,30 +190,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ],
 
               const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Categories",
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF324EAF),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "See All",
-                      style: GoogleFonts.poppins(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildSectionHeader("Categories"),
               const SizedBox(height: 12),
               CategoryChips(
                 categoryList: categoryList,
@@ -266,6 +205,35 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color:
+                Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : const Color(0xff324eaf),
+          ),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: Text(
+            "See All",
+            style: GoogleFonts.poppins(
+              color: Colors.green,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -425,7 +393,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF324EAF),
+                          color: const Color(0xFF324EAF),
                         ),
                       ),
                     )
