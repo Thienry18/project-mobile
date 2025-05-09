@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
@@ -50,10 +51,34 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     Row(
-                      children: const [
-                        Icon(Icons.diamond, color: Colors.blueAccent, size: 28),
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ComingSoon(),
+                              ),
+                            );
+                          },
+                          child: Icon(
+                            Icons.diamond,
+                            color: Colors.blueAccent,
+                            size: 28,
+                          ),
+                        ),
                         SizedBox(width: 20),
-                        Icon(Icons.shopping_cart_outlined, size: 28),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CartPage(),
+                              ),
+                            );
+                          },
+                          child: Icon(Icons.shopping_cart_outlined, size: 28),
+                        ),
                       ],
                     ),
                   ],
