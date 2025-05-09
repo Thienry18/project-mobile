@@ -104,16 +104,41 @@ class _BuildProfile extends State<BuildProfile> {
               gender: gender,
               onChanged: (val) => setState(() => gender = val ?? ''),
             ),
+            SizedBox(height: 15),
             CustomTextField(
               prefixIcon: Icon(Icons.phone, color: Color(0xFF7A8EDA)),
               hintText: 'Phone number',
               onChanged: (val) => setState(() => phoneNumber = val),
             ),
             SizedBox(height: 15),
-            CustomTextField(
-              prefixIcon: Icon(Icons.public, color: Color(0xFF7A8EDA)),
-              hintText: 'Country',
-              onChanged: (val) => setState(() => country = val),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.public, color: Color(0xFF7A8EDA)),
+                filled: true,
+                fillColor: Color(0xFFE3E8FB),
+                hintText: 'Country',
+                hintStyle: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              value: country.isEmpty ? null : country,
+              items: [
+                DropdownMenuItem(
+                  value: 'Coming Soon',
+                  child: Text('Coming Soon'),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  country = value!;
+                });
+              },
             ),
             SizedBox(height: 30),
             CustomButton(

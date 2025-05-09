@@ -2,7 +2,7 @@ import 'package:projek_mobile/models/explore_model.dart';
 
 final List<Course> trendingCourses = [
   Course(
-    images: 'images/card_image/udemy_course.webp',
+    images: 'images/card_image/udemy_course.jpg',
     title: '100 Days of Code: The Complete Python Pro Bootcamp',
     duration: '55h 21m',
     rating: '4.7 (365,859)',
@@ -42,7 +42,7 @@ final List<Course> trendingCourses = [
     category: 'Java',
   ),
   Course(
-    images: 'images/card_image/r.webp',
+    images: 'images/card_image/r.jpg',
     title: 'Data Science and Machine Learning Bootcamp with R',
     duration: '58h 30m',
     rating: '4.7 (145,875)',
@@ -53,7 +53,7 @@ final List<Course> trendingCourses = [
   ),
 
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/2622998_75db_6.jpg',
+    images: 'images/card_image/web_bootcamp.jpeg',
     title: 'The Complete Web Developer Bootcamp 2025',
     duration: '56h 20m',
     rating: '4.9 (721,249)',
@@ -63,7 +63,7 @@ final List<Course> trendingCourses = [
     category: 'Web Development',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/2275168_200b_7.jpg',
+    images: 'images/image_card/sql_bootcamp.jpeg',
     title: 'Complete SQL Bootcamp 2025: Go from Zero to Hero',
     duration: '41h 15m',
     rating: '4.8 (457,675)',
@@ -73,7 +73,7 @@ final List<Course> trendingCourses = [
     category: 'SQL',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/921208_99da_8.jpg',
+    images: 'images/card_image/ios_development.jpeg',
     title: 'The Complete iOS App Development Bootcamp 2025',
     duration: '75h 5m',
     rating: '4.7 (522,400)',
@@ -83,7 +83,7 @@ final List<Course> trendingCourses = [
     category: 'iOS Development',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/4312042_5f70_7.jpg',
+    images: 'images_card_image/stack_dev.jpeg',
     title: 'The Complete MERN Stack Developer Course 2025',
     duration: '70h 35m',
     rating: '4.6 (308,500)',
@@ -93,7 +93,7 @@ final List<Course> trendingCourses = [
     category: 'MERN Stack',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/522361_70bb_7.jpg',
+    images: 'images/card_image/react_guide.jpeg',
     title: 'React Native - The Practical Guide [2025 Edition]',
     duration: '50h 5m',
     rating: '4.8 (318,220)',
@@ -103,7 +103,7 @@ final List<Course> trendingCourses = [
     category: 'React Native',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/7432420_1cd9_5.jpg',
+    images: 'images/card_image/python_data_science.jpeg',
     title: 'Python for Data Science and Machine Learning Bootcamp',
     duration: '65h 10m',
     rating: '4.7 (412,600)',
@@ -113,7 +113,7 @@ final List<Course> trendingCourses = [
     category: 'Python',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/2140136_6ab9_9.jpg',
+    images: 'images/card_image/complete_react.jpeg',
     title: 'Complete React Developer in 2025 (w/ Redux, Hooks, GraphQL)',
     duration: '61h 40m',
     rating: '4.9 (231,400)',
@@ -123,7 +123,7 @@ final List<Course> trendingCourses = [
     category: 'React.js',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/2503480_8c0d_4.jpg',
+    images: 'images/card_image/web_dev_bootcamp.jpeg',
     title: 'Web Development Bootcamp with HTML, CSS, JavaScript',
     duration: '63h 55m',
     rating: '4.8 (687,390)',
@@ -133,7 +133,7 @@ final List<Course> trendingCourses = [
     category: 'Web Development',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/853888_75f4_4.jpg',
+    images: 'images/card_image/complete_flutter.jpeg',
     title: 'Flutter & Dart - The Complete Guide [2025 Edition]',
     duration: '52h 30m',
     rating: '4.9 (432,000)',
@@ -143,7 +143,7 @@ final List<Course> trendingCourses = [
     category: 'Flutter',
   ),
   Course(
-    images: 'images/complete_guide.jpeg',
+    images: 'images/card_image/complete_guide.jpeg',
     title: 'Go: The Complete Guide for Beginners',
     duration: '45h 10m',
     rating: '4.7 (150,500)',
@@ -153,7 +153,7 @@ final List<Course> trendingCourses = [
     category: 'Go',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/8123879_1234_3.jpg',
+    images: 'images/card_image/complete_c++.jpeg',
     title: 'Complete C++ Developer Course: From Beginner to Expert',
     duration: '78h 45m',
     rating: '4.8 (225,800)',
@@ -163,7 +163,7 @@ final List<Course> trendingCourses = [
     category: 'C++',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/943863_ef2a_5.jpg',
+    images: 'images/card_image/ml_python.jpeg',
     title: 'Introduction to Machine Learning with Python',
     duration: '60h 20m',
     rating: '4.8 (280,112)',
@@ -173,7 +173,7 @@ final List<Course> trendingCourses = [
     category: 'Python',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/3012479_2567_8.jpg',
+    images: 'images/card_image/master_python_sql.jpeg',
     title: 'Mastering Data Science with Python & SQL',
     duration: '62h 10m',
     rating: '4.7 (120,800)',
@@ -183,7 +183,7 @@ final List<Course> trendingCourses = [
     category: 'Data Science',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/3129781_2467_6.jpg',
+    images: 'images/card_image/reac_redux.jpeg',
     title: 'React JS & Redux Masterclass (2025 Edition)',
     duration: '58h 50m',
     rating: '4.9 (500,900)',
@@ -213,7 +213,7 @@ final List<Course> trendingCourses = [
     category: 'R',
   ),
   Course(
-    images: 'python_2.jpg',
+    images: 'images/card_image/python_2.jpg',
     title: 'Learn C# Programming (In Ten Easy Steps)',
     duration: '13h 30m',
     rating: '4.6 (45,000)',
@@ -223,7 +223,7 @@ final List<Course> trendingCourses = [
     category: 'C#',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/1219332_7201.jpg',
+    images: 'images/card_image/php.jpeg',
     title: 'PHP for Beginners - Become a PHP Master - CMS Project',
     duration: '38h 0m',
     rating: '4.5 (98,000)',
@@ -311,6 +311,108 @@ final List<Course> trendingCourses = [
     isBestseller: true,
     index: 30,
     category: 'CSS',
+  ),
+
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/1219332_7201.jpg',
+    title: 'Python for Beginners - Learn Python Programming from Scratch',
+    duration: '30h 0m',
+    rating: '4.7 (45,000)',
+    price: '\$29.99',
+    isBestseller: true,
+    index: 1,
+    category: 'Python',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/1495992_1fa3.jpg',
+    title: 'Java Programming Masterclass - Beginner to Advanced',
+    duration: '40h 0m',
+    rating: '4.6 (60,000)',
+    price: '\$39.99',
+    isBestseller: true,
+    index: 2,
+    category: 'Java',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/3080708_0333_3.jpg',
+    title: 'The Complete JavaScript Course - From Beginner to Expert',
+    duration: '45h 0m',
+    rating: '4.8 (100,000)',
+    price: '\$44.99',
+    isBestseller: true,
+    index: 3,
+    category: 'JavaScript',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/1386420_fcb7_4.jpg',
+    title: 'C++ Programming for Beginners - Master C++ from Scratch',
+    duration: '35h 0m',
+    rating: '4.5 (20,000)',
+    price: '\$24.99',
+    isBestseller: false,
+    index: 4,
+    category: 'C++',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/1254692_f8f5.jpg',
+    title: 'C# for Beginners - Learn C# Programming with Real-World Projects',
+    duration: '25h 0m',
+    rating: '4.4 (15,000)',
+    price: '\$19.99',
+    isBestseller: false,
+    index: 5,
+    category: 'C#',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/1842048_7e4d.jpg',
+    title: 'PHP for Beginners - Become a PHP Master - CMS Project',
+    duration: '38h 0m',
+    rating: '4.5 (98,000)',
+    price: '\$34.99',
+    isBestseller: true,
+    index: 6,
+    category: 'PHP',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/1408426_3a4b.jpg',
+    title: 'Swift Programming for Beginners - Build iOS Apps',
+    duration: '28h 0m',
+    rating: '4.6 (25,000)',
+    price: '\$29.99',
+    isBestseller: true,
+    index: 7,
+    category: 'Swift',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/1347356_20a1.jpg',
+    title:
+        'Kotlin for Beginners - Learn Kotlin Programming for Android Development',
+    duration: '27h 0m',
+    rating: '4.7 (35,000)',
+    price: '\$32.99',
+    isBestseller: false,
+    index: 8,
+    category: 'Kotlin',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/2044618_50f4.jpg',
+    title: 'Dart for Beginners - Master Dart for Flutter Development',
+    duration: '24h 0m',
+    rating: '4.6 (50,000)',
+    price: '\$29.99',
+    isBestseller: true,
+    index: 9,
+    category: 'Dart',
+  ),
+  Course(
+    images: 'https://img-c.udemycdn.com/course/240x135/426332_8fd6.jpg',
+    title: 'TypeScript for Beginners - Learn TypeScript Programming',
+    duration: '18h 0m',
+    rating: '4.5 (10,000)',
+    price: '\$19.99',
+    isBestseller: false,
+    index: 10,
+    category: 'TypeScript',
   ),
 ];
 

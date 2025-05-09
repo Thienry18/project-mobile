@@ -88,19 +88,35 @@ flutter:
     - assets/images/notification.png
     - assets/images/card_image/udemy_course.webp  
     - assets/images/card_image/reactjs_code.jpg  
-    - assets/images/card_image/python.webp  
+    - assets/images/card_image/python.jpg  
     - assets/images/card_image/javascript_code.jpg  
     - assets/images/card_image/encrypted.jpeg  
-    - assets/images/card_image/c++_coding.webp  
+    - assets/images/card_image/c++_coding.jpg  
     - assets/images/card_image/complete_guide.jpeg  
     - assets/images/card_image/python_2.jpg  
     - assets/images/card_image/ztm_swift.jpg  
     - assets/images/card_image/flutter.jpg  
     - assets/images/card_image/typescript.jpg  
-    - assets/images/card_image/go.webp  
-    - assets/images/card_image/sql.webp  
-    - assets/images/card_image/html.webp  
-    - assets/images/card_image/R.webp
+    - assets/images/card_image/go.jpg 
+    - assets/images/card_image/sql.jpg
+    - assets/images/card_image/html.jpg
+    - assets/images/card_image/R.jpg
+    - assets/images/card_image/php.jpeg
+    - assets/images/card_image/web_bootcamp.jpeg
+    - assets/images/card_image/sql_bootcamp.jpeg
+    - assets/images/card_image/ios_development.jpeg
+    - assets/images/card_image/stack_dev.jpeg
+    - assets/images/card_image/react_guide.jpeg
+    - assets/images/card_image/python_data_science.jpeg
+    - assets/images/card_image/complete_react.jpeg
+    - assets/images/card_image/complete_flutter.jpeg
+    - assets/images/card_image/complete_c++.jpeg
+    - assets/images/card_image/ml_python.jpeg
+    - assets/images/card_image/master_python_sql.jpeg
+    - assets/images/card_image/react_redux.jpeg
+
+
+    
 
 
 
