@@ -6,6 +6,8 @@ import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/sign_in.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
+import 'package:projek_mobile/widgets/menu_item.dart';
+import 'package:projek_mobile/widgets/toggle_item.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 
@@ -17,7 +19,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  bool isDarkMode = false;
   bool isNotificationEnabled = false;
 
   @override
@@ -48,14 +49,10 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     Row(
-                      children: [
-                        const Icon(
-                          Icons.diamond,
-                          color: Colors.blueAccent,
-                          size: 28,
-                        ),
-                        const SizedBox(width: 20),
-                        const Icon(Icons.shopping_cart_outlined, size: 28),
+                      children: const [
+                        Icon(Icons.diamond, color: Colors.blueAccent, size: 28),
+                        SizedBox(width: 20),
+                        Icon(Icons.shopping_cart_outlined, size: 28),
                       ],
                     ),
                   ],
@@ -112,9 +109,9 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               const SizedBox(height: 22),
-              buildMenuItem(
-                Icons.person_outline,
-                "Edit Profile",
+              MenuItem(
+                icon: Icons.person_outline,
+                title: "Edit Profile",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -127,9 +124,9 @@ class _ProfileState extends State<Profile> {
                   );
                 },
               ),
-              buildMenuItem(
-                Icons.settings_outlined,
-                "Settings",
+              MenuItem(
+                icon: Icons.settings_outlined,
+                title: "Settings",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -143,17 +140,17 @@ class _ProfileState extends State<Profile> {
                 },
               ),
               const SizedBox(height: 25),
-              buildToggleItem(
-                Icons.dark_mode_outlined,
-                "Dark Mode",
+              ToggleItem(
+                icon: Icons.dark_mode_outlined,
+                title: "Dark Mode",
                 value: themeNotifier.isDarkMode,
                 onChanged: (val) {
                   themeNotifier.toggleTheme(val);
                 },
               ),
-              buildToggleItem(
-                Icons.notifications_none,
-                "Notification",
+              ToggleItem(
+                icon: Icons.notifications_none,
+                title: "Notification",
                 value: isNotificationEnabled,
                 onChanged: (val) {
                   setState(() {
@@ -162,9 +159,9 @@ class _ProfileState extends State<Profile> {
                 },
               ),
               const SizedBox(height: 25),
-              buildMenuItem(
-                Icons.lock_outline,
-                "Privacy",
+              MenuItem(
+                icon: Icons.lock_outline,
+                title: "Privacy",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -177,9 +174,9 @@ class _ProfileState extends State<Profile> {
                   );
                 },
               ),
-              buildMenuItem(
-                Icons.shield_outlined,
-                "Security",
+              MenuItem(
+                icon: Icons.shield_outlined,
+                title: "Security",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -192,9 +189,9 @@ class _ProfileState extends State<Profile> {
                   );
                 },
               ),
-              buildMenuItem(
-                Icons.help_outline,
-                "FAQ",
+              MenuItem(
+                icon: Icons.help_outline,
+                title: "FAQ",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -207,9 +204,9 @@ class _ProfileState extends State<Profile> {
                   );
                 },
               ),
-              buildMenuItem(
-                Icons.info_outline,
-                "About App",
+              MenuItem(
+                icon: Icons.info_outline,
+                title: "About App",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -223,9 +220,9 @@ class _ProfileState extends State<Profile> {
                 },
               ),
               const SizedBox(height: 25),
-              buildMenuItem(
-                Icons.logout,
-                "Sign Out",
+              MenuItem(
+                icon: Icons.logout,
+                title: "Sign Out",
                 trailing: Icon(
                   Icons.arrow_forward_rounded,
                   color:
@@ -275,94 +272,6 @@ class _ProfileState extends State<Profile> {
               break;
           }
         },
-      ),
-    );
-  }
-
-  Widget buildMenuItem(
-    IconData icon,
-    String title, {
-    Widget? trailing,
-    Color? iconColor,
-    Color? textColor,
-    VoidCallback? onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : const Color(0xff324eaf),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Text(
-                title,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xff324eaf),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            trailing ??
-                Icon(
-                  Icons.arrow_forward_rounded,
-                  size: 20,
-                  color:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xff324eaf),
-                ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildToggleItem(
-    IconData icon,
-    String title, {
-    required bool value,
-    required Function(bool) onChanged,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color:
-                Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : const Color(0xff324eaf),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Text(
-              title,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color:
-                    Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : const Color(0xff324eaf),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Switch(value: value, onChanged: onChanged),
-        ],
       ),
     );
   }
