@@ -131,7 +131,10 @@ class _SignInState extends State<SignIn> {
                   CustomButton(
                     text: 'Sign In',
                     onPressed: () {
-                      InputPin();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => InputPin()),
+                      );
                     },
                     padding: const EdgeInsets.symmetric(
                       vertical: 18,
