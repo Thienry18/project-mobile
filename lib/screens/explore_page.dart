@@ -5,6 +5,7 @@ import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
@@ -69,7 +70,7 @@ class _ExplorePageState extends State<ExplorePage> {
         actions: [
           IconCircleButton(
             icon: Icons.diamond,
-            iconColor: Colors.blue, 
+            iconColor: Colors.blue,
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -92,9 +93,9 @@ class _ExplorePageState extends State<ExplorePage> {
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,
             onTap: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ComingSoon()),
+                MaterialPageRoute(builder: (context) => CartPage()),
               );
             },
           ),

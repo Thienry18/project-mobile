@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
@@ -50,9 +51,9 @@ class _NotificationPageState extends State<NotificationPage> {
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,
             onTap: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ComingSoon()),
+                MaterialPageRoute(builder: (context) => CartPage()),
               );
             },
           ),

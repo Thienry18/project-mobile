@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 class IconCircleButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
-  final Color iconColor;
+  final Color? iconColor;
 
   const IconCircleButton({
     super.key,
     required this.icon,
     required this.onTap,
-    this.iconColor = Colors.black,
+    this.iconColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final color = iconColor ?? (isDarkMode ? Colors.white : Colors.black);
 
     return Material(
       color: Colors.transparent,
@@ -30,7 +31,7 @@ class IconCircleButton extends StatelessWidget {
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: Icon(icon, color: iconColor, size: 20),
+            child: Icon(icon, color: color, size: 20),
           ),
         ),
       ),
