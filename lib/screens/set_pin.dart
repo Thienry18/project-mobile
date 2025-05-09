@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
-import 'package:projek_mobile/providers/set_pin_provider.dart';
+import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/screens/success.dart';
 import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';

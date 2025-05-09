@@ -2,7 +2,7 @@ import 'package:projek_mobile/models/explore_model.dart';
 
 final List<Course> trendingCourses = [
   Course(
-    images: 'images/udemy_course.webp',
+    images: 'images/card_image/udemy_course.webp',
     title: '100 Days of Code: The Complete Python Pro Bootcamp',
     duration: '55h 21m',
     rating: '4.7 (365,859)',
@@ -12,7 +12,7 @@ final List<Course> trendingCourses = [
     category: 'Python',
   ),
   Course(
-    images: 'images/encrypted.jpeg',
+    images: 'images/card_image/encrypted.jpeg',
     title: 'Machine Learning A-Z: AI, Python & R + ChatGPT Prize [2025]',
     duration: '42h 44m',
     rating: '4.5 (196,112)',
@@ -22,7 +22,7 @@ final List<Course> trendingCourses = [
     category: 'Python',
   ),
   Course(
-    images: 'images/javascript_code.jpg',
+    images: 'images/card_image/javascript_code.jpg',
     title: 'The Complete JavaScript Course 2025: From Zero to Expert!',
     duration: '68h 15m',
     rating: '4.8 (500,122)',
@@ -32,7 +32,7 @@ final List<Course> trendingCourses = [
     category: 'JavaScript',
   ),
   Course(
-    images: 'images/reactjs_code.jpg',
+    images: 'images/card_image/reactjs_code.jpg',
     title: 'Java Programming Masterclass for Software Developers',
     duration: '80h 10m',
     rating: '4.6 (300,320)',
@@ -42,7 +42,7 @@ final List<Course> trendingCourses = [
     category: 'Java',
   ),
   Course(
-    images: 'images/r.webp',
+    images: 'images/card_image/r.webp',
     title: 'Data Science and Machine Learning Bootcamp with R',
     duration: '58h 30m',
     rating: '4.7 (145,875)',

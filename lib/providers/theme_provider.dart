@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ThemeNotifier extends ChangeNotifier {
-  bool _isDarkMode = false; // Default mode adalah terang
+  ThemeMode _themeMode = ThemeMode.light;
 
-  bool get isDarkMode => _isDarkMode;
+  ThemeMode get themeMode => _themeMode;
 
-  void toggleDarkMode() {
-    _isDarkMode = !_isDarkMode;
-    notifyListeners(); // Memberitahu bahwa ada perubahan status tema
+  bool get isDarkMode => _themeMode == ThemeMode.dark;
+
+  void toggleTheme(bool isOn) {
+    _themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
   }
 }

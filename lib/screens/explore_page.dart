@@ -5,7 +5,6 @@ import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
-import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -14,7 +13,6 @@ import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/icon_circle_button.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
-import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key, required this.selectedCategory});
@@ -26,13 +24,11 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   Set<int> favoriteCourses = {};
+
   int? selectedCategoryIndex;
-  bool isDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
-    isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
-
     List<Course> filteredCourses =
         selectedCategoryIndex != null
             ? trendingCourses
@@ -44,10 +40,10 @@ class _ExplorePageState extends State<ExplorePage> {
             : trendingCourses;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        backgroundColor: Colors.white,
         title: Row(
           children: [
             const CircleAvatar(
@@ -59,7 +55,7 @@ class _ExplorePageState extends State<ExplorePage> {
               "Hi, Moon!",
               style: GoogleFonts.poppins(
                 fontSize: 15,
-                color: isDarkMode ? Colors.white : const Color(0xFF324EAF),
+                color: const Color(0xFF324EAF),
               ),
             ),
           ],
@@ -67,7 +63,7 @@ class _ExplorePageState extends State<ExplorePage> {
         actions: [
           IconCircleButton(icon: Icons.event_available, onTap: () {}),
           const SizedBox(width: 10),
-          IconCircleButton(icon: Icons.shopping_cart_outlined, onTap: () {}),
+          IconCircleButton(icon: Icons.notifications, onTap: () {}),
           const SizedBox(width: 10),
         ],
       ),
@@ -94,6 +90,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 context,
                 MaterialPageRoute(builder: (_) => Profile()),
               );
+              break;
           }
         },
       ),
@@ -108,7 +105,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 style: GoogleFonts.poppins(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: isDarkMode ? Colors.white : const Color(0xFF324EAF),
+                  color: const Color(0xFF324EAF),
                 ),
               ),
               const SizedBox(height: 20),
@@ -132,8 +129,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color:
-                          isDarkMode ? Colors.white : const Color(0xFF324EAF),
+                      color: const Color(0xFF324EAF),
                     ),
                   ),
                   TextButton(
@@ -149,21 +145,10 @@ class _ExplorePageState extends State<ExplorePage> {
                 ],
               ),
               const SizedBox(height: 12),
-<<<<<<< HEAD
               autoSlideCourseBanner(courses: getTrendingTop5()),
 
-=======
-              autoSlideImage(
-                images: [
-                  'assets/AI_guide.jpeg',
-                  'assets/mobiledev.png',
-                  'assets/emergintech.png',
-                ],
-                height: 188,
-                borderRadius: 12,
-              ),
->>>>>>> 1a8f1392b629ef8ec29b6a8ad803eb1f861a41a3
               const SizedBox(height: 30),
+
               if (widget.selectedCategory.isNotEmpty) ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -173,8 +158,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color:
-                            isDarkMode ? Colors.white : const Color(0xFF324EAF),
+                        color: const Color(0xFF324EAF),
                       ),
                     ),
                     TextButton(
@@ -192,7 +176,9 @@ class _ExplorePageState extends State<ExplorePage> {
                 const SizedBox(height: 12),
                 _buildCourseCardList(getTrendingTop5()),
               ],
+
               const SizedBox(height: 30),
+
               if (widget.selectedCategory.isNotEmpty) ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,10 +188,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color:
-                              isDarkMode
-                                  ? Colors.white
-                                  : const Color(0xFF324EAF),
+                          color: const Color(0xFF324EAF),
                         ),
                         children: [
                           TextSpan(
@@ -213,14 +196,11 @@ class _ExplorePageState extends State<ExplorePage> {
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color:
-                                  isDarkMode
-                                      ? Colors.white
-                                      : const Color(0xFF324EAF),
+                              color: const Color(0xFF324EAF),
                             ),
                           ),
                           TextSpan(
-                            text: widget.selectedCategory,
+                            text: categoryselected,
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -230,6 +210,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         ],
                       ),
                     ),
+
                     TextButton(
                       onPressed: () {},
                       child: Text(
@@ -243,11 +224,11 @@ class _ExplorePageState extends State<ExplorePage> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                _buildCourseCardList(
-                  getRecommendedForYou(widget.selectedCategory),
-                ),
+                _buildCourseCardList(getRecommendedForYou(categoryselected)),
               ],
+
               const SizedBox(height: 20),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -256,8 +237,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color:
-                          isDarkMode ? Colors.white : const Color(0xFF324EAF),
+                      color: const Color(0xFF324EAF),
                     ),
                   ),
                   TextButton(
@@ -407,13 +387,12 @@ class _ExplorePageState extends State<ExplorePage> {
                 });
               },
               child: Icon(
-                isFavorited ? Icons.shopping_cart : Icons.add_shopping_cart,
-                color: isFavorited ? Colors.green : Colors.white,
+                isFavorited ? Icons.favorite : Icons.favorite_border,
+                color: isFavorited ? Colors.red : Colors.white,
                 size: 20,
               ),
             ),
           ),
-
           Positioned(
             bottom: 0,
             left: 0,
@@ -449,7 +428,9 @@ class _ExplorePageState extends State<ExplorePage> {
                           color: Color(0xFF324EAF),
                         ),
                       ),
-                    ),
+                    )
+                  else
+                    const SizedBox(),
                   Text(
                     price,
                     style: GoogleFonts.poppins(
