@@ -37,9 +37,35 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         centerTitle: false,
         actions: [
-          IconCircleButton(icon: Icons.search, onTap: () {}),
+          IconCircleButton(
+            icon: Icons.search,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => const Scaffold(
+                        body: Center(child: Text("Coming Soon")),
+                      ),
+                ),
+              );
+            },
+          ),
           const SizedBox(width: 10),
-          IconCircleButton(icon: Icons.shopping_cart_outlined, onTap: () {}),
+          IconCircleButton(
+            icon: Icons.shopping_cart_outlined,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => const Scaffold(
+                        body: Center(child: Text("Coming Soon")),
+                      ),
+                ),
+              );
+            },
+          ),
           const SizedBox(width: 10),
         ],
       ),
@@ -108,7 +134,16 @@ class _NotificationPageState extends State<NotificationPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      const Scaffold(body: Center(child: Text("Coming Soon"))),
+            ),
+          );
+        },
         backgroundColor: Color(0xff324eaf),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         child: const Icon(Icons.add, color: Colors.white),

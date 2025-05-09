@@ -65,9 +65,35 @@ class _ExplorePageState extends State<ExplorePage> {
           ],
         ),
         actions: [
-          IconCircleButton(icon: Icons.event_available, onTap: () {}),
+          IconCircleButton(
+            icon: Icons.event_available,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => const Scaffold(
+                        body: Center(child: Text("Coming Soon")),
+                      ),
+                ),
+              );
+            },
+          ),
           const SizedBox(width: 10),
-          IconCircleButton(icon: Icons.notifications, onTap: () {}),
+          IconCircleButton(
+            icon: Icons.notifications,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => const Scaffold(
+                        body: Center(child: Text("Coming Soon")),
+                      ),
+                ),
+              );
+            },
+          ),
           const SizedBox(width: 10),
         ],
       ),
@@ -174,7 +200,17 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => const Scaffold(
+                                  body: Center(child: Text("Coming Soon")),
+                                ),
+                          ),
+                        );
+                      },
                       child: Text(
                         "See All",
                         style: GoogleFonts.poppins(
@@ -224,7 +260,17 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => const Scaffold(
+                      body: Center(child: Text("Coming Soon")),
+                    ),
+              ),
+            );
+          },
           child: Text(
             "See All",
             style: GoogleFonts.poppins(
