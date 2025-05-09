@@ -5,7 +5,7 @@ import 'package:projek_mobile/providers/verify_code_provider.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/screens/set_pin.dart';
 import 'package:provider/provider.dart';
-import 'package:projek_mobile/providers/theme_provider.dart'; // ⬅ Tambahkan ini
+import 'package:projek_mobile/providers/theme_provider.dart';
 
 void main() {
   runApp(

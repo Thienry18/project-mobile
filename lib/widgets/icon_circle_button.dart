@@ -8,7 +8,6 @@ class IconCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mendapatkan warna sesuai dengan mode tema saat ini
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
@@ -17,10 +16,7 @@ class IconCircleButton extends StatelessWidget {
       child: Ink(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color:
-              isDarkMode
-                  ? Colors.black
-                  : Colors.white, // Ganti warna latar belakang
+          color: isDarkMode ? Colors.black : Colors.white,
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(100),
@@ -30,8 +26,7 @@ class IconCircleButton extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Icon(
               icon,
-              color:
-                  isDarkMode ? Colors.white : Colors.black, // Ganti warna ikon
+              color: isDarkMode ? Colors.white : Colors.black,
               size: 20,
             ),
           ),

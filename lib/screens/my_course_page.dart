@@ -23,16 +23,13 @@ class _MyCoursePageState extends State<MyCoursePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Mendapatkan mode tema yang aktif
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDarkMode ? Colors.black : Colors.white, // Ubah warna latar belakang
+      backgroundColor: isDarkMode ? Colors.black : Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor:
-            isDarkMode ? Colors.black : Colors.white, // Ubah warna app bar
+        backgroundColor: isDarkMode ? Colors.black : Colors.white,
         title: Text(
           "My Course",
           style: GoogleFonts.poppins(
