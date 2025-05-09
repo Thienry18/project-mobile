@@ -20,7 +20,6 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
-    // Mengetahui apakah dark mode aktif atau tidak
     final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
 
     return Scaffold(
@@ -40,7 +39,7 @@ class _NotificationPageState extends State<NotificationPage> {
           IconCircleButton(
             icon: Icons.search,
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder:
@@ -55,7 +54,7 @@ class _NotificationPageState extends State<NotificationPage> {
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder:
@@ -75,10 +74,7 @@ class _NotificationPageState extends State<NotificationPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/images/notification.png',
-                height: 200, // Warna gambar untuk dark mode
-              ),
+              Image.asset('assets/images/notification.png', height: 200),
               const SizedBox(height: 24),
               Text(
                 "No Notification Yet",
@@ -135,7 +131,7 @@ class _NotificationPageState extends State<NotificationPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder:

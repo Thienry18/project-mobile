@@ -110,8 +110,7 @@ class VerifyCode extends StatelessWidget {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder:
-                                            (context) => const ResetPassword(),
+                                        builder: (context) => ResetPassword(),
                                       ),
                                     );
                                   }

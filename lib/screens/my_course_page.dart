@@ -45,7 +45,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
           IconCircleButton(
             icon: Icons.search,
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder:
@@ -60,7 +60,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder:

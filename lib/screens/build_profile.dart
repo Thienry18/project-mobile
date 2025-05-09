@@ -119,7 +119,7 @@ class _BuildProfile extends State<BuildProfile> {
             CustomButton(
               text: 'Continue',
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Interest()),
                 );
@@ -128,7 +128,6 @@ class _BuildProfile extends State<BuildProfile> {
             ),
           ],
         ),
-        
       ),
     );
   }

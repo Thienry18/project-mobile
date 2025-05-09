@@ -5,6 +5,7 @@ import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -24,7 +25,7 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   Set<int> favoriteCourses = {};
-  Set<int> selectedIndexes = {};
+  Set<int> selectedIndexes = {0};
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +70,9 @@ class _ExplorePageState extends State<ExplorePage> {
           IconCircleButton(
             icon: Icons.event_available,
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => const Scaffold(
-                        body: Center(child: Text("Coming Soon")),
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => ComingSoon()),
               );
             },
           ),
@@ -84,14 +80,9 @@ class _ExplorePageState extends State<ExplorePage> {
           IconCircleButton(
             icon: Icons.notifications,
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => const Scaffold(
-                        body: Center(child: Text("Coming Soon")),
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => ComingSoon()),
               );
             },
           ),
@@ -202,7 +193,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder:
@@ -268,14 +259,9 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder:
-                    (context) => const Scaffold(
-                      body: Center(child: Text("Coming Soon")),
-                    ),
-              ),
+              MaterialPageRoute(builder: (context) => ComingSoon()),
             );
           },
           child: Text(

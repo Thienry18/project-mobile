@@ -17,7 +17,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   int? selectedCategoryIndex = 0;
   bool selectAll = false;
-  Set<int> selectedIndexes = {};
+  Set<int> selectedIndexes = {0};
 
   @override
   void initState() {
