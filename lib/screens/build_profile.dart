@@ -128,6 +128,7 @@ class _BuildProfile extends State<BuildProfile> {
             ),
           ],
         ),
+        
       ),
     );
   }

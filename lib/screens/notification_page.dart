@@ -4,8 +4,11 @@ import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
+import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/icon_circle_button.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -17,23 +20,26 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
+    // Mengetahui apakah dark mode aktif atau tidak
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDarkMode ? Colors.black : Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: isDarkMode ? Colors.black : Colors.white,
         title: Text(
           "Notification",
           style: GoogleFonts.poppins(
-            color: const Color(0xFF324EAF),
+            color: isDarkMode ? Colors.white : const Color(0xFF324EAF),
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: false,
         actions: [
-          IconCircleButton(icon: Icons.event_available, onTap: () {}),
+          IconCircleButton(icon: Icons.search, onTap: () {}),
           const SizedBox(width: 10),
-          IconCircleButton(icon: Icons.notifications, onTap: () {}),
+          IconCircleButton(icon: Icons.shopping_cart_outlined, onTap: () {}),
           const SizedBox(width: 10),
         ],
       ),
@@ -43,14 +49,30 @@ class _NotificationPageState extends State<NotificationPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/notification.png', height: 200),
+              Image.asset(
+                'assets/images/notification.png',
+                height: 200, // Warna gambar untuk dark mode
+              ),
               const SizedBox(height: 24),
-              Text("No Notification Yet", style: AppTextStyles.heading),
+              Text(
+                "No Notification Yet",
+                style: AppTextStyles.heading.copyWith(
+                  color:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xff324eaf),
+                ),
+              ),
               const SizedBox(height: 12),
               Text(
                 "Fresh start! We’ll let you know when there’s something worth your attention.",
                 textAlign: TextAlign.center,
-                style: AppTextStyles.subheading,
+                style: AppTextStyles.subheading.copyWith(
+                  color:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xff324eaf),
+                ),
               ),
             ],
           ),
@@ -77,12 +99,11 @@ class _NotificationPageState extends State<NotificationPage> {
               break;
             case 2:
               break;
-            // case 3:
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (_) => const ProfilePage()),
-            //   );
-            //   break;
+            case 3:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => Profile()),
+              );
           }
         },
       ),
