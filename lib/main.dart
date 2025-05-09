@@ -14,9 +14,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => VerifyCodeProvider()),
         ChangeNotifierProvider(create: (_) => SetPinProvider()),
         ChangeNotifierProvider(create: (_) => PasswordProvider()),
-        ChangeNotifierProvider(
-          create: (_) => ThemeNotifier(),
-        ), // ⬅ Tambahkan ini
+        ChangeNotifierProvider(create: (_) => ThemeNotifier()),
       ],
       child: const MyApp(),
     ),
