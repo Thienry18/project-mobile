@@ -19,7 +19,7 @@ class MyCoursePage extends StatefulWidget {
 
 class _MyCoursePageState extends State<MyCoursePage> {
   final List<String> alllist = ['All', ...categoryList];
-  int selectedIndex = 0;
+  Set<int> selectedIndex = {0};
 
   @override
   Widget build(BuildContext context) {
@@ -81,10 +81,14 @@ class _MyCoursePageState extends State<MyCoursePage> {
           children: [
             CategoryChips(
               categoryList: alllist,
-              selectedIndex: selectedIndex,
-              onCategorySelected: (index) {
+              selectedIndexes: selectedIndex,
+              onCategoryToggle: (index) {
                 setState(() {
-                  selectedIndex = index;
+                  if (selectedIndex.contains(index)) {
+                    selectedIndex.remove(index);
+                  } else {
+                    selectedIndex.add(index);
+                  }
                 });
               },
             ),

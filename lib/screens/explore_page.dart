@@ -24,18 +24,19 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   Set<int> favoriteCourses = {};
-  int? selectedCategoryIndex;
+  Set<int> selectedIndexes = {};
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     List<Course> filteredCourses =
-        selectedCategoryIndex != null
+        selectedIndexes.isNotEmpty
             ? trendingCourses
                 .where(
-                  (course) =>
-                      course.category == categoryList[selectedCategoryIndex!],
+                  (course) => selectedIndexes.contains(
+                    categoryList.indexOf(course.category),
+                  ),
                 )
                 .toList()
             : trendingCourses;
@@ -230,9 +231,15 @@ class _ExplorePageState extends State<ExplorePage> {
               const SizedBox(height: 12),
               CategoryChips(
                 categoryList: categoryList,
-                selectedIndex: selectedCategoryIndex,
-                onCategorySelected: (index) {
-                  setState(() => selectedCategoryIndex = index);
+                selectedIndexes: selectedIndexes,
+                onCategoryToggle: (index) {
+                  setState(() {
+                    if (selectedIndexes.contains(index)) {
+                      selectedIndexes.remove(index);
+                    } else {
+                      selectedIndexes.add(index);
+                    }
+                  });
                 },
               ),
               const SizedBox(height: 16),

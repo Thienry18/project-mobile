@@ -82,11 +82,14 @@ class _CartPageState extends State<CartPage> {
           const SizedBox(height: 10),
           CategoryChips(
             categoryList: ['All', ...categoryList],
-            selectedIndex: selectedCategoryIndex,
-            onCategorySelected: (index) {
+            selectedIndexes: selectedIndexes,
+            onCategoryToggle: (index) {
               setState(() {
-                selectedCategoryIndex = index;
-                _selectAllVisibleItems();
+                if (selectedIndexes.contains(index)) {
+                  selectedIndexes.remove(index);
+                } else {
+                  selectedIndexes.add(index);
+                }
               });
             },
           ),

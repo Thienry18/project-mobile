@@ -3,14 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CategoryChips extends StatelessWidget {
   final List<String> categoryList;
-  final int? selectedIndex;
-  final void Function(int) onCategorySelected;
+  final Set<int> selectedIndexes;
+  final void Function(int) onCategoryToggle;
 
   const CategoryChips({
     super.key,
     required this.categoryList,
-    required this.selectedIndex,
-    required this.onCategorySelected,
+    required this.selectedIndexes,
+    required this.onCategoryToggle,
   });
 
   @override
@@ -19,11 +19,11 @@ class CategoryChips extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(categoryList.length, (index) {
-          final isSelected = selectedIndex == index;
+          final isSelected = selectedIndexes.contains(index);
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: GestureDetector(
-              onTap: () => onCategorySelected(index),
+              onTap: () => onCategoryToggle(index),
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
