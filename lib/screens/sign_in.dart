@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
+import 'package:projek_mobile/screens/input_pin.dart';
 import 'package:projek_mobile/screens/sign_up.dart';
 import 'package:projek_mobile/screens/forgot_password.dart';
 import 'package:projek_mobile/widgets/login_tab_bar.dart';
@@ -130,7 +131,7 @@ class _SignInState extends State<SignIn> {
                   CustomButton(
                     text: 'Sign In',
                     onPressed: () {
-                      // Handle sign in logic here
+                      InputPin();
                     },
                     padding: const EdgeInsets.symmetric(
                       vertical: 18,
