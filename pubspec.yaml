@@ -114,6 +114,22 @@ flutter:
     - assets/images/card_image/ml_python.jpeg
     - assets/images/card_image/master_python_sql.jpeg
     - assets/images/card_image/react_redux.jpeg
+    - assets/images/card_image/kotlin_android.jpeg
+    - assets/images/card_image/flutter_guide.jpeg
+    - assets/images/card_image/css_guide.jpeg
+    - assets/images/card_image/python_beginner.jpeg
+    - assets/images/card_image/java_beginner.jpeg
+    - assets/images/card_image/js_beginner.jpeg
+    - assets/images/card_image/c++_beginner.jpeg
+    - assets/images/card_image/c#_beginner.jpeg
+    - assets/images/card_image/php_beginner.jpeg
+    - assets/images/card_image/swift_beginner.jpeg
+    - assets/images/card_image/kotlin_beginner.jpeg
+    - assets/images/card_image/flutter_beginner.jpeg
+    - assets/images/card_image/ts_beginner.jpeg
+
+
+
 
 
     

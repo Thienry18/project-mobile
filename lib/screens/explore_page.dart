@@ -68,6 +68,18 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
         actions: [
           IconCircleButton(
+            icon: Icons.diamond,
+            iconColor: Colors.blue, 
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => ComingSoon()),
+              );
+            },
+          ),
+
+          const SizedBox(width: 10),
+          IconCircleButton(
             icon: Icons.event_available,
             onTap: () {
               Navigator.pushReplacement(
@@ -78,7 +90,7 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
           const SizedBox(width: 10),
           IconCircleButton(
-            icon: Icons.notifications,
+            icon: Icons.shopping_cart_outlined,
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -394,12 +406,15 @@ class _ExplorePageState extends State<ExplorePage> {
                 });
               },
               child: Icon(
-                isFavorited ? Icons.favorite : Icons.favorite_border,
-                color: isFavorited ? Colors.red : Colors.white,
+                isFavorited
+                    ? Icons.shopping_cart
+                    : Icons.shopping_cart_outlined,
+                color: isFavorited ? Colors.green : Colors.white,
                 size: 20,
               ),
             ),
           ),
+
           Positioned(
             bottom: 0,
             left: 0,

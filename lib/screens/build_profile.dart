@@ -6,6 +6,7 @@ import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/gender_picker.dart';
 import 'package:projek_mobile/widgets/profile_image.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BuildProfile extends StatefulWidget {
   const BuildProfile({super.key});
@@ -116,22 +117,30 @@ class _BuildProfile extends State<BuildProfile> {
                 prefixIcon: Icon(Icons.public, color: Color(0xFF7A8EDA)),
                 filled: true,
                 fillColor: Color(0xFFE3E8FB),
-                hintText: 'Country',
-                hintStyle: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
+                ),
+              ),
+              hint: Text(
+                'Country',
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF7A8EDA),
                 ),
               ),
               value: country.isEmpty ? null : country,
               items: [
                 DropdownMenuItem(
                   value: 'Coming Soon',
-                  child: Text('Coming Soon'),
+                  child: Text(
+                    'Coming Soon',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Color(0xFF7A8EDA),
+                    ),
+                  ),
                 ),
               ],
               onChanged: (value) {
@@ -140,6 +149,7 @@ class _BuildProfile extends State<BuildProfile> {
                 });
               },
             ),
+
             SizedBox(height: 30),
             CustomButton(
               text: 'Continue',

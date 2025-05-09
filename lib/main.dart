@@ -3,6 +3,7 @@ import 'package:projek_mobile/providers/password_provider.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/providers/verify_code_provider.dart';
 import 'package:projek_mobile/screens/build_profile.dart';
+import 'package:projek_mobile/screens/interest.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/screens/set_pin.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeNotifier.themeMode,
-      home: BuildProfile(),
+      home: Interest(),
     );
   }
 }
