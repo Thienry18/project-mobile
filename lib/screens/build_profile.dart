@@ -117,10 +117,9 @@ class _BuildProfile extends State<BuildProfile> {
                 filled: true,
                 fillColor: Color(0xFFE3E8FB),
                 hintText: 'Country',
-                hintStyle: TextStyle(
-                  fontFamily: 'Poppins',
+                hintStyle: AppTextStyles.subheading.copyWith(
                   fontSize: 14,
-                  color: Colors.grey[600],
+                  color: Color(0xFF7A8EDA),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -128,10 +127,12 @@ class _BuildProfile extends State<BuildProfile> {
                 ),
               ),
               value: country.isEmpty ? null : country,
+              style: AppTextStyles.subheading,
+              dropdownColor: Color(0xFFE3E8FB),
               items: [
                 DropdownMenuItem(
                   value: 'Coming Soon',
-                  child: Text('Coming Soon'),
+                  child: Text('Coming Soon', style: AppTextStyles.subheading),
                 ),
               ],
               onChanged: (value) {
