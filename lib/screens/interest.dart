@@ -74,7 +74,7 @@ class InterestState extends State<Interest> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ChoiceChip(
-                            showCheckmark: false, // <== Hilangkan ceklis
+                            showCheckmark: false,
                             padding: EdgeInsets.all(15),
                             label: ColorFiltered(
                               colorFilter:
