@@ -170,7 +170,8 @@ class _ExplorePageState extends State<ExplorePage> {
               ],
               const SizedBox(height: 30),
 
-              if (widget.selectedCategory.isNotEmpty) ...[
+              if (widget.selectedCategory.isNotEmpty &&
+                  getRecommendedForYou(categoryselected).isNotEmpty) ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

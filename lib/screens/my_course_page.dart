@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -47,12 +48,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => const Scaffold(
-                        body: Center(child: Text("Coming Soon")),
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => ComingSoon()),
               );
             },
           ),
@@ -62,12 +58,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => const Scaffold(
-                        body: Center(child: Text("Coming Soon")),
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => ComingSoon()),
               );
             },
           ),

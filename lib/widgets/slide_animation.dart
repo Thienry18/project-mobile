@@ -5,7 +5,7 @@ import 'package:projek_mobile/models/explore_model.dart';
 
 Widget autoSlideCourseBanner({
   required List<Course> courses,
-  double height = 188,
+  double height = 200,
   double borderRadius = 12,
   Duration duration = const Duration(seconds: 3),
 }) {

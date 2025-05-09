@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeNotifier.themeMode,
-      home: Interest(),
+      home: BuildProfile(),
     );
   }
 }

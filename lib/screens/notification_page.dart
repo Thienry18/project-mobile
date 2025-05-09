@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -41,12 +42,7 @@ class _NotificationPageState extends State<NotificationPage> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => const Scaffold(
-                        body: Center(child: Text("Coming Soon")),
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => ComingSoon()),
               );
             },
           ),
@@ -56,12 +52,7 @@ class _NotificationPageState extends State<NotificationPage> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => const Scaffold(
-                        body: Center(child: Text("Coming Soon")),
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => ComingSoon()),
               );
             },
           ),
@@ -133,11 +124,7 @@ class _NotificationPageState extends State<NotificationPage> {
         onPressed: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder:
-                  (context) =>
-                      const Scaffold(body: Center(child: Text("Coming Soon"))),
-            ),
+            MaterialPageRoute(builder: (context) => ComingSoon()),
           );
         },
         backgroundColor: Color(0xff324eaf),
