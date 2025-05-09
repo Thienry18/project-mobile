@@ -56,7 +56,7 @@ class ForgotPassword extends StatelessWidget {
                 child: CustomButton(
                   text: 'Send Code',
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder:

@@ -27,7 +27,6 @@ class CustomBottomBar extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Voucher Section
           Row(
             children: [
               const Icon(Icons.card_giftcard, color: Colors.blue),
@@ -44,7 +43,6 @@ class CustomBottomBar extends StatelessWidget {
           ),
           const SizedBox(height: 10),
 
-          // Bottom Cart Actions
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -6,7 +6,7 @@ class Course {
   final String price;
   final bool isBestseller;
   final int index;
-  final String category; // Optional category field
+  final String category;
 
   Course({
     required this.images,
@@ -16,6 +16,6 @@ class Course {
     required this.price,
     required this.isBestseller,
     required this.index,
-    required this.category, // Initialize category in the constructor
+    required this.category,
   });
 }

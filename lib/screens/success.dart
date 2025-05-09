@@ -37,7 +37,7 @@ class Success extends StatelessWidget {
             CustomButton(
               text: 'Get Started',
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder:

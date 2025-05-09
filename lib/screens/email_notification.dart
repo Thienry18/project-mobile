@@ -62,7 +62,7 @@ class EmailNotification extends StatelessWidget {
                   child: CustomButton(
                     text: 'Verify Code',
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => VerifyCode(email: email),
@@ -100,7 +100,7 @@ class EmailNotification extends StatelessWidget {
                     recognizer:
                         TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ForgotPassword(),

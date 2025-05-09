@@ -17,8 +17,7 @@ class CustomTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final int? maxLength;
   final TextAlign textAlign;
-  final TextAlignVertical?
-  textAlignVertical; // Tambahkan parameter textAlignVertical
+  final TextAlignVertical? textAlignVertical;
   final List<TextInputFormatter>? inputFormatters;
   final EdgeInsetsGeometry? contentPadding;
   final TextStyle? inputTextStyle;
@@ -39,7 +38,7 @@ class CustomTextField extends StatelessWidget {
     this.onChanged,
     this.maxLength,
     this.textAlign = TextAlign.start,
-    this.textAlignVertical = TextAlignVertical.center, // Default ke tengah
+    this.textAlignVertical = TextAlignVertical.center,
     this.inputFormatters,
     this.contentPadding,
     this.inputTextStyle,
@@ -55,7 +54,7 @@ class CustomTextField extends StatelessWidget {
         keyboardType: keyboardType,
         maxLength: maxLength,
         textAlign: textAlign,
-        textAlignVertical: textAlignVertical, // Gunakan textAlignVertical
+        textAlignVertical: textAlignVertical,
         readOnly: readOnly,
         onTap: onTap,
         onChanged: onChanged,

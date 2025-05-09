@@ -109,7 +109,7 @@ class _SignInState extends State<SignIn> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ForgotPassword(),
@@ -148,7 +148,7 @@ class _SignInState extends State<SignIn> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => SignUp()),
                           );

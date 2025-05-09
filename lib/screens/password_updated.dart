@@ -42,7 +42,7 @@ class PasswordUpdated extends StatelessWidget {
                   text: 'Sign in with new password',
                   icon: Icons.arrow_forward,
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => SignIn()),
                     );

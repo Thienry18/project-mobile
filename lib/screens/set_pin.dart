@@ -120,7 +120,7 @@ class SetPinScreen extends StatelessWidget {
                       onPressed:
                           provider.isPinComplete()
                               ? () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => const Success(),

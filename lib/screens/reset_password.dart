@@ -178,7 +178,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 child: CustomButton(
                   text: "Change Password",
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const PasswordUpdated(),

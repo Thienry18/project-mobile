@@ -107,7 +107,7 @@ class VerifyCode extends StatelessWidget {
                           onPressed:
                               provider.isCodeComplete()
                                   ? () {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                         builder:

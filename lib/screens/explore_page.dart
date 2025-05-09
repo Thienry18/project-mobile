@@ -137,15 +137,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 ],
               ),
               const SizedBox(height: 12),
-              autoSlideImage(
-                images: [
-                  'assets/AI_guide.jpeg',
-                  'assets/mobiledev.png',
-                  'assets/emergintech.png',
-                ],
-                height: 188,
-                borderRadius: 12,
-              ),
+              autoSlideCourseBanner(courses: getTrendingTop5()),
 
               const SizedBox(height: 30),
 
