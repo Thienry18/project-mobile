@@ -86,20 +86,23 @@ flutter:
     - assets/images/empty_cart.png
     - assets/images/empty_course.png
     - assets/images/notification.png
-    - assets/images/udemy_course.webp
-    - assets/reactjs_code.jpg
-    - assets/python.webp
-    - assets/javascript_code.jpg
-    - assets/encrypted.jpeg
-    - assets/c++_coding.webp
-    - assets/complete_guide.jpeg
-    - assets/python_2.jpg
-    - assets/ztm_swift.jpg
-    - assets/flutter.jpg
-    - assets/typescript.jpg
-    - assets/go.webp
-    - assets/sql.webp
-    - assets/html.webp
+    - assets/images/card_image/udemy_course.webp  
+    - assets/images/card_image/reactjs_code.jpg  
+    - assets/images/card_image/python.webp  
+    - assets/images/card_image/javascript_code.jpg  
+    - assets/images/card_image/encrypted.jpeg  
+    - assets/images/card_image/c++_coding.webp  
+    - assets/images/card_image/complete_guide.jpeg  
+    - assets/images/card_image/python_2.jpg  
+    - assets/images/card_image/ztm_swift.jpg  
+    - assets/images/card_image/flutter.jpg  
+    - assets/images/card_image/typescript.jpg  
+    - assets/images/card_image/go.webp  
+    - assets/images/card_image/sql.webp  
+    - assets/images/card_image/html.webp  
+    - assets/images/card_image/R.webp
+
+
 
 
 

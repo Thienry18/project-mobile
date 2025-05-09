@@ -42,7 +42,7 @@ final List<Course> trendingCourses = [
     category: 'Java',
   ),
   Course(
-    images: 'https://img-c.udemycdn.com/course/240x135/932100_81f3_10.jpg',
+    images: 'images/r.webp',
     title: 'Data Science and Machine Learning Bootcamp with R',
     duration: '58h 30m',
     rating: '4.7 (145,875)',

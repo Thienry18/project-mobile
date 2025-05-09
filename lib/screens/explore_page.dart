@@ -305,7 +305,7 @@ class _ExplorePageState extends State<ExplorePage> {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.network(
+            child: Image.asset(
               imageUrl,
               height: 100,
               width: 151,
