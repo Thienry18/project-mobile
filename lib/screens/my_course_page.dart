@@ -35,10 +35,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
         title: Text(
           "My Course",
           style: GoogleFonts.poppins(
-            color:
-                isDarkMode
-                    ? Colors.white
-                    : const Color(0xFF324EAF), // Ubah warna teks
+            color: isDarkMode ? Colors.white : const Color(0xFF324EAF),
             fontWeight: FontWeight.bold,
           ),
         ),

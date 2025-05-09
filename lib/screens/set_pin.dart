@@ -84,9 +84,7 @@ class SetPinScreen extends StatelessWidget {
                                 maxLength: 1,
                                 textAlign: TextAlign.center,
                                 textAlignVertical: TextAlignVertical.center,
-                                contentPadding: const EdgeInsets.all(
-                                  28,
-                                ), // Padding konsisten
+                                contentPadding: const EdgeInsets.all(28),
                                 inputTextStyle: AppTextStyles.heading.copyWith(
                                   fontSize: 20,
                                 ),
