@@ -107,6 +107,7 @@ class VerifyCode extends StatelessWidget {
                           onPressed:
                               provider.isCodeComplete()
                                   ? () {
+                                    // Navigasi jika kode lengkap
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -114,7 +115,23 @@ class VerifyCode extends StatelessWidget {
                                       ),
                                     );
                                   }
-                                  : () {},
+                                  : () {
+                                    // Tampilkan SnackBar jika kode tidak lengkap
+                                    final snackBar = SnackBar(
+                                      content: const Text(
+                                        'Please enter the complete 6-digit code.',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      backgroundColor: Colors.redAccent,
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    );
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).showSnackBar(snackBar);
+                                  },
                         ),
                         const SizedBox(height: 60),
                         Text(
@@ -127,7 +144,9 @@ class VerifyCode extends StatelessWidget {
                         ),
                         const SizedBox(height: 3),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            // TODO: Implement resend code functionality
+                          },
                           child: Text("Resend code", style: AppTextStyles.link),
                         ),
                       ],

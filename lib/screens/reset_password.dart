@@ -26,7 +26,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   void initState() {
     super.initState();
     _confirmFocusNode.addListener(() {
-      if (_confirmFocusNode.hasFocus) {
+      if (mounted) {
         setState(() {});
       }
     });
@@ -34,6 +34,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   void dispose() {
+    _confirmFocusNode.removeListener(() {});
     _confirmFocusNode.dispose();
     super.dispose();
   }
@@ -50,6 +51,12 @@ class _ResetPasswordState extends State<ResetPassword> {
     List<Color> barColors = List.generate(3, (index) {
       return index < strength ? Colors.green : Colors.grey.shade300;
     });
+
+    final bool isPasswordValid =
+        passwordProvider.hasMinLength &&
+        passwordProvider.hasNumber &&
+        passwordProvider.hasUppercase;
+    final bool canSubmit = isPasswordValid && passwordProvider.passwordsMatch;
 
     return Scaffold(
       appBar: AppBar(
@@ -75,29 +82,23 @@ class _ResetPasswordState extends State<ResetPassword> {
                 style: AppTextStyles.subheading.copyWith(fontSize: 10),
               ),
               const SizedBox(height: 30),
+              // KODE DIPERBAIKI DI SINI
               CustomTextField(
                 controller: passwordProvider.passwordController,
                 onChanged: passwordProvider.onPasswordChanged,
                 obscureText: _obscurePassword,
                 labelText: 'Enter your password',
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.lock_outline,
                   color: Color(0xFF7A8EDA),
                   size: 25,
                 ),
-                contentPadding: EdgeInsets.all(20),
-                suffixIcon:
-                    _obscurePassword
-                        ? Icon(
-                          Icons.visibility_off,
-                          color: Color(0xFF7A8EDA),
-                          size: 25,
-                        )
-                        : Icon(
-                          Icons.visibility,
-                          color: Color(0xFF7A8EDA),
-                          size: 25,
-                        ),
+                contentPadding: const EdgeInsets.all(20),
+                suffixIcon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  color: const Color(0xFF7A8EDA),
+                  size: 25,
+                ),
                 onTap: () {
                   setState(() {
                     _obscurePassword = !_obscurePassword;
@@ -117,7 +118,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     passwordProvider.getPasswordStrengthText(),
                     style: GoogleFonts.poppins(
                       fontSize: 12,
-                      color: Colors.green,
+                      color: isPasswordValid ? Colors.green : Colors.grey,
                     ),
                   ),
                 ),
@@ -129,30 +130,26 @@ class _ResetPasswordState extends State<ResetPassword> {
                   hasMinLength: passwordProvider.hasMinLength,
                 ),
               const SizedBox(height: 10),
+              // KODE DIPERBAIKI DI SINI
               CustomTextField(
                 focusNode: _confirmFocusNode,
                 controller: passwordProvider.confirmPasswordController,
                 onChanged: passwordProvider.onConfirmPasswordChanged,
                 obscureText: _obscureConfirmPassword,
                 labelText: 'Re-enter your password',
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.lock_outline,
                   color: Color(0xFF7A8EDA),
                   size: 25,
                 ),
-                contentPadding: EdgeInsets.all(20),
-                suffixIcon:
-                    _obscureConfirmPassword
-                        ? Icon(
-                          Icons.visibility_off,
-                          color: Color(0xFF7A8EDA),
-                          size: 25,
-                        )
-                        : Icon(
-                          Icons.visibility,
-                          color: Color(0xFF7A8EDA),
-                          size: 25,
-                        ),
+                contentPadding: const EdgeInsets.all(20),
+                suffixIcon: Icon(
+                  _obscureConfirmPassword
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                  color: const Color(0xFF7A8EDA),
+                  size: 25,
+                ),
                 onTap: () {
                   setState(() {
                     _obscureConfirmPassword = !_obscureConfirmPassword;
@@ -162,13 +159,12 @@ class _ResetPasswordState extends State<ResetPassword> {
               const SizedBox(height: 5),
               if (_confirmFocusNode.hasFocus &&
                   passwordProvider.confirmPasswordController.text.isNotEmpty &&
-                  passwordProvider.passwordController.text !=
-                      passwordProvider.confirmPasswordController.text)
-                Align(
+                  !passwordProvider.passwordsMatch)
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Both passwords must match.',
-                    style: TextStyle(fontSize: 12, color: Colors.green),
+                    style: TextStyle(fontSize: 12, color: Colors.red),
                   ),
                 ),
               const SizedBox(height: 30),
@@ -178,16 +174,31 @@ class _ResetPasswordState extends State<ResetPassword> {
                 child: CustomButton(
                   text: "Change Password",
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PasswordUpdated(),
-                      ),
-                    );
+                    if (canSubmit) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PasswordUpdated(),
+                        ),
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                        content: const Text(
+                          'Password does not meet all criteria or does not match.',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.redAccent,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           ),
         ),

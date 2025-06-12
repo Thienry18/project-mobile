@@ -6,10 +6,12 @@ import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/gender_picker.dart';
 import 'package:projek_mobile/widgets/profile_image.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+// Impor package yang diperlukan
+import 'package:country_picker/country_picker.dart';
 
 class BuildProfile extends StatefulWidget {
-  const BuildProfile({super.key});
+  BuildProfile({super.key});
 
   @override
   _BuildProfile createState() => _BuildProfile();
@@ -21,7 +23,7 @@ class _BuildProfile extends State<BuildProfile> {
   String dob = '';
   String gender = '';
   String phoneNumber = '';
-  String country = '';
+  String country = ''; // Variabel ini akan menyimpan nama negara yang dipilih
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +91,7 @@ class _BuildProfile extends State<BuildProfile> {
               onTap: () async {
                 DateTime? date = await showDatePicker(
                   context: context,
-                  initialDate: DateTime(2000),
+                  initialDate: DateTime.now(),
                   firstDate: DateTime(1950),
                   lastDate: DateTime.now(),
                 );
@@ -110,46 +112,46 @@ class _BuildProfile extends State<BuildProfile> {
               prefixIcon: Icon(Icons.phone, color: Color(0xFF7A8EDA)),
               hintText: 'Phone number',
               onChanged: (val) => setState(() => phoneNumber = val),
+              keyboardType: TextInputType.phone,
             ),
             SizedBox(height: 15),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.public, color: Color(0xFF7A8EDA)),
-                filled: true,
-                fillColor: Color(0xFFE3E8FB),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              hint: Text(
-                'Country',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF7A8EDA),
-                ),
-              ),
-              value: country.isEmpty ? null : country,
-              items: [
-                DropdownMenuItem(
-                  value: 'Coming Soon',
-                  child: Text(
-                    'Coming Soon',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Color(0xFF7A8EDA),
+
+            // ===== BAGIAN YANG DIUBAH: DARI DROPDOWN MENJADI CUSTOMTEXTFIELD DENGAN DIALOG =====
+            CustomTextField(
+              prefixIcon: Icon(Icons.public, color: Color(0xFF7A8EDA)),
+              hintText: country.isEmpty ? 'Country' : country,
+              readOnly: true,
+              onTap: () {
+                showCountryPicker(
+                  context: context,
+                  // Tampilan UI dari dialog
+                  countryListTheme: CountryListThemeData(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
+                    ),
+                    inputDecoration: InputDecoration(
+                      labelText: 'Search',
+                      hintText: 'Start typing to search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFF8C98A8).withOpacity(0.2),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  country = value!;
-                });
+                  onSelect: (Country selectedCountry) {
+                    setState(() {
+                      // Simpan nama negara yang dipilih ke dalam state
+                      country = selectedCountry.name;
+                    });
+                  },
+                );
               },
             ),
 
+            // ===== AKHIR BAGIAN YANG DIUBAH =====
             SizedBox(height: 30),
             CustomButton(
               text: 'Continue',
@@ -159,7 +161,7 @@ class _BuildProfile extends State<BuildProfile> {
                   MaterialPageRoute(builder: (context) => Interest()),
                 );
               },
-              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 80),
+              padding: EdgeInsets.symmetric(vertical: 18, horizontal: 80),
             ),
           ],
         ),
