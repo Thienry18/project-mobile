@@ -6,7 +6,7 @@ import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
-import 'package:projek_mobile/screens/sign_in.dart';
+import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/menu_item.dart';
 import 'package:projek_mobile/widgets/toggle_item.dart';
@@ -228,10 +228,7 @@ class _ProfileState extends State<Profile> {
                   size: 20,
                 ),
                 onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SignIn()),
-                  );
+                  signOutDialog(context);
                 },
               ),
               const SizedBox(height: 16),

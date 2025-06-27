@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projek_mobile/widgets/filter_menu_button.dart';
 
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({super.key});
@@ -28,14 +29,8 @@ class SearchBarWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: const Color(0xFF324EAF),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(Icons.tune, color: Colors.white, size: 20),
-        ),
+        // Ganti ElevatedButton → FilterMenuButton
+        const FilterMenuButton(), // ini sudah tombol + popup-nya
       ],
     );
   }
