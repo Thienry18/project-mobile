@@ -26,7 +26,7 @@ class CartItemTile extends StatelessWidget {
         ],
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Checkbox(
             value: isSelected,
@@ -44,6 +44,19 @@ class CartItemTile extends StatelessWidget {
               width: 60,
               height: 60,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 60,
+                  height: 60,
+                  color: Colors.blue,
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.broken_image,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(width: 12),
@@ -53,13 +66,15 @@ class CartItemTile extends StatelessWidget {
               children: [
                 Text(
                   course.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(Icons.star, size: 16, color: Colors.amber),
@@ -98,17 +113,13 @@ class CartItemTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Row(
-            children: [
-              Text(
-                '${course.price}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: Color(0xFF324EAF),
-                ),
-              ),
-            ],
+          Text(
+            '${course.price}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: Color(0xFF324EAF),
+            ),
           ),
         ],
       ),
