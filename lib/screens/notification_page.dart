@@ -1,4 +1,3 @@
-// Semua import kamu tetap seperti sebelumnya
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -216,7 +215,6 @@ class _NotificationPageState extends State<NotificationPage>
           ),
         ],
       ),
-      bottomSheet: Container(height: 16, color: Colors.grey.shade200),
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 2,
         onTap: (index) {
