@@ -5,7 +5,6 @@ import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/widgets/cart_item_tile.dart';
-import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
 
@@ -97,6 +96,33 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
+  void _handleCheckout() {
+    final selectedItems =
+        cartCourses
+            .where((item) => selectedIndexes.contains(item.index))
+            .toList();
+
+    for (final course in selectedItems) {
+      if (!myCourses.any((c) => c.index == course.index)) {
+        myCourses.add(course);
+      }
+    }
+
+    cartCourses.removeWhere((item) => selectedIndexes.contains(item.index));
+
+    setState(() {
+      selectedIndexes.clear();
+      selectedPromo = null;
+      promoDiscount = 0.0;
+      _selectAllVisibleItems();
+    });
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => MyCoursePage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartItems = _getFilteredCartItems();
@@ -123,7 +149,26 @@ class _CartPageState extends State<CartPage> {
           SizedBox(width: 16),
         ],
       ),
-
+      bottomNavigationBar: CustomBottomBar(
+        total: _calculateTotal(
+          cartItems
+              .where((item) => selectedIndexes.contains(item.index))
+              .toList(),
+        ),
+        cartCount: selectedIndexes.length,
+        selectAll: selectAll,
+        promoDiscount: promoDiscount,
+        selectedPromo: selectedPromo,
+        onSelectAllChanged: (value) {
+          setState(() {
+            selectAll = value ?? false;
+            selectedIndexes =
+                selectAll ? cartItems.map((e) => e.index).toSet() : {};
+          });
+        },
+        onCheckout: _handleCheckout,
+        onTapVoucher: _showPromoBottomSheet,
+      ),
       body: Column(
         children: [
           const SizedBox(height: 10),
@@ -157,7 +202,6 @@ class _CartPageState extends State<CartPage> {
           Expanded(
             child: isEmpty ? _buildEmptyCart() : _buildCartList(cartItems),
           ),
-          _buildBottomSummary(cartItems),
         ],
       ),
     );
@@ -221,19 +265,18 @@ class _CartPageState extends State<CartPage> {
           Image.asset(
             'assets/images/empty_cart.png',
             height: 200,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                height: 200,
-                width: 200,
-                color: Colors.blue,
-                alignment: Alignment.center,
-                child: const Icon(
-                  Icons.broken_image,
-                  color: Colors.white,
-                  size: 48,
+            errorBuilder:
+                (context, error, stackTrace) => Container(
+                  height: 200,
+                  width: 200,
+                  color: Colors.blue,
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.broken_image,
+                    color: Colors.white,
+                    size: 48,
+                  ),
                 ),
-              );
-            },
           ),
           const SizedBox(height: 30),
           Text("No Items Yet", style: AppTextStyles.heading),
@@ -248,125 +291,6 @@ class _CartPageState extends State<CartPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomSummary(List<Course> items) {
-    final selectedItems =
-        items.where((item) => selectedIndexes.contains(item.index)).toList();
-    final total = _calculateTotal(selectedItems);
-    final finalTotal = total - promoDiscount;
-    final hasSelected = selectedItems.isNotEmpty;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (hasSelected)
-          InkWell(
-            onTap: _showPromoBottomSheet,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: const Color(0xFFEDE7FF),
-              child: Row(
-                children: const [
-                  Icon(Icons.local_activity_outlined, color: Color(0xFF815CFF)),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "Tap to apply your voucher and enjoy the discount!",
-                      style: TextStyle(color: Color(0xFF815CFF)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(top: BorderSide(color: Colors.grey.shade300)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Checkbox(
-                    value: selectAll,
-                    onChanged: (value) {
-                      setState(() {
-                        selectAll = value ?? false;
-                        selectedIndexes =
-                            selectAll ? items.map((e) => e.index).toSet() : {};
-                      });
-                    },
-                  ),
-                  const Text("All"),
-                  const Spacer(),
-                  if (promoDiscount > 0)
-                    Text(
-                      "-\$${promoDiscount.toStringAsFixed(2)}",
-                      style: const TextStyle(color: Colors.blueAccent),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Total: \$${hasSelected ? finalTotal.toStringAsFixed(2) : '0'}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (promoDiscount > 0)
-                          Text(
-                            "Cha-ching! \$${promoDiscount.toStringAsFixed(1)} saved with $selectedPromo!",
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00C569),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed:
-                        hasSelected
-                            ? () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MyCoursePage(),
-                                ),
-                              );
-                            }
-                            : null,
-                    child: Text("Checkout (${selectedItems.length})"),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
