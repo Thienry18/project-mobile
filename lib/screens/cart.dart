@@ -28,6 +28,67 @@ class _CartPageState extends State<CartPage> {
     _selectAllVisibleItems();
   }
 
+  void _showDeleteConfirmation() {
+    showDialog(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: const Text('Confirm Delete'),
+            content: const Text(
+              'Are you sure you want to delete selected items from cart?',
+            ),
+            actions: [
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed:
+                    () => Navigator.of(context, rootNavigator: true).pop(),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('Delete'),
+                onPressed: () {
+                  final deletedItems = <Course>[];
+                  final deletedIndexes = selectedIndexes.toList()..sort();
+
+                  for (final index in deletedIndexes.reversed) {
+                    final course = cartCourses.firstWhere(
+                      (c) => c.index == index,
+                    );
+                    deletedItems.add(course);
+                    cartCourses.remove(course);
+                  }
+
+                  setState(() {
+                    selectedIndexes.clear();
+                    _selectAllVisibleItems();
+                  });
+
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text("Items deleted from cart"),
+                      duration: const Duration(seconds: 4),
+                      action: SnackBarAction(
+                        label: 'UNDO',
+                        onPressed: () {
+                          setState(() {
+                            for (int i = 0; i < deletedItems.length; i++) {
+                              cartCourses.insert(0, deletedItems[i]);
+                            }
+                            _selectAllVisibleItems();
+                          });
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+    );
+  }
+
   void _selectAllVisibleItems() {
     final items = _getFilteredCartItems();
     selectedIndexes = items.map((e) => e.index).toSet();
@@ -38,15 +99,6 @@ class _CartPageState extends State<CartPage> {
     if (selectedCategoryIndex == 0) return cartCourses;
     final category = categoryList[selectedCategoryIndex - 1];
     return cartCourses.where((e) => e.category == category).toList();
-  }
-
-  void _deleteSelectedItems() {
-    setState(() {
-      cartCourses.removeWhere(
-        (course) => selectedIndexes.contains(course.index),
-      );
-      selectedIndexes.clear();
-    });
   }
 
   void _showPromoBottomSheet() {
@@ -190,7 +242,7 @@ class _CartPageState extends State<CartPage> {
                   ),
                 if (selectedIndexes.isNotEmpty)
                   TextButton(
-                    onPressed: _deleteSelectedItems,
+                    onPressed: _showDeleteConfirmation,
                     child: Text(
                       "Delete (${selectedIndexes.length})",
                       style: const TextStyle(color: Colors.red),
