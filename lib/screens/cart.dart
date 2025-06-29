@@ -3,9 +3,11 @@ import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/widgets/cart_item_tile.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
+import 'package:projek_mobile/data/my_course_data.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -75,6 +77,31 @@ class _CartPageState extends State<CartPage> {
             selectedIndexes =
                 selectAll ? cartItems.map((e) => e.index).toSet() : {};
           });
+        },
+        onCheckout: () {
+          final selectedItems =
+              cartItems
+                  .where((item) => selectedIndexes.contains(item.index))
+                  .toList();
+
+          // Tambahkan ke myCourses (jika belum ada)
+          for (final course in selectedItems) {
+            if (!myCourses.any((c) => c.index == course.index)) {
+              myCourses.add(course);
+            }
+            cartCourses.removeWhere((c) => c.index == course.index);
+          }
+
+          setState(() {
+            selectedIndexes.clear();
+            _selectAllVisibleItems();
+          });
+
+          // Pindah ke halaman MyCourse
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => MyCoursePage()),
+          );
         },
       ),
       body: Column(

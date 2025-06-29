@@ -7,6 +7,7 @@ class CustomBottomBar extends StatelessWidget {
   final int cartCount;
   final bool selectAll;
   final ValueChanged<bool?> onSelectAllChanged;
+  final VoidCallback onCheckout;
 
   const CustomBottomBar({
     super.key,
@@ -14,6 +15,7 @@ class CustomBottomBar extends StatelessWidget {
     required this.cartCount,
     required this.selectAll,
     required this.onSelectAllChanged,
+    required this.onCheckout,
   });
 
   @override
@@ -69,7 +71,7 @@ class CustomBottomBar extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: onCheckout,
                     child: Text("Checkout ($cartCount)"),
                   ),
                 ],
