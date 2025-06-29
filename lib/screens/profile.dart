@@ -219,12 +219,14 @@ class _ProfileState extends State<Profile> {
               MenuItem(
                 icon: Icons.logout,
                 title: "Sign Out",
+                iconColor: Colors.red,
+                textColor: Colors.red,
                 trailing: Icon(
                   Icons.arrow_forward_rounded,
                   color:
                       Theme.of(context).brightness == Brightness.dark
                           ? Colors.white
-                          : const Color(0xff324eaf),
+                          : Colors.red,
                   size: 20,
                 ),
                 onTap: () {

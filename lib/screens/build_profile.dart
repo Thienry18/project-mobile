@@ -7,7 +7,6 @@ import 'package:projek_mobile/widgets/gender_picker.dart';
 import 'package:projek_mobile/widgets/profile_image.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 
-// Impor package yang diperlukan
 import 'package:country_picker/country_picker.dart';
 
 class BuildProfile extends StatefulWidget {
@@ -23,7 +22,7 @@ class _BuildProfile extends State<BuildProfile> {
   String dob = '';
   String gender = '';
   String phoneNumber = '';
-  String country = ''; // Variabel ini akan menyimpan nama negara yang dipilih
+  String country = '';
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +115,6 @@ class _BuildProfile extends State<BuildProfile> {
             ),
             SizedBox(height: 15),
 
-            // ===== BAGIAN YANG DIUBAH: DARI DROPDOWN MENJADI CUSTOMTEXTFIELD DENGAN DIALOG =====
             CustomTextField(
               prefixIcon: Icon(Icons.public, color: Color(0xFF7A8EDA)),
               hintText: country.isEmpty ? 'Country' : country,
@@ -124,7 +122,6 @@ class _BuildProfile extends State<BuildProfile> {
               onTap: () {
                 showCountryPicker(
                   context: context,
-                  // Tampilan UI dari dialog
                   countryListTheme: CountryListThemeData(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.0),
@@ -143,7 +140,6 @@ class _BuildProfile extends State<BuildProfile> {
                   ),
                   onSelect: (Country selectedCountry) {
                     setState(() {
-                      // Simpan nama negara yang dipilih ke dalam state
                       country = selectedCountry.name;
                     });
                   },
@@ -151,7 +147,6 @@ class _BuildProfile extends State<BuildProfile> {
               },
             ),
 
-            // ===== AKHIR BAGIAN YANG DIUBAH =====
             SizedBox(height: 30),
             CustomButton(
               text: 'Continue',

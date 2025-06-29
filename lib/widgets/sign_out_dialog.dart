@@ -6,11 +6,8 @@ void signOutDialog(BuildContext context) {
     context: context,
     builder:
         (_) => Center(
-          // supaya ukuran dialog bisa dikontrol
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 320,
-            ), // ubah ukuran di sini
+            constraints: const BoxConstraints(maxWidth: 320),
             child: Material(
               type: MaterialType.transparency,
               child: AlertDialog(
@@ -47,10 +44,7 @@ void signOutDialog(BuildContext context) {
                       children: [
                         OutlinedButton(
                           onPressed: () {
-                            Navigator.of(
-                              context,
-                              rootNavigator: true,
-                            ).pop(); // Tutup dialog
+                            Navigator.of(context, rootNavigator: true).pop();
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.blue,
@@ -63,10 +57,7 @@ void signOutDialog(BuildContext context) {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.of(
-                              context,
-                              rootNavigator: true,
-                            ).pop(); // Tutup dialog dulu
+                            Navigator.of(context, rootNavigator: true).pop();
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (_) => const SignIn()),

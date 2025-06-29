@@ -29,8 +29,7 @@ class SearchBarWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        // Ganti ElevatedButton → FilterMenuButton
-        const FilterMenuButton(), // ini sudah tombol + popup-nya
+        const FilterMenuButton(),
       ],
     );
   }
