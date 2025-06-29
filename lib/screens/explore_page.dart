@@ -49,9 +49,7 @@ class _ExplorePageState extends State<ExplorePage> {
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-          ), // supaya agak masuk ke dalam
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -106,7 +104,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               ListTile(
                 dense: true,
-                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.diamond,
                   color: Color(0xff324eaf),
@@ -135,7 +133,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   size: 16,
                 ),
                 title: Text(
-                  'daily Check-in',
+                  'Daily Check-in',
                   style: GoogleFonts.poppins(
                     color: Color(0xff324eaf),
                     fontSize: 12,
@@ -180,7 +178,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               ListTile(
                 dense: true,
-                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.badge,
                   color: Color(0xff324eaf),
@@ -202,7 +200,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               ListTile(
                 dense: true,
-                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.question_answer,
                   color: Color(0xff324eaf),
@@ -232,7 +230,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               ListTile(
                 dense: true,
-                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.settings,
                   color: Color(0xff324eaf),
@@ -254,7 +252,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               ListTile(
                 dense: true,
-                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.logout, color: Colors.red, size: 16),
                 title: Text(
                   'Sign Out',
@@ -279,20 +277,11 @@ class _ExplorePageState extends State<ExplorePage> {
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ),
         ),
-        title: Text(
-          "What’s New?",
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color:
-                theme.brightness == Brightness.dark
-                    ? Colors.white
-                    : const Color(0xff324eaf),
-          ),
-        ),
+
         actions: [
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,
+            iconColor: Color(0xff324eaf),
             onTap: () {
               Navigator.push(
                 context,
@@ -310,8 +299,6 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
         ],
       ),
-      // ... body and bottomNavigationBar tetap sama seperti sebelumnya
-      // (tidak diubah agar tidak menyalahi batas instruksi "tanpa DrawerHeader")
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 0,
         onTap: (index) {

@@ -178,6 +178,7 @@ class _NotificationPageState extends State<NotificationPage>
         actions: [
           IconCircleButton(
             icon: Icons.search,
+            iconColor: Color(0xff324eaf),
             onTap:
                 () => Navigator.push(
                   context,
@@ -187,6 +188,7 @@ class _NotificationPageState extends State<NotificationPage>
           const SizedBox(width: 10),
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,
+            iconColor: Color(0xff324eaf),
             onTap:
                 () => Navigator.push(
                   context,
@@ -247,6 +249,7 @@ class _NotificationPageState extends State<NotificationPage>
       ),
       floatingActionButton: SpeedDial(
         backgroundColor: const Color(0xff324eaf),
+        foregroundColor: Colors.white,
         icon: isDeleteMode ? Icons.close : Icons.add,
         activeIcon: Icons.close,
         spacing: 10,
@@ -254,9 +257,7 @@ class _NotificationPageState extends State<NotificationPage>
         children: [
           SpeedDialChild(
             child: const Icon(Icons.settings, color: Colors.white),
-            backgroundColor: const Color(0xff4e7fff),
-            labelStyle: const TextStyle(color: Colors.white),
-            labelBackgroundColor: const Color(0xff4e7fff),
+            backgroundColor: const Color(0xff324eaf),
             onTap:
                 () => Navigator.push(
                   context,
@@ -266,10 +267,7 @@ class _NotificationPageState extends State<NotificationPage>
           SpeedDialChild(
             child: const Icon(Icons.delete, color: Colors.white),
             backgroundColor:
-                isDeleteMode ? Colors.red : const Color(0xff4e7fff),
-            labelStyle: const TextStyle(color: Colors.white),
-            labelBackgroundColor:
-                isDeleteMode ? Colors.red : const Color(0xff4e7fff),
+                isDeleteMode ? Colors.red : const Color(0xff324eaf),
             onTap: () {
               if (isDeleteMode && selectedIndexes.isNotEmpty) {
                 _showDeleteConfirmation();
@@ -346,12 +344,12 @@ class _NotificationPageState extends State<NotificationPage>
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
-                      color: isDarkMode ? Colors.white : Colors.black,
+                      color: isDarkMode ? Colors.white : Color(0xff324eaf),
                     ),
                   ),
                 ),
                 if (notif['unread'])
-                  const Icon(Icons.circle, size: 10, color: Colors.green),
+                  const Icon(Icons.circle, size: 12, color: Colors.green),
               ],
             ),
             subtitle: Column(

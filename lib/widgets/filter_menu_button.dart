@@ -45,7 +45,6 @@ class _FilterMenuButtonState extends State<FilterMenuButton> {
       builder:
           (context) => Stack(
             children: [
-              // Area luar menu, klik untuk menutup
               Positioned.fill(
                 child: GestureDetector(
                   onTap: _closeMenu,
@@ -76,9 +75,8 @@ class _FilterMenuButtonState extends State<FilterMenuButton> {
                             title: Text(entry.key),
                             value: entry.value,
                             onChanged: (val) {
-                              setState(() {
-                                priceFilters[entry.key] = val ?? false;
-                              });
+                              priceFilters[entry.key] = val!;
+                              _rebuildMenu();
                             },
                           ),
                         ),
@@ -92,9 +90,8 @@ class _FilterMenuButtonState extends State<FilterMenuButton> {
                             title: Text(entry.key),
                             value: entry.value,
                             onChanged: (val) {
-                              setState(() {
-                                updateStatus[entry.key] = val ?? false;
-                              });
+                              updateStatus[entry.key] = val!;
+                              _rebuildMenu();
                             },
                           ),
                         ),
@@ -108,6 +105,12 @@ class _FilterMenuButtonState extends State<FilterMenuButton> {
     );
 
     Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _rebuildMenu() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    _showMenu();
   }
 
   void _closeMenu() {
