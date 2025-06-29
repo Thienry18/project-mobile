@@ -7,12 +7,14 @@ import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
+import 'package:projek_mobile/screens/favscreen.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/icon_circle_button.dart';
+import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
 
@@ -45,63 +47,272 @@ class _ExplorePageState extends State<ExplorePage> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
+      drawer: Drawer(
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+          ), // supaya agak masuk ke dalam
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Image.asset(
+                  'assets/images/logo.jpg',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const CircleAvatar(
+                radius: 30,
+                backgroundImage: NetworkImage(
+                  'https://i.pravatar.cc/100?img=3',
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey[400],
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  "Basic",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 50),
+              Text(
+                "Account",
+                style: GoogleFonts.poppins(
+                  color: Color(0xFF7A8EDA),
+                  fontSize: 11,
+                ),
+              ),
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                leading: const Icon(
+                  Icons.diamond,
+                  color: Color(0xff324eaf),
+                  size: 16,
+                ),
+                title: Text(
+                  'Upgrade to Premium',
+                  style: GoogleFonts.poppins(
+                    color: Color(0xff324eaf),
+                    fontSize: 12,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ComingSoon()),
+                  );
+                },
+              ),
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(
+                  Icons.checklist_outlined,
+                  color: Color(0xff324eaf),
+                  size: 16,
+                ),
+                title: Text(
+                  'daily Check-in',
+                  style: GoogleFonts.poppins(
+                    color: Color(0xff324eaf),
+                    fontSize: 12,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => CartPage()),
+                  );
+                },
+              ),
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(
+                  Icons.workspace_premium,
+                  color: Color(0xff324eaf),
+                  size: 16,
+                ),
+                title: Text(
+                  'My Certficate',
+                  style: GoogleFonts.poppins(
+                    color: Color(0xff324eaf),
+                    fontSize: 12,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => CartPage()),
+                  );
+                },
+              ),
+              SizedBox(height: 40),
+              Text(
+                'Support',
+                style: GoogleFonts.poppins(
+                  color: Color(0xFF7A8EDA),
+                  fontSize: 11,
+                ),
+              ),
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                leading: const Icon(
+                  Icons.badge,
+                  color: Color(0xff324eaf),
+                  size: 16,
+                ),
+                title: Text(
+                  'Contact Support',
+                  style: GoogleFonts.poppins(
+                    color: Color(0xff324eaf),
+                    fontSize: 12,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ComingSoon()),
+                  );
+                },
+              ),
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                leading: const Icon(
+                  Icons.question_answer,
+                  color: Color(0xff324eaf),
+                  size: 16,
+                ),
+                title: Text(
+                  'Help Center',
+                  style: GoogleFonts.poppins(
+                    color: Color(0xff324eaf),
+                    fontSize: 12,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ComingSoon()),
+                  );
+                },
+              ),
+              SizedBox(height: 40),
+              Text(
+                'More Option',
+                style: GoogleFonts.poppins(
+                  color: Color(0xFF7A8EDA),
+                  fontSize: 12,
+                ),
+              ),
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                leading: const Icon(
+                  Icons.settings,
+                  color: Color(0xff324eaf),
+                  size: 16,
+                ),
+                title: Text(
+                  'Settings',
+                  style: GoogleFonts.poppins(
+                    color: Color(0xff324eaf),
+                    fontSize: 12,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ComingSoon()),
+                  );
+                },
+              ),
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero, // hilangkan padding bawaan
+                leading: const Icon(Icons.logout, color: Colors.red, size: 16),
+                title: Text(
+                  'Sign Out',
+                  style: GoogleFonts.poppins(color: Colors.red, fontSize: 12),
+                ),
+                onTap: () {
+                  signOutDialog(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+
       appBar: AppBar(
         elevation: 0,
         backgroundColor: theme.scaffoldBackgroundColor,
-        title: Row(
-          children: [
-            const CircleAvatar(
-              radius: 22,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/100?img=3'),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              "Hi, Moon!",
-              style: GoogleFonts.poppins(
-                fontSize: 15,
-                color:
-                    Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : const Color(0xff324eaf),
+        leading: Builder(
+          builder:
+              (context) => IconButton(
+                icon: const Icon(Icons.menu, color: Color(0xff324eaf)),
+                onPressed: () => Scaffold.of(context).openDrawer(),
               ),
-            ),
-          ],
+        ),
+        title: Text(
+          "What’s New?",
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color:
+                theme.brightness == Brightness.dark
+                    ? Colors.white
+                    : const Color(0xff324eaf),
+          ),
         ),
         actions: [
-          IconCircleButton(
-            icon: Icons.diamond,
-            iconColor: Colors.blue,
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => ComingSoon()),
-              );
-            },
-          ),
-
-          const SizedBox(width: 10),
-          IconCircleButton(
-            icon: Icons.event_available,
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => ComingSoon()),
-              );
-            },
-          ),
-          const SizedBox(width: 10),
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CartPage()),
+                MaterialPageRoute(builder: (_) => CartPage()),
               );
             },
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: CircleAvatar(
+              radius: 18,
+              backgroundImage: NetworkImage('https://i.pravatar.cc/100?img=3'),
+            ),
+          ),
         ],
       ),
+      // ... body and bottomNavigationBar tetap sama seperti sebelumnya
+      // (tidak diubah agar tidak menyalahi batas instruksi "tanpa DrawerHeader")
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 0,
         onTap: (index) {
@@ -141,7 +352,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color:
-                      Theme.of(context).brightness == Brightness.dark
+                      theme.brightness == Brightness.dark
                           ? Colors.white
                           : const Color(0xff324eaf),
                 ),
@@ -163,14 +374,12 @@ class _ExplorePageState extends State<ExplorePage> {
               const SizedBox(height: 12),
               autoSlideCourseBanner(courses: getTrendingTop5()),
               const SizedBox(height: 30),
-
               if (widget.selectedCategory.isNotEmpty) ...[
                 _buildSectionHeader("Recommended for You"),
                 const SizedBox(height: 12),
                 _buildCourseCardList(getTrendingTop5()),
               ],
               const SizedBox(height: 30),
-
               if (widget.selectedCategory.isNotEmpty &&
                   getRecommendedForYou(categoryselected).isNotEmpty) ...[
                 Row(
@@ -188,8 +397,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             text: "Popular for ",
                             style: TextStyle(
                               color:
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
+                                  theme.brightness == Brightness.dark
                                       ? Colors.white
                                       : const Color(0xff324eaf),
                             ),
@@ -230,7 +438,6 @@ class _ExplorePageState extends State<ExplorePage> {
                 const SizedBox(height: 12),
                 _buildCourseCardList(getRecommendedForYou(categoryselected)),
               ],
-
               const SizedBox(height: 20),
               _buildSectionHeader("Categories"),
               const SizedBox(height: 12),
@@ -416,7 +623,6 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
             ),
           ),
-
           Positioned(
             bottom: 0,
             left: 0,

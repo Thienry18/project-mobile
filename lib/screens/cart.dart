@@ -3,7 +3,11 @@ import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/widgets/cart_item_tile.dart';
+import 'package:projek_mobile/widgets/category_chips.dart';
+import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
+import 'package:projek_mobile/data/my_course_data.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -119,6 +123,7 @@ class _CartPageState extends State<CartPage> {
           SizedBox(width: 16),
         ],
       ),
+
       body: Column(
         children: [
           const SizedBox(height: 10),
@@ -343,7 +348,17 @@ class _CartPageState extends State<CartPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: hasSelected ? () {} : null,
+                    onPressed:
+                        hasSelected
+                            ? () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MyCoursePage(),
+                                ),
+                              );
+                            }
+                            : null,
                     child: Text("Checkout (${selectedItems.length})"),
                   ),
                 ],

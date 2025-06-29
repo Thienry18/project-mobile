@@ -3,14 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/data/my_course_data.dart';
+import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
-import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/icon_circle_button.dart';
+import 'package:projek_mobile/widgets/category_chips.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
@@ -21,11 +23,20 @@ class MyCoursePage extends StatefulWidget {
 
 class _MyCoursePageState extends State<MyCoursePage> {
   final List<String> alllist = ['All', ...categoryList];
-  Set<int> selectedIndex = {0};
+  Set<int> selectedIndexes = {0};
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    final filteredCourses =
+        selectedIndexes.contains(0)
+            ? myCourses
+            : myCourses.where((course) {
+              final selectedCategories =
+                  selectedIndexes.map((i) => categoryList[i - 1]).toList();
+              return selectedCategories.contains(course.category);
+            }).toList();
 
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -65,76 +76,30 @@ class _MyCoursePageState extends State<MyCoursePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CategoryChips(
-              categoryList: alllist,
-              selectedIndexes: selectedIndex,
-              onCategoryToggle: (index) {
-                setState(() {
-                  if (selectedIndex.contains(index)) {
-                    selectedIndex.remove(index);
-                  } else {
-                    selectedIndex.add(index);
-                  }
-                });
-              },
-            ),
-            const SizedBox(height: 32),
-            Center(
-              child: Image.asset('assets/images/empty_course.png', height: 200),
-            ),
-            const SizedBox(height: 24),
-            Center(
-              child: Text(
-                "Find Your Course",
-                style: AppTextStyles.heading.copyWith(
-                  color:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xff324eaf),
+        child:
+            myCourses.isEmpty
+                ? _buildEmptyState(isDarkMode)
+                : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
+                    CategoryChips(
+                      categoryList: alllist,
+                      selectedIndexes: selectedIndexes,
+                      onCategoryToggle: (index) {
+                        setState(() {
+                          if (selectedIndexes.contains(index)) {
+                            selectedIndexes.remove(index);
+                          } else {
+                            selectedIndexes.add(index);
+                          }
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(child: _buildCourseCardList(filteredCourses)),
+                  ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Center(
-              child: Text(
-                "Discover courses you're actually into and start learning in a way that feels easy and fun.",
-                textAlign: TextAlign.center,
-                style: AppTextStyles.subheading.copyWith(
-                  color:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xff324eaf),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("Explore", style: TextStyle(color: Colors.white)),
-                      SizedBox(width: 6),
-                      Icon(Icons.arrow_right_alt, color: Colors.white),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 1,
@@ -166,6 +131,212 @@ class _MyCoursePageState extends State<MyCoursePage> {
           }
         },
       ),
+    );
+  }
+
+  Widget _buildCourseCardList(List<Course> courseList) {
+    return ListView.builder(
+      itemCount: courseList.length,
+      itemBuilder: (context, index) {
+        final course = courseList[index];
+        return Card(
+          color: Colors.white,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 48),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(12),
+                  leading: Image.asset(
+                    course.images,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(
+                    course.title,
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                  ),
+                  subtitle: Text(
+                    course.category,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(10),
+                          ),
+                        ),
+                        builder: (context) => _buildBottomSheet(context),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 8,
+                right: 12,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Continue",
+                        style: GoogleFonts.poppins(color: Colors.white),
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomSheet(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            dense: true,
+            leading: const Icon(Icons.start, color: Color(0xFF324EAF)),
+            title: Text(
+              "Start/Continue Course",
+              style: GoogleFonts.poppins(fontSize: 12),
+            ),
+            onTap: () => Navigator.pop(context),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(
+              Icons.workspace_premium,
+              color: Color(0xFF324EAF),
+            ),
+            title: Text(
+              "View Certificate",
+              style: GoogleFonts.poppins(fontSize: 12),
+            ),
+            onTap: () => Navigator.pop(context),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.schedule, color: Color(0xFF324EAF)),
+            title: Text(
+              "Set Reminder/Schedule",
+              style: GoogleFonts.poppins(fontSize: 12),
+            ),
+            onTap: () => Navigator.pop(context),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.share, color: Color(0xFF324EAF)),
+            title: Text(
+              "Share Course",
+              style: GoogleFonts.poppins(fontSize: 12),
+            ),
+            onTap: () => Navigator.pop(context),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.report, color: Color(0xFF324EAF)),
+            title: Text(
+              "Report a Problem",
+              style: GoogleFonts.poppins(fontSize: 12),
+            ),
+            onTap: () => Navigator.pop(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(bool isDarkMode) {
+    return Column(
+      children: [
+        const SizedBox(height: 32),
+        Center(
+          child: Image.asset('assets/images/empty_course.png', height: 200),
+        ),
+        const SizedBox(height: 24),
+        Center(
+          child: Text(
+            "Find Your Course",
+            style: AppTextStyles.heading.copyWith(
+              color: isDarkMode ? Colors.white : const Color(0xff324eaf),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Center(
+          child: Text(
+            "Discover courses you're actually into and start learning in a way that feels easy and fun.",
+            textAlign: TextAlign.center,
+            style: AppTextStyles.subheading.copyWith(
+              color: isDarkMode ? Colors.white : const Color(0xff324eaf),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Center(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => ExplorePage(selectedCategory: categoryselected),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Explore", style: TextStyle(color: Colors.white)),
+                  SizedBox(width: 6),
+                  Icon(Icons.arrow_right_alt, color: Colors.white),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
