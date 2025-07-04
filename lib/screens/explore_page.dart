@@ -8,6 +8,7 @@ import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/favscreen.dart';
+import 'package:projek_mobile/screens/my_certificate.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -165,7 +166,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => CartPage()),
+                    MaterialPageRoute(builder: (_) => const CertificatePage()),
                   );
                 },
               ),

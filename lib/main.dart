@@ -4,6 +4,7 @@ import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/providers/verify_code_provider.dart';
 // import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/favscreen.dart';
+import 'package:projek_mobile/screens/my_certificate.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeNotifier.themeMode,
-      home: FavScreen(),
+      home: CertificatePage(),
     );
   }
 }
