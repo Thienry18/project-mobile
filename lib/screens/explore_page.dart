@@ -8,7 +8,6 @@ import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/favscreen.dart';
-import 'package:projek_mobile/screens/my_certificate.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -18,6 +17,7 @@ import 'package:projek_mobile/widgets/icon_circle_button.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
+import 'package:projek_mobile/screens/my_certificate.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key, required this.selectedCategory});

@@ -89,6 +89,7 @@ flutter:
     - assets/images/empty_cart.png
     - assets/images/empty_course.png
     - assets/images/notification.png
+    - assets/images/no_orders.png
     - assets/images/card_image/udemy_course.webp  
     - assets/images/card_image/reactjs_code.jpg  
     - assets/images/card_image/python.jpg  
