@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/screens/history.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/widgets/cart_item_tile.dart';
 import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -148,7 +152,9 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  void _handleCheckout() {
+  // Tambahkan di bagian import
+
+  void _handleCheckout() async {
     final selectedItems =
         cartCourses
             .where((item) => selectedIndexes.contains(item.index))
@@ -169,10 +175,83 @@ class _CartPageState extends State<CartPage> {
       _selectAllVisibleItems();
     });
 
+    // Tambahkan notifikasi checkout
+    await _addCheckoutNotification(selectedItems);
+    await _saveToHistory(selectedItems);
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => MyCoursePage()),
     );
+  }
+
+  Future<void> _saveToHistory(List<Course> purchasedCourses) async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('purchase_history');
+    List<Map<String, dynamic>> history = [];
+
+    if (data != null) {
+      history = List<Map<String, dynamic>>.from(jsonDecode(data));
+    }
+
+    for (final course in purchasedCourses) {
+      history.add({
+        'image': course.images,
+        'title': course.title,
+        'rating': course.rating,
+        'price':
+            double.tryParse(course.price.replaceAll(RegExp(r'[^\d.]'), '')) ??
+            0.0,
+        'isBestseller': course.isBestseller,
+        'duration': course.duration,
+        'category': course.category,
+        "status": "completed",
+      });
+    }
+
+    await prefs.setString('purchase_history', jsonEncode(history));
+  }
+
+  Future<void> _addCheckoutNotification(List<Course> purchasedCourses) async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('notifications');
+    List<Map<String, dynamic>> currentNotifications = [];
+
+    if (data != null) {
+      currentNotifications = List<Map<String, dynamic>>.from(
+        jsonDecode(data).map((e) => Map<String, dynamic>.from(e)),
+      );
+    }
+
+    // Ambil URL gambar dari course pertama (pastikan ada)
+    final imageUrl =
+        purchasedCourses.isNotEmpty
+            ? purchasedCourses
+                .first
+                .images // <- pastikan field 'image' berisi URL
+            : null;
+
+    final newNotification = {
+      'title': 'Order Completed!',
+      'message':
+          'Thanks for your purchase! Your course is now available in My Course. Take your time, start whenever you’re ready, and enjoy every step of your learning journey.',
+      'image': imageUrl ?? '', // default ke kosong jika tidak ada
+      'date': _getCurrentFormattedDateTime(),
+      'unread': true,
+      'isNetworkImage': true, // <-- flag penting agar tahu ini network image
+    };
+
+    currentNotifications.insert(0, newNotification);
+    await prefs.setString('notifications', jsonEncode(currentNotifications));
+  }
+
+  String _getCurrentFormattedDateTime() {
+    final now = DateTime.now();
+    final hour = now.hour > 12 ? now.hour - 12 : now.hour;
+    final amPm = now.hour >= 12 ? 'P.M.' : 'A.M.';
+    final formatted =
+        '${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}-${now.year} $hour:${now.minute.toString().padLeft(2, '0')} $amPm';
+    return formatted;
   }
 
   @override
@@ -196,8 +275,19 @@ class _CartPageState extends State<CartPage> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        actions: const [
-          Icon(Icons.qr_code, color: Color(0xFF324EAF)),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HistoryScreen()),
+              );
+            },
+            icon: Icon(
+              Icons.history_toggle_off_outlined,
+              color: Color(0xFF324EAF),
+            ),
+          ),
           SizedBox(width: 16),
         ],
       ),
