@@ -110,7 +110,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.diamond,
-                  color: Color(0xff324eaf),
+                  color: Color(0xff696969),
                   size: 16,
                 ),
                 title: Text(
@@ -133,7 +133,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.checklist_outlined,
-                  color: Color(0xff324eaf),
+                  color: Color(0xff696969),
                   size: 16,
                 ),
                 title: Text(
@@ -156,7 +156,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.workspace_premium,
-                  color: Color(0xff324eaf),
+                  color: Color(0xff696969),
                   size: 16,
                 ),
                 title: Text(
@@ -188,7 +188,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.badge,
-                  color: Color(0xff324eaf),
+                  color: Color(0xff696969),
                   size: 16,
                 ),
                 title: Text(
@@ -211,7 +211,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.question_answer,
-                  color: Color(0xff324eaf),
+                  color: Color(0xff696969),
                   size: 16,
                 ),
                 title: Text(
@@ -243,7 +243,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(
                   Icons.settings,
-                  color: Color(0xff324eaf),
+                  color: Color(0xff696969),
                   size: 16,
                 ),
                 title: Text(
