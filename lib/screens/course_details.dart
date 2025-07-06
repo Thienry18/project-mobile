@@ -10,6 +10,7 @@ class CourseDetailScreen extends StatelessWidget {
   final String rating;
   final String duration;
   final bool isBestseller;
+  final String instructor;
   final List<Course> recommendedCourses;
 
   const CourseDetailScreen({
@@ -20,6 +21,7 @@ class CourseDetailScreen extends StatelessWidget {
     required this.rating,
     required this.duration,
     required this.isBestseller,
+    required this.instructor,
     required this.recommendedCourses,
   });
 
@@ -85,6 +87,8 @@ class CourseDetailScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
+                Text("$instructor", style: AppTextStyles.body),
+                SizedBox(height: 8),
                 _InfoIconText(
                   icon: Icons.schedule,
                   text: duration,
@@ -315,6 +319,9 @@ class CourseDetailScreen extends StatelessWidget {
                     isBestseller: isBestseller,
                     index: DateTime.now().millisecondsSinceEpoch,
                     category: '',
+                    instructor: instructor,
+                    language: 'English',
+                    subtitle: 'Indonesian',
                   );
 
                   if (!cartCourses.any((c) => c.title == course.title)) {
