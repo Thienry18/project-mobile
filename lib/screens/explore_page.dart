@@ -288,7 +288,7 @@ class _ExplorePageState extends State<ExplorePage> {
         leading: Builder(
           builder:
               (context) => IconButton(
-                icon: const Icon(Icons.menu, color: Color(0xff324eaf)),
+                icon: const Icon(Icons.menu, color: Color(0xff696969)),
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ),
         ),
@@ -296,7 +296,7 @@ class _ExplorePageState extends State<ExplorePage> {
         actions: [
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,
-            iconColor: Color(0xff324eaf),
+            iconColor: Color(0xff696969),
             onTap: () {
               Navigator.push(
                 context,
