@@ -50,33 +50,24 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   CustomTextField(
                     labelText: 'Enter your username',
-                    prefixIcon: Icon(Icons.person, color: Color(0xFF7A8EDA)),
+                    prefixIcon: Icon(Icons.person, color: Colors.white),
                   ),
                   SizedBox(height: 16),
                   CustomTextField(
                     labelText: 'Enter your email',
-                    prefixIcon: Icon(
-                      Icons.email_outlined,
-                      color: Color(0xFF7A8EDA),
-                    ),
+                    prefixIcon: Icon(Icons.email_outlined, color: Colors.white),
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 16),
                   CustomTextField(
                     labelText: 'Enter your password',
-                    prefixIcon: Icon(
-                      Icons.lock_outline,
-                      color: Color(0xFF7A8EDA),
-                    ),
+                    prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
                     obscureText: true,
                   ),
                   SizedBox(height: 16),
                   CustomTextField(
                     labelText: 'Re-enter your password',
-                    prefixIcon: Icon(
-                      Icons.lock_outline,
-                      color: Color(0xFF7A8EDA),
-                    ),
+                    prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
                     obscureText: true,
                   ),
                   SizedBox(height: 12),
