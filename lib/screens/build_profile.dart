@@ -32,7 +32,7 @@ class _BuildProfile extends State<BuildProfile> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xFF7A8EDA)),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -68,25 +68,22 @@ class _BuildProfile extends State<BuildProfile> {
             ProfileImage(),
             SizedBox(height: 25),
             CustomTextField(
-              prefixIcon: Icon(Icons.person, color: Color(0xFF7A8EDA)),
+              prefixIcon: Icon(Icons.person, color: Colors.white),
               hintText: 'Username',
               onChanged: (val) => setState(() => username = val),
             ),
             SizedBox(height: 15),
             CustomTextField(
-              prefixIcon: Icon(Icons.badge, color: Color(0xFF7A8EDA)),
+              prefixIcon: Icon(Icons.badge, color: Colors.white),
               hintText: 'Full name',
               onChanged: (val) => setState(() => fullName = val),
             ),
             SizedBox(height: 15),
             CustomTextField(
-              prefixIcon: Icon(Icons.calendar_today, color: Color(0xFF7A8EDA)),
+              prefixIcon: Icon(Icons.calendar_today, color: Colors.white),
               hintText: dob.isEmpty ? 'Date of birth' : dob,
               readOnly: true,
-              suffixIcon: Icon(
-                Icons.keyboard_arrow_down,
-                color: Color(0xFF7A8EDA),
-              ),
+              suffixIcon: Icon(Icons.keyboard_arrow_down, color: Colors.white),
               onTap: () async {
                 DateTime? date = await showDatePicker(
                   context: context,
@@ -108,7 +105,7 @@ class _BuildProfile extends State<BuildProfile> {
             ),
             SizedBox(height: 15),
             CustomTextField(
-              prefixIcon: Icon(Icons.phone, color: Color(0xFF7A8EDA)),
+              prefixIcon: Icon(Icons.phone, color: Colors.white),
               hintText: 'Phone number',
               onChanged: (val) => setState(() => phoneNumber = val),
               keyboardType: TextInputType.phone,
@@ -116,7 +113,7 @@ class _BuildProfile extends State<BuildProfile> {
             SizedBox(height: 15),
 
             CustomTextField(
-              prefixIcon: Icon(Icons.public, color: Color(0xFF7A8EDA)),
+              prefixIcon: Icon(Icons.public, color: Colors.white),
               hintText: country.isEmpty ? 'Country' : country,
               readOnly: true,
               onTap: () {
