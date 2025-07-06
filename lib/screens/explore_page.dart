@@ -7,7 +7,7 @@ import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
-import 'package:projek_mobile/screens/favscreen.dart';
+import 'package:projek_mobile/screens/course_details.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -517,150 +517,176 @@ class _ExplorePageState extends State<ExplorePage> {
     bool isBestseller = false,
   }) {
     final isFavorited = favoriteCourses.contains(index);
-    return Container(
-      width: 151,
-      decoration: BoxDecoration(
-        color: const Color(0xFF324EAF),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
-      ),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.asset(
-              imageUrl,
-              height: 100,
-              width: 151,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned(
-            bottom: 60,
-            left: 8,
-            right: 8,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(Icons.schedule, size: 10, color: Colors.white),
-                    const SizedBox(width: 4),
-                    Text(
-                      duration,
-                      style: GoogleFonts.poppins(
-                        fontSize: 10,
-                        color: Colors.white,
-                      ),
-                    ),
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (_) => CourseDetailScreen(
+                  title: title,
+                  imageUrl: imageUrl,
+                  price: price,
+                  rating: rating,
+                  duration: duration,
+                  isBestseller: isBestseller,
+                  recommendedCourses: [
+                    ...getRecommendedForYou(categoryselected),
                   ],
                 ),
-                const SizedBox(height: 2),
-                Row(
-                  children: [
-                    const Icon(Icons.star, size: 10, color: Colors.yellow),
-                    const SizedBox(width: 4),
-                    Text(
-                      rating,
-                      style: GoogleFonts.poppins(
-                        fontSize: 10,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
           ),
-          Positioned(
-            bottom: 30,
-            right: 8,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  if (isFavorited) {
-                    favoriteCourses.remove(index);
-                    cartCourses.removeWhere((course) => course.index == index);
-                  } else {
-                    favoriteCourses.add(index);
-                    final course = trendingCourses.firstWhere(
-                      (c) => c.index == index,
-                    );
-                    cartCourses.add(course);
-                  }
-                });
-              },
-              child: Icon(
-                isFavorited
-                    ? Icons.shopping_cart
-                    : Icons.shopping_cart_outlined,
-                color: isFavorited ? Colors.green : Colors.white,
-                size: 20,
+        );
+      },
+      child: Container(
+        width: 151,
+        decoration: BoxDecoration(
+          color: const Color(0xFF324EAF),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10),
+              ),
+              child: Image.asset(
+                imageUrl,
+                height: 100,
+                width: 151,
+                fit: BoxFit.cover,
               ),
             ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 5,
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(10),
-                ),
-                color: Color(0xFF324EAF),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Positioned(
+              bottom: 60,
+              left: 8,
+              right: 8,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (isBestseller)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        'Bestseller',
+                  Text(
+                    title,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.schedule, size: 10, color: Colors.white),
+                      const SizedBox(width: 4),
+                      Text(
+                        duration,
                         style: GoogleFonts.poppins(
                           fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF324EAF),
+                          color: Colors.white,
                         ),
                       ),
-                    )
-                  else
-                    const SizedBox(),
-                  Text(
-                    price,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 15,
-                    ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 10, color: Colors.yellow),
+                      const SizedBox(width: 4),
+                      Text(
+                        rating,
+                        style: GoogleFonts.poppins(
+                          fontSize: 10,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 30,
+              right: 8,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    if (isFavorited) {
+                      favoriteCourses.remove(index);
+                      cartCourses.removeWhere(
+                        (course) => course.index == index,
+                      );
+                    } else {
+                      favoriteCourses.add(index);
+                      final course = trendingCourses.firstWhere(
+                        (c) => c.index == index,
+                      );
+                      cartCourses.add(course);
+                    }
+                  });
+                },
+                child: Icon(
+                  isFavorited
+                      ? Icons.shopping_cart
+                      : Icons.shopping_cart_outlined,
+                  color: isFavorited ? Colors.green : Colors.white,
+                  size: 20,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 5,
+              child: Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(10),
+                  ),
+                  color: Color(0xFF324EAF),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (isBestseller)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.yellow,
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          'Bestseller',
+                          style: GoogleFonts.poppins(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF324EAF),
+                          ),
+                        ),
+                      )
+                    else
+                      const SizedBox(),
+                    Text(
+                      price,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
