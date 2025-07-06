@@ -228,49 +228,73 @@ class _MyCoursePageState extends State<MyCoursePage> {
         children: [
           ListTile(
             dense: true,
-            leading: const Icon(Icons.start, color: Color(0xFF324EAF)),
+            leading: const Icon(Icons.start, color: Colors.grey),
             title: Text(
               "Start/Continue Course",
-              style: GoogleFonts.poppins(fontSize: 12),
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Color(0xFF324EAF),
+              ),
             ),
             onTap: () => Navigator.pop(context),
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(
-              Icons.workspace_premium,
-              color: Color(0xFF324EAF),
-            ),
+            leading: const Icon(Icons.workspace_premium, color: Colors.grey),
             title: Text(
               "View Certificate",
-              style: GoogleFonts.poppins(fontSize: 12),
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Color(0xFF324EAF),
+              ),
             ),
             onTap: () => Navigator.pop(context),
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.schedule, color: Color(0xFF324EAF)),
+            leading: const Icon(Icons.schedule, color: Colors.grey),
             title: Text(
               "Set Reminder/Schedule",
-              style: GoogleFonts.poppins(fontSize: 12),
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Color(0xFF324EAF),
+              ),
             ),
             onTap: () => Navigator.pop(context),
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.share, color: Color(0xFF324EAF)),
+            leading: const Icon(Icons.share, color: Colors.grey),
             title: Text(
               "Share Course",
-              style: GoogleFonts.poppins(fontSize: 12),
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Color(0xFF324EAF),
+              ),
             ),
             onTap: () => Navigator.pop(context),
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.report, color: Color(0xFF324EAF)),
+            leading: const Icon(Icons.grid_view, color: Colors.grey),
+            title: Text(
+              "View Course Details",
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Color(0xFF324EAF),
+              ),
+            ),
+            onTap: () => Navigator.pop(context),
+          ),
+          Divider(),
+          ListTile(
+            leading: const Icon(Icons.report, color: Colors.grey),
             title: Text(
               "Report a Problem",
-              style: GoogleFonts.poppins(fontSize: 12),
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Color(0xFF324EAF),
+              ),
             ),
             onTap: () => Navigator.pop(context),
           ),

@@ -27,30 +27,19 @@ class _NotificationPageState extends State<NotificationPage>
   late TabController _tabController;
   bool isDeleteMode = false;
   Set<int> selectedIndexes = {};
-  List<Map<String, dynamic>> notifications = [
-    {
-      'title': 'Order Completed!',
-      'message':
-          'Thanks for your purchase! Your course is now available in My Course. Take your time, start whenever you’re ready, and enjoy every step of your learning journey.',
-      'image': 'assets/images/notification.png',
-      'date': '04-30-2025 2:43 A.M.',
-      'unread': true,
-    },
-    {
-      'title': 'Order Completed!',
-      'message':
-          'Thanks for your purchase! Your course is now available in My Course. Take your time, start whenever you’re ready, and enjoy every step of your learning journey.',
-      'image': 'assets/images/notification.png',
-      'date': '01-04-2025 8:58 A.M.',
-      'unread': false,
-    },
-  ];
+  List<Map<String, dynamic>> notifications = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadNotifications();
+    clearNotifications();
+  }
+
+  Future<void> clearNotifications() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('notifications');
   }
 
   Future<void> _loadNotifications() async {
@@ -63,24 +52,7 @@ class _NotificationPageState extends State<NotificationPage>
         );
       });
     } else {
-      notifications = [
-        {
-          'title': 'Order Completed!',
-          'message':
-              'Thanks for your purchase! Your course is now available in My Course. Take your time, start whenever you’re ready, and enjoy every step of your learning journey.',
-          'image': 'assets/images/notification.png',
-          'date': '04-30-2025 2:43 A.M.',
-          'unread': true,
-        },
-        {
-          'title': 'Order Completed!',
-          'message':
-              'Thanks for your purchase! Your course is now available in My Course. Take your time, start whenever you’re ready, and enjoy every step of your learning journey.',
-          'image': 'assets/images/notification.png',
-          'date': '01-04-2025 8:58 A.M.',
-          'unread': false,
-        },
-      ];
+      notifications = [];
       _saveNotifications();
     }
   }
@@ -334,8 +306,40 @@ class _NotificationPageState extends State<NotificationPage>
             ),
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(notif['image'], width: 50, height: 50),
+              child:
+                  notif['isNetworkImage'] == true
+                      ? Image.network(
+                        notif['image'],
+                        width: 50,
+                        height: 50,
+                        errorBuilder:
+                            (_, __, ___) => Container(
+                              width: 50,
+                              height: 50,
+                              color: Colors.grey,
+                              child: const Icon(
+                                Icons.broken_image,
+                                color: Colors.white,
+                              ),
+                            ),
+                      )
+                      : Image.asset(
+                        notif['image'],
+                        width: 50,
+                        height: 50,
+                        errorBuilder:
+                            (_, __, ___) => Container(
+                              width: 50,
+                              height: 50,
+                              color: Colors.grey,
+                              child: const Icon(
+                                Icons.broken_image,
+                                color: Colors.white,
+                              ),
+                            ),
+                      ),
             ),
+
             title: Row(
               children: [
                 Expanded(

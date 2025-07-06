@@ -17,6 +17,7 @@ import 'package:projek_mobile/widgets/icon_circle_button.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
+import 'package:projek_mobile/screens/my_certificate.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key, required this.selectedCategory});
@@ -165,7 +166,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => CartPage()),
+                    MaterialPageRoute(builder: (_) => const CertificatePage()),
                   );
                 },
               ),
