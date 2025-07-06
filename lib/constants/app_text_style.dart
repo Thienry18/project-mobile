@@ -21,7 +21,7 @@ class AppTextStyles {
   );
 
   static final TextStyle link = GoogleFonts.poppins(
-    color: Colors.green,
+    color: Color(0xFF40CE62),
     fontWeight: FontWeight.bold,
     decoration: TextDecoration.underline,
     decorationColor: Colors.green,
