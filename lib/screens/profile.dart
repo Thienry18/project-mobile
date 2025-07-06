@@ -137,6 +137,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 22),
               MenuItem(
                 icon: Icons.person_outline,
+                iconColor: Color(0XFF696969),
                 title: "Edit Profile",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -147,6 +148,7 @@ class _ProfileState extends State<Profile> {
               ),
               MenuItem(
                 icon: Icons.settings_outlined,
+                iconColor: Color(0XFF696969),
                 title: "Settings",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -177,6 +179,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 25),
               MenuItem(
                 icon: Icons.lock_outline,
+                iconColor: Color(0XFF696969),
                 title: "Privacy",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -187,6 +190,7 @@ class _ProfileState extends State<Profile> {
               ),
               MenuItem(
                 icon: Icons.shield_outlined,
+                iconColor: Color(0XFF696969),
                 title: "Security",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -197,6 +201,7 @@ class _ProfileState extends State<Profile> {
               ),
               MenuItem(
                 icon: Icons.help_outline,
+                iconColor: Color(0XFF696969),
                 title: "FAQ",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -207,6 +212,7 @@ class _ProfileState extends State<Profile> {
               ),
               MenuItem(
                 icon: Icons.info_outline,
+                iconColor: Color(0XFF696969),
                 title: "About App",
                 onTap: () {
                   Navigator.pushReplacement(
