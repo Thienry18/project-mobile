@@ -7,6 +7,9 @@ class Course {
   final bool isBestseller;
   final int index;
   final String category;
+  final String instructor;
+  final String language;
+  final String subtitle;
 
   Course({
     required this.images,
@@ -17,5 +20,8 @@ class Course {
     required this.isBestseller,
     required this.index,
     required this.category,
+    required this.instructor,
+    required this.language,
+    required this.subtitle,
   });
 }
