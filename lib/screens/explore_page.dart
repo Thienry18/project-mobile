@@ -499,6 +499,7 @@ class _ExplorePageState extends State<ExplorePage> {
             title: course.title,
             duration: course.duration,
             rating: course.rating,
+            instructor: course.instructor,
             price: course.price,
             isBestseller: course.isBestseller,
             index: course.index,
@@ -512,6 +513,7 @@ class _ExplorePageState extends State<ExplorePage> {
     required String imageUrl,
     required String title,
     required String duration,
+    required String instructor,
     required String rating,
     required String price,
     required int index,
@@ -532,6 +534,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   rating: rating,
                   duration: duration,
                   isBestseller: isBestseller,
+                  instructor: instructor,
                   recommendedCourses: [
                     ...getRecommendedForYou(categoryselected),
                   ],
