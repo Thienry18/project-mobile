@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projek_mobile/screens/favscreen2.dart';
-import 'package:projek_mobile/widgets/fav_body.dart';
-import 'package:projek_mobile/widgets/fav_button.dart';
+import 'package:projek_mobile/screens/onboarding2.dart';
+import 'package:projek_mobile/widgets/onboarding_body.dart';
+import 'package:projek_mobile/widgets/onboarding_button.dart';
 
 class FavScreen extends StatefulWidget {
   const FavScreen({super.key});

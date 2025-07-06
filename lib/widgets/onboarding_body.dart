@@ -46,7 +46,7 @@ class FavBody extends StatelessWidget {
               children: [
                 Positioned(
                   top: 0,
-                  left: 95,
+                  left: 135,
                   child: Hero(
                     tag: 'circle-shape',
                     child: Container(
@@ -61,7 +61,7 @@ class FavBody extends StatelessWidget {
                 ),
                 Positioned(
                   top: 10,
-                  left: 90,
+                  left: 130,
                   child: Image.asset(image, width: 200, height: 200),
                 ),
               ],

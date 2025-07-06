@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:projek_mobile/screens/favscreen.dart';
-import 'package:projek_mobile/screens/favscreen3.dart';
-import 'package:projek_mobile/widgets/fav_body.dart';
-import 'package:projek_mobile/widgets/fav_button.dart';
+import 'package:projek_mobile/screens/onboarding.dart';
+import 'package:projek_mobile/screens/onboarding3.dart';
+import 'package:projek_mobile/widgets/onboarding_body.dart';
+import 'package:projek_mobile/widgets/onboarding_button.dart';
 
 class FavScreen2 extends StatelessWidget {
   const FavScreen2({super.key});

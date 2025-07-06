@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projek_mobile/providers/password_provider.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/providers/verify_code_provider.dart';
-import 'package:projek_mobile/screens/favscreen.dart';
+import 'package:projek_mobile/screens/onboarding.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 

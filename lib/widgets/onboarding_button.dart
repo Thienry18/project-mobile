@@ -35,7 +35,7 @@ class FavButton extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: Size(106, 34),
+                      minimumSize: Size(106, 45),
                     ),
                     child: Text("Back", style: AppTextStyles.button),
                   ),
@@ -54,7 +54,7 @@ class FavButton extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              minimumSize: Size(106, 34),
+              minimumSize: Size(106, 45),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
