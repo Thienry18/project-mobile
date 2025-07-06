@@ -152,8 +152,6 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  // Tambahkan di bagian import
-
   void _handleCheckout() async {
     final selectedItems =
         cartCourses
@@ -175,7 +173,6 @@ class _CartPageState extends State<CartPage> {
       _selectAllVisibleItems();
     });
 
-    // Tambahkan notifikasi checkout
     await _addCheckoutNotification(selectedItems);
     await _saveToHistory(selectedItems);
 
