@@ -306,7 +306,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
   Widget _buildEmptyState(bool isDarkMode) {
     return Column(
       children: [
-        const SizedBox(height: 32),
+        const SizedBox(height: 100),
         Center(
           child: Image.asset('assets/images/empty_course.png', height: 200),
         ),
