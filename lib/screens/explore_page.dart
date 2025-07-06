@@ -77,7 +77,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey[400],
+                  color: Color(0XFF969696),
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
@@ -101,7 +101,8 @@ class _ExplorePageState extends State<ExplorePage> {
                 "Account",
                 style: GoogleFonts.poppins(
                   color: Color(0xFF7A8EDA),
-                  fontSize: 11,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               ListTile(
@@ -116,7 +117,8 @@ class _ExplorePageState extends State<ExplorePage> {
                   'Upgrade to Premium',
                   style: GoogleFonts.poppins(
                     color: Color(0xff324eaf),
-                    fontSize: 12,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 onTap: () {
@@ -138,7 +140,8 @@ class _ExplorePageState extends State<ExplorePage> {
                   'Daily Check-in',
                   style: GoogleFonts.poppins(
                     color: Color(0xff324eaf),
-                    fontSize: 12,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 onTap: () {
@@ -157,10 +160,11 @@ class _ExplorePageState extends State<ExplorePage> {
                   size: 16,
                 ),
                 title: Text(
-                  'My Certficate',
+                  'My Certificate',
                   style: GoogleFonts.poppins(
-                    color: Color(0xff324eaf),
-                    fontSize: 12,
+                    color: Color(0XFF324EAF),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 onTap: () {
@@ -175,7 +179,8 @@ class _ExplorePageState extends State<ExplorePage> {
                 'Support',
                 style: GoogleFonts.poppins(
                   color: Color(0xFF7A8EDA),
-                  fontSize: 11,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               ListTile(
@@ -190,7 +195,8 @@ class _ExplorePageState extends State<ExplorePage> {
                   'Contact Support',
                   style: GoogleFonts.poppins(
                     color: Color(0xff324eaf),
-                    fontSize: 12,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 onTap: () {
@@ -212,7 +218,8 @@ class _ExplorePageState extends State<ExplorePage> {
                   'Help Center',
                   style: GoogleFonts.poppins(
                     color: Color(0xff324eaf),
-                    fontSize: 12,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 onTap: () {
@@ -228,6 +235,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 style: GoogleFonts.poppins(
                   color: Color(0xFF7A8EDA),
                   fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               ListTile(
@@ -242,7 +250,8 @@ class _ExplorePageState extends State<ExplorePage> {
                   'Settings',
                   style: GoogleFonts.poppins(
                     color: Color(0xff324eaf),
-                    fontSize: 12,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 onTap: () {
@@ -258,7 +267,11 @@ class _ExplorePageState extends State<ExplorePage> {
                 leading: const Icon(Icons.logout, color: Colors.red, size: 16),
                 title: Text(
                   'Sign Out',
-                  style: GoogleFonts.poppins(color: Colors.red, fontSize: 12),
+                  style: GoogleFonts.poppins(
+                    color: Colors.red,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 onTap: () {
                   signOutDialog(context);
