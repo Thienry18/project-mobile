@@ -26,7 +26,7 @@ class GenderPicker extends StatelessWidget {
                 onChanged: onChanged,
                 title: Text('Male', style: AppTextStyles.subheading),
                 secondary: Icon(Icons.male, color: Colors.white, size: 30),
-                fillColor: MaterialStateProperty.all(Colors.white),
+                fillColor: MaterialStateProperty.all(Color(0XFF7A8EDA)),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 5,
                   vertical: 5,
@@ -49,11 +49,7 @@ class GenderPicker extends StatelessWidget {
                 onChanged: onChanged,
                 fillColor: MaterialStateProperty.all(Color(0xFF7A8EDA)),
                 title: Text('Female', style: AppTextStyles.subheading),
-                secondary: Icon(
-                  Icons.female,
-                  color: Color(0xFF7A8EDA),
-                  size: 30,
-                ),
+                secondary: Icon(Icons.female, color: Colors.white, size: 30),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 5,
                   vertical: 5,
