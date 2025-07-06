@@ -71,7 +71,7 @@ class CartItemTile extends StatelessWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
-                    color: Colors.black87,
+                    color: Color(0XFF324EAF),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -83,7 +83,8 @@ class CartItemTile extends StatelessWidget {
                       '${course.rating}',
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Colors.black54,
+                        color: Color(0XFF324EAF),
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     if (course.isBestseller) ...[
@@ -94,14 +95,14 @@ class CartItemTile extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFE066),
+                          color: const Color(0xFFFDFD02),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
                           'Bestseller',
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             color: Color(0xFF324EAF),
                           ),
                         ),

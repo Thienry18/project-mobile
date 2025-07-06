@@ -332,7 +332,10 @@ class _CartPageState extends State<CartPage> {
                     onPressed: _showDeleteConfirmation,
                     child: Text(
                       "Delete (${selectedIndexes.length})",
-                      style: const TextStyle(color: Colors.red),
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
               ],
