@@ -41,6 +41,7 @@ dependencies:
   country_picker: ^2.0.27
   flutter_speed_dial: ^7.0.0
   shared_preferences: ^2.5.3
+  video_player: ^2.7.2
 
 dev_dependencies:
   flutter_test:
@@ -132,6 +133,7 @@ flutter:
     - assets/images/card_image/flutter_beginner.jpeg
     - assets/images/card_image/ts_beginner.jpeg
     - assets/images/certification.png
+    - assets/video/coming_soon.mp4
 
 
 
