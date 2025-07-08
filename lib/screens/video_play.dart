@@ -74,6 +74,36 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       : const CircularProgressIndicator(),
             ),
 
+            // Subtitle & More icons (top right)
+            if (_showControls && _controller.value.isInitialized)
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.subtitles, color: Colors.white),
+                      tooltip: 'Subtitles',
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Subtitle clicked")),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.more_vert, color: Colors.white),
+                      tooltip: 'More options',
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("More options clicked")),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
             // Progress bar (bottom)
             if (_showControls && _controller.value.isInitialized)
               Positioned(
@@ -97,7 +127,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Previous
                     IconButton(
                       icon: const Icon(Icons.skip_previous),
                       color: Colors.white,
@@ -109,8 +138,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       },
                     ),
                     const SizedBox(width: 12),
-
-                    // Rewind 10s
                     IconButton(
                       icon: const Icon(Icons.replay_10),
                       color: Colors.white,
@@ -118,8 +145,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       onPressed: _skipBackward,
                     ),
                     const SizedBox(width: 12),
-
-                    // Play/Pause
                     IconButton(
                       icon: Icon(
                         _controller.value.isPlaying
@@ -137,8 +162,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       },
                     ),
                     const SizedBox(width: 12),
-
-                    // Forward 10s
                     IconButton(
                       icon: const Icon(Icons.forward_10),
                       color: Colors.white,
@@ -146,8 +169,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       onPressed: _skipForward,
                     ),
                     const SizedBox(width: 12),
-
-                    // Next
                     IconButton(
                       icon: const Icon(Icons.skip_next),
                       color: Colors.white,

@@ -39,7 +39,7 @@ class CartItemTile extends StatelessWidget {
           const SizedBox(width: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
+            child: Image.asset(
               course.images,
               width: 60,
               height: 60,
