@@ -57,12 +57,6 @@ class _CertificatePageState extends State<CertificatePage> {
             fontSize: 18,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.grey),
-            onPressed: () {},
-          ),
-        ],
         backgroundColor: Colors.white,
         elevation: 0,
       ),

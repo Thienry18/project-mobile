@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/category.dart';
+import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/cart.dart';
-import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
+import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/screens/video_player.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/icon_circle_button.dart';
@@ -57,9 +58,12 @@ class _MyCoursePageState extends State<MyCoursePage> {
           IconCircleButton(
             icon: Icons.search,
             onTap: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ComingSoon()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => SearchScreen(courseList: trendingCourses),
+                ),
               );
             },
           ),

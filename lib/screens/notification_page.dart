@@ -149,15 +149,6 @@ class _NotificationPageState extends State<NotificationPage>
           ),
         ),
         actions: [
-          IconCircleButton(
-            icon: Icons.search,
-            iconColor: Color(0xff324eaf),
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => ComingSoon()),
-                ),
-          ),
           const SizedBox(width: 10),
           IconCircleButton(
             icon: Icons.shopping_cart_outlined,

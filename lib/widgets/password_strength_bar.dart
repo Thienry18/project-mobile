@@ -17,7 +17,7 @@ class PasswordStrengthBar extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Total width dikurangi margin antar bar (2 * 8)
-        final double barWidth = (constraints.maxWidth - (2 * 8)) / 3;
+        final double barWidth = (constraints.maxWidth - (2 * 13)) / 3;
 
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,

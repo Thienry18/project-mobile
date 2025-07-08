@@ -58,6 +58,12 @@ class _ResetPasswordState extends State<ResetPassword> {
         passwordProvider.hasUppercase;
     final bool canSubmit = isPasswordValid && passwordProvider.passwordsMatch;
 
+    final width = MediaQuery.of(context).size.width;
+    final padding = width < 400 ? 12.0 : 20.0;
+    final imageHeight =
+        width * 0.5 > 350 ? 350.0 : (width * 0.5).clamp(180.0, 350.0);
+    final buttonWidth = width < 400 ? width - 2 * padding : 400.0;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -69,11 +75,17 @@ class _ResetPasswordState extends State<ResetPassword> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: padding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/forgot_password.png', height: 350),
+              SizedBox(height: 10),
+              Image.asset(
+                'assets/images/forgot_password.png',
+                height: imageHeight,
+                width: width,
+                fit: BoxFit.contain,
+              ),
               Text('New Password', style: AppTextStyles.heading),
               const SizedBox(height: 8),
               Text(
@@ -82,7 +94,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                 style: AppTextStyles.subheading.copyWith(fontSize: 10),
               ),
               const SizedBox(height: 30),
-              // KODE DIPERBAIKI DI SINI
               CustomTextField(
                 controller: passwordProvider.passwordController,
                 onChanged: passwordProvider.onPasswordChanged,
@@ -130,7 +141,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                   hasMinLength: passwordProvider.hasMinLength,
                 ),
               const SizedBox(height: 10),
-              // KODE DIPERBAIKI DI SINI
               CustomTextField(
                 focusNode: _confirmFocusNode,
                 controller: passwordProvider.confirmPasswordController,
@@ -169,7 +179,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ),
               const SizedBox(height: 30),
               SizedBox(
-                width: 300,
+                width: buttonWidth,
                 height: 50,
                 child: CustomButton(
                   text: "Change Password",
