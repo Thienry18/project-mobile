@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/models/explore_model.dart';
-import 'package:projek_mobile/screens/video_play.dart'; // sesuaikan path
+import 'package:projek_mobile/screens/video_play.dart'; // Sesuaikan path
 
 class VideoPlayer extends StatelessWidget {
   final Course course;
@@ -40,19 +40,25 @@ class VideoPlayer extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // ExpansionTile
+              // 9 ExpansionTiles
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: ExpansionTile(
-                  title: Text(
-                    'Course Materials',
-                    style: GoogleFonts.poppins(
-                      color: const Color(0xFF324EAF),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  children: [_buildComingSoonTile(context, "Coming Soon", 1)],
+                child: Column(
+                  children: List.generate(9, (index) {
+                    return ExpansionTile(
+                      title: Text(
+                        'Module ${index + 1} - Introduction',
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFF324EAF),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      children: [
+                        _buildComingSoonTile(context, "Coming Soon", index + 1),
+                      ],
+                    );
+                  }),
                 ),
               ),
             ],
