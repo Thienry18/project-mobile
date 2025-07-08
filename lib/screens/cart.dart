@@ -153,17 +153,45 @@ class _CartPageState extends State<CartPage> {
   }
 
   void _handleCheckout() async {
-    final selectedItems =
-        cartCourses
-            .where((item) => selectedIndexes.contains(item.index))
-            .toList();
+    final prefs = await SharedPreferences.getInstance();
 
-    for (final course in selectedItems) {
-      if (!myCourses.any((c) => c.index == course.index)) {
-        myCourses.add(course);
-      }
+    // Ambil riwayat pembelian sebelumnya
+    final historyData = prefs.getString('purchase_history');
+    final List<Map<String, dynamic>> history =
+        historyData != null
+            ? List<Map<String, dynamic>>.from(jsonDecode(historyData))
+            : [];
+
+    // Kumpulkan semua judul course yang pernah dibeli
+    final purchasedTitles = history.map((e) => e['title']).toSet();
+    final myCourseTitles = myCourses.map((e) => e.title).toSet();
+
+    // Ambil item yang dipilih dan belum pernah dibeli
+    final selectedItems =
+        cartCourses.where((item) {
+          final notInHistory = !purchasedTitles.contains(item.title);
+          final notInMyCourses = !myCourseTitles.contains(item.title);
+          return selectedIndexes.contains(item.index) &&
+              notInHistory &&
+              notInMyCourses;
+        }).toList();
+
+    if (selectedItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("No new courses to purchase."),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
     }
 
+    // Tambahkan ke My Courses
+    for (final course in selectedItems) {
+      myCourses.add(course);
+    }
+
+    // Hapus dari cart yang sudah dibeli
     cartCourses.removeWhere((item) => selectedIndexes.contains(item.index));
 
     setState(() {
@@ -173,9 +201,11 @@ class _CartPageState extends State<CartPage> {
       _selectAllVisibleItems();
     });
 
+    // Simpan notifikasi dan history
     await _addCheckoutNotification(selectedItems);
     await _saveToHistory(selectedItems);
 
+    // Pindah ke halaman My Course
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => MyCoursePage()),

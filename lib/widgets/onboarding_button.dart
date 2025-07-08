@@ -8,9 +8,24 @@ class FavButton extends StatelessWidget {
     required this.back,
     required this.next,
   });
+
   final int step;
   final Widget next;
   final Widget back;
+
+  void _navigateWithFade(BuildContext context, Widget destination) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => destination,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 400),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,37 +39,27 @@ class FavButton extends StatelessWidget {
                 child: SizedBox(
                   width: 110,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => back),
-                      );
-                    },
+                    onPressed: () => _navigateWithFade(context, back),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF40CE62),
+                      backgroundColor: const Color(0xFF40CE62),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: Size(106, 45),
+                      minimumSize: const Size(106, 45),
                     ),
                     child: Text("Back", style: AppTextStyles.button),
                   ),
                 ),
               )
-              : SizedBox(),
+              : const SizedBox(),
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => next),
-              );
-            },
+            onPressed: () => _navigateWithFade(context, next),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF324EAF),
+              backgroundColor: const Color(0xFF324EAF),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              minimumSize: Size(106, 45),
+              minimumSize: const Size(106, 45),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -63,10 +68,9 @@ class FavButton extends StatelessWidget {
                   (step != 3) ? "Next" : "Start",
                   style: AppTextStyles.button,
                 ),
-                SizedBox(width: 5),
-                (step == 3)
-                    ? Icon(Icons.arrow_forward_sharp, color: Colors.white)
-                    : SizedBox(),
+                const SizedBox(width: 5),
+                if (step == 3)
+                  const Icon(Icons.arrow_forward_sharp, color: Colors.white),
               ],
             ),
           ),

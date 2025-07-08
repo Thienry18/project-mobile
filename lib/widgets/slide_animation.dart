@@ -17,15 +17,16 @@ Widget autoSlideCourseBanner({
   );
 }
 
+// ...existing code...
 class _AutoSlideCourseBannerWidget extends StatefulWidget {
   final List<Course> courses;
-  final double height;
+  final double? height;
   final double borderRadius;
   final Duration duration;
 
   const _AutoSlideCourseBannerWidget({
     required this.courses,
-    required this.height,
+    this.height,
     required this.borderRadius,
     required this.duration,
   });
@@ -63,111 +64,121 @@ class _AutoSlideCourseBannerWidgetState
   @override
   Widget build(BuildContext context) {
     final course = widget.courses[_currentIndex];
-    return Column(
-      children: [
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 800),
-          transitionBuilder: (child, animation) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          child: ClipRRect(
-            key: ValueKey(course.index),
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            child: Stack(
-              children: [
-                Image.asset(
-                  course.images,
-                  height: widget.height,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  left: 16,
-                  bottom: 16,
-                  right: 16,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        course.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double width = constraints.maxWidth;
+        // Gunakan aspect ratio 16:9 atau fallback ke widget.height jika ada
+        final double height = widget.height ?? width * 9 / 16;
+
+        return Column(
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 800),
+              transitionBuilder: (child, animation) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              child: ClipRRect(
+                key: ValueKey(course.index),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      course.images,
+                      height: height,
+                      width: width,
+                      fit: BoxFit.cover,
+                    ),
+                    Positioned(
+                      left: 16,
+                      bottom: 16,
+                      right: 16,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Colors.yellow,
-                          ),
-                          const SizedBox(width: 4),
                           Text(
-                            course.rating,
+                            course.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.poppins(
                               color: Colors.white,
-                              fontSize: 12,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star,
+                                size: 14,
+                                color: Colors.yellow,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                course.rating,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                if (course.isBestseller)
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        'Bestseller',
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF324EAF),
-                        ),
-                      ),
                     ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(widget.courses.length, (index) {
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: _currentIndex == index ? 12 : 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color:
-                    _currentIndex == index
-                        ? const Color(0xFF324EAF)
-                        : Colors.grey[300],
-                borderRadius: BorderRadius.circular(4),
+                    if (course.isBestseller)
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: const BoxDecoration(
+                            color: Colors.yellow,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            'Bestseller',
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF324EAF),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            );
-          }),
-        ),
-      ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(widget.courses.length, (index) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: _currentIndex == index ? 12 : 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color:
+                        _currentIndex == index
+                            ? const Color(0xFF324EAF)
+                            : Colors.grey[300],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                );
+              }),
+            ),
+          ],
+        );
+      },
     );
   }
 }
+
+// ...existing code...

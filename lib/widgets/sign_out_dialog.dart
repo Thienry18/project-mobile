@@ -4,18 +4,22 @@ import 'package:projek_mobile/screens/sign_in.dart';
 void signOutDialog(BuildContext context) {
   showDialog(
     context: context,
-    builder:
-        (_) => Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 320),
-            child: Material(
-              type: MaterialType.transparency,
-              child: AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                contentPadding: const EdgeInsets.all(20),
-                content: Column(
+    builder: (_) {
+      final maxDialogWidth = MediaQuery.of(context).size.width * 0.9;
+      return Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxDialogWidth < 320 ? maxDialogWidth : 320,
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: const EdgeInsets.all(20),
+              content: SingleChildScrollView(
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
@@ -42,36 +46,43 @@ void signOutDialog(BuildContext context) {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.blue,
-                            side: const BorderSide(color: Colors.blue),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                        Flexible(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.blue,
+                              side: const BorderSide(color: Colors.blue),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
+                            child: const Text('NO'),
                           ),
-                          child: const Text('NO'),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (_) => const SignIn()),
-                              (route) => false,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true).pop();
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const SignIn(),
+                                ),
+                                (route) => false,
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
+                            child: const Text('YES'),
                           ),
-                          child: const Text('YES'),
                         ),
                       ],
                     ),
@@ -81,5 +92,7 @@ void signOutDialog(BuildContext context) {
             ),
           ),
         ),
+      );
+    },
   );
 }

@@ -116,6 +116,9 @@ class InputPin extends StatelessWidget {
                                     builder: (context) => const Success(),
                                   ),
                                 );
+                                provider.pinControllers.forEach(
+                                  (controller) => controller.clear(),
+                                );
                               }
                               : () {},
                     ),

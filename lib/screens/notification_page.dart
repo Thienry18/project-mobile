@@ -138,6 +138,7 @@ class _NotificationPageState extends State<NotificationPage>
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.black : Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: isDarkMode ? Colors.black : Colors.white,
         title: Text(

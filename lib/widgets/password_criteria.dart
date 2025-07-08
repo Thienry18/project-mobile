@@ -27,6 +27,7 @@ class PasswordCriteria extends StatelessWidget {
 
   Widget _buildCriteriaRow(bool isValid, String text) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(
           isValid ? Icons.check_circle : Icons.cancel,
@@ -34,11 +35,14 @@ class PasswordCriteria extends StatelessWidget {
           color: isValid ? Colors.green : const Color(0xff7A8EDA),
         ),
         const SizedBox(width: 5),
-        Text(
-          text,
-          style: GoogleFonts.poppins(
-            fontSize: 11,
-            color: isValid ? Colors.green : const Color(0xff7A8EDA),
+        Flexible(
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(
+              fontSize: 11,
+              color: isValid ? Colors.green : const Color(0xff7A8EDA),
+            ),
+            softWrap: true,
           ),
         ),
       ],

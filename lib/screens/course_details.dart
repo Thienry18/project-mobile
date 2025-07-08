@@ -29,151 +29,158 @@ class CourseDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: const BackButton(color: Colors.black),
         actions: [
-          IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.share), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.favorite_border, color: Colors.black),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.share, color: Colors.black),
+            onPressed: () {},
+          ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            Text(title, style: AppTextStyles.heading.copyWith(fontSize: 20)),
-            const SizedBox(height: 8),
+              Text(title, style: AppTextStyles.heading.copyWith(fontSize: 20)),
+              const SizedBox(height: 8),
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isBestseller)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      'Bestseller',
-                      style: AppTextStyles.subheading.copyWith(
-                        color: Colors.orange,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isBestseller)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        'Bestseller',
+                        style: AppTextStyles.subheading.copyWith(
+                          color: Colors.orange,
+                        ),
                       ),
                     ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        rating,
+                        style: AppTextStyles.body.copyWith(color: Colors.grey),
+                      ),
+                    ],
                   ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      rating,
-                      style: AppTextStyles.body.copyWith(color: Colors.grey),
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text("$instructor", style: AppTextStyles.body),
-                SizedBox(height: 8),
-                _InfoIconText(
-                  icon: Icons.schedule,
-                  text: duration,
-                  textStyle: AppTextStyles.body,
-                ),
-                const SizedBox(height: 8),
-                _InfoIconText(
-                  icon: Icons.language,
-                  text: 'English',
-                  textStyle: AppTextStyles.body,
-                ),
-                const SizedBox(height: 8),
-                _InfoIconText(
-                  icon: Icons.subtitles,
-                  text: 'Available Subtitle: Indonesian',
-                  textStyle: AppTextStyles.body,
-                ),
-                const SizedBox(height: 8),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            Text(
-              'About Course',
-              style: AppTextStyles.heading.copyWith(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-              style: AppTextStyles.body,
-            ),
-
-            const SizedBox(height: 24),
-            Text(
-              'What Skill You\'ll gain',
-              style: AppTextStyles.heading.copyWith(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            bulletText(
-              'Build interactive models using Computer Vision, Convolutional Neural Networks and Natural Language Processing',
-            ),
-            bulletText('Design secure & scalable cloud applications and APIs'),
-            bulletText(
-              'Increase your skills in cloud computing, AI/ML, and integration',
-            ),
-            bulletText(
-              'Understand how to integrate machine learning into tools and operations',
-            ),
-
-            const SizedBox(height: 24),
-
-            Text(
-              'Syllabus',
-              style: AppTextStyles.heading.copyWith(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            ExpansionTile(
-              title: Text(
-                'Module 1 - Introduction',
-                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w500),
-              ),
-              children: [
-                ListTile(
-                  title: Text(
-                    '• Welcome to the course',
+                  const SizedBox(height: 8),
+                  Text(
+                    instructor,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.body,
                   ),
+                  const SizedBox(height: 8),
+                  _InfoIconText(
+                    icon: Icons.schedule,
+                    text: duration,
+                    textStyle: AppTextStyles.body,
+                  ),
+                  const SizedBox(height: 8),
+                  _InfoIconText(
+                    icon: Icons.language,
+                    text: 'English',
+                    textStyle: AppTextStyles.body,
+                  ),
+                  const SizedBox(height: 8),
+                  _InfoIconText(
+                    icon: Icons.subtitles,
+                    text: 'Available Subtitle: Indonesian',
+                    textStyle: AppTextStyles.body,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'About Course',
+                style: AppTextStyles.heading.copyWith(fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                style: AppTextStyles.body,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "What Skill You'll gain",
+                style: AppTextStyles.heading.copyWith(fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              bulletText(
+                'Build interactive models using Computer Vision, Convolutional Neural Networks and Natural Language Processing',
+              ),
+              bulletText(
+                'Design secure & scalable cloud applications and APIs',
+              ),
+              bulletText(
+                'Increase your skills in cloud computing, AI/ML, and integration',
+              ),
+              bulletText(
+                'Understand how to integrate machine learning into tools and operations',
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Syllabus',
+                style: AppTextStyles.heading.copyWith(fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              ExpansionTile(
+                title: Text(
+                  'Module 1 - Introduction',
+                  style: AppTextStyles.body.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                ListTile(
-                  title: Text('• AWS overview', style: AppTextStyles.body),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-            recommendedCourses.isNotEmpty
-                ? Text(
+                children: [
+                  ListTile(
+                    title: Text(
+                      '• Welcome to the course',
+                      style: AppTextStyles.body,
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('• AWS overview', style: AppTextStyles.body),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              if (recommendedCourses.isNotEmpty) ...[
+                Text(
                   'You May Like These Courses',
                   style: AppTextStyles.heading.copyWith(fontSize: 16),
-                )
-                : SizedBox(),
-            const SizedBox(height: 8),
-
-            recommendedCourses.isNotEmpty
-                ? SizedBox(
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
                   height: 230,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
@@ -258,9 +265,10 @@ class CourseDetailScreen extends StatelessWidget {
                       );
                     },
                   ),
-                )
-                : SizedBox(),
-          ],
+                ),
+              ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Container(
@@ -292,7 +300,7 @@ class CourseDetailScreen extends StatelessWidget {
                   style: AppTextStyles.subheading.copyWith(fontSize: 12),
                 ),
                 Text(
-                  '$price',
+                  price,
                   style: AppTextStyles.heading.copyWith(
                     fontSize: 24,
                     color: const Color(0xff324eaf),
@@ -301,10 +309,8 @@ class CourseDetailScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(width: 16),
-
             Container(height: 40, width: 1, color: Colors.grey.shade300),
             const SizedBox(width: 16),
-
             SizedBox(
               height: 42,
               width: 50,
@@ -323,21 +329,14 @@ class CourseDetailScreen extends StatelessWidget {
                     language: 'English',
                     subtitle: 'Indonesian',
                   );
-
                   if (!cartCourses.any((c) => c.title == course.title)) {
                     cartCourses.add(course);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Added to cart'),
-                        duration: Duration(seconds: 2),
-                      ),
+                      const SnackBar(content: Text('Added to cart')),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Already in cart'),
-                        duration: Duration(seconds: 2),
-                      ),
+                      const SnackBar(content: Text('Already in cart')),
                     );
                   }
                 },
@@ -352,9 +351,7 @@ class CourseDetailScreen extends StatelessWidget {
                 child: const Icon(Icons.shopping_cart_outlined, size: 24),
               ),
             ),
-
             const SizedBox(width: 8),
-
             Expanded(
               child: SizedBox(
                 height: 48,
