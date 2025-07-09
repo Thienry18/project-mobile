@@ -27,20 +27,25 @@ class InterestState extends State<Interest> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = 2;
+    final spacing = 10.0;
+    final itemWidth =
+        (screenWidth - (spacing * (crossAxisCount + 1))) / crossAxisCount;
+    final itemHeight = itemWidth + 30;
+    final aspectRatio = itemWidth / itemHeight;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xFF7A8EDA)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF7A8EDA)),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
+          children: const [
             BuildStepCircle(isActive: true),
             BuildStepCircle(isActive: true),
             BuildStepCircle(isActive: false),
@@ -54,18 +59,18 @@ class InterestState extends State<Interest> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('What Interests You?', style: AppTextStyles.heading),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               'Select the tech topics that excite you the most, and we’ll build your journey around what you truly want to explore.',
               style: AppTextStyles.subheading,
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             Expanded(
               child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 1,
-                childAspectRatio: 1.2,
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: spacing,
+                mainAxisSpacing: spacing,
+                childAspectRatio: aspectRatio,
                 children:
                     interestsList.map((interest) {
                       final isSelected = selectedInterest == interest.name;
@@ -75,7 +80,7 @@ class InterestState extends State<Interest> {
                         children: [
                           ChoiceChip(
                             showCheckmark: false,
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             label: ColorFiltered(
                               colorFilter:
                                   isSelected
@@ -83,7 +88,7 @@ class InterestState extends State<Interest> {
                                         Colors.grey.withOpacity(0.6),
                                         BlendMode.srcATop,
                                       )
-                                      : ColorFilter.mode(
+                                      : const ColorFilter.mode(
                                         Colors.transparent,
                                         BlendMode.multiply,
                                       ),
@@ -95,13 +100,13 @@ class InterestState extends State<Interest> {
                             ),
                             selected: isSelected,
                             selectedColor: Colors.green.withOpacity(0.2),
-                            backgroundColor: Color(0xFFE3E8FB),
+                            backgroundColor: const Color(0xFFE3E8FB),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
                             onSelected: (_) => toggleInterest(interest.name),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Text(
                             interest.name,
                             textAlign: TextAlign.center,
@@ -110,7 +115,9 @@ class InterestState extends State<Interest> {
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color:
-                                  isSelected ? Colors.green : Color(0xFF7A8EDA),
+                                  isSelected
+                                      ? Colors.green
+                                      : const Color(0xFF7A8EDA),
                             ),
                           ),
                         ],
@@ -118,7 +125,7 @@ class InterestState extends State<Interest> {
                     }).toList(),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Center(
               child: SizedBox(
                 width: 250,
@@ -130,11 +137,13 @@ class InterestState extends State<Interest> {
                       categoryselected = selectedInterest!;
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => SetPinScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const SetPinScreen(),
+                        ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('Please select at least one interest.'),
                           backgroundColor: Colors.red,
                         ),

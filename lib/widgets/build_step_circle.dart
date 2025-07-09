@@ -7,13 +7,14 @@ class BuildStepCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 120,
-      height: 9,
-      margin: EdgeInsets.symmetric(horizontal: 7),
-      decoration: BoxDecoration(
-        color: isActive ? Colors.green : Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(15),
+    return Expanded(
+      child: Container(
+        height: 9,
+        margin: const EdgeInsets.symmetric(horizontal: 5),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.green : Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(15),
+        ),
       ),
     );
   }

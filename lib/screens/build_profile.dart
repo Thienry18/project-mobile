@@ -6,7 +6,6 @@ import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/gender_picker.dart';
 import 'package:projek_mobile/widgets/profile_image.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
-
 import 'package:country_picker/country_picker.dart';
 
 class BuildProfile extends StatefulWidget {
@@ -38,15 +37,18 @@ class _BuildProfile extends State<BuildProfile> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            BuildStepCircle(isActive: true),
-            BuildStepCircle(isActive: false),
-            BuildStepCircle(isActive: false),
-          ],
+        title: SizedBox(
+          width:
+              double
+                  .infinity, // atau pakai double.infinity di bawah kalau tidak pakai centerTitle
+          child: Row(
+            children: const [
+              BuildStepCircle(isActive: true),
+              BuildStepCircle(isActive: false),
+              BuildStepCircle(isActive: false),
+            ],
+          ),
         ),
-        centerTitle: true,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -67,21 +69,26 @@ class _BuildProfile extends State<BuildProfile> {
                     textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 20),
-                  Center(child: ProfileImage()),
-
+                  const Center(child: ProfileImage()),
                   const SizedBox(height: 25),
+
+                  // Username
                   CustomTextField(
                     prefixIcon: const Icon(Icons.person, color: Colors.white),
                     hintText: 'Username',
                     onChanged: (val) => setState(() => username = val),
                   ),
                   const SizedBox(height: 15),
+
+                  // Full Name
                   CustomTextField(
                     prefixIcon: const Icon(Icons.badge, color: Colors.white),
                     hintText: 'Full name',
                     onChanged: (val) => setState(() => fullName = val),
                   ),
                   const SizedBox(height: 15),
+
+                  // Date of Birth
                   CustomTextField(
                     prefixIcon: const Icon(
                       Icons.calendar_today,
@@ -108,11 +115,15 @@ class _BuildProfile extends State<BuildProfile> {
                     },
                   ),
                   const SizedBox(height: 15),
+
+                  // Gender Picker
                   GenderPicker(
                     gender: gender,
                     onChanged: (val) => setState(() => gender = val ?? ''),
                   ),
                   const SizedBox(height: 15),
+
+                  // Phone Number
                   CustomTextField(
                     prefixIcon: const Icon(Icons.phone, color: Colors.white),
                     hintText: 'Phone number',
@@ -120,6 +131,8 @@ class _BuildProfile extends State<BuildProfile> {
                     keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: 15),
+
+                  // Country Picker
                   CustomTextField(
                     prefixIcon: const Icon(Icons.public, color: Colors.white),
                     hintText: country.isEmpty ? 'Country' : country,
@@ -151,22 +164,28 @@ class _BuildProfile extends State<BuildProfile> {
                       );
                     },
                   ),
-                  const SizedBox(height: 30),
-                  CustomButton(
-                    text: 'Continue',
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Interest(),
-                        ),
-                      );
-                    },
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 80,
+
+                  const Spacer(),
+
+                  // Continue Button
+                  Center(
+                    child: CustomButton(
+                      text: 'Continue',
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Interest(),
+                          ),
+                        );
+                      },
+                      padding: EdgeInsets.symmetric(
+                        vertical: 18,
+                        horizontal: screenWidth * 0.2, // RESPONSIF
+                      ),
                     ),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
