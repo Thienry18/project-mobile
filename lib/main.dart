@@ -4,6 +4,7 @@ import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/verify_code_provider.dart';
 import 'package:projek_mobile/screens/onboarding.dart';
+import 'package:projek_mobile/screens/sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 

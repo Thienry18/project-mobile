@@ -15,7 +15,7 @@ class GenderPicker extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              height: 60,
+              height: 50,
               decoration: BoxDecoration(
                 color: Color(0xFFE3E8FB),
                 borderRadius: BorderRadius.circular(12),
@@ -28,8 +28,8 @@ class GenderPicker extends StatelessWidget {
                 secondary: Icon(Icons.male, color: Colors.white, size: 30),
                 fillColor: MaterialStateProperty.all(Color(0XFF7A8EDA)),
                 contentPadding: EdgeInsets.symmetric(
-                  horizontal: 5,
-                  vertical: 5,
+                  horizontal: 0,
+                  vertical: 0,
                 ),
                 controlAffinity: ListTileControlAffinity.trailing,
               ),
@@ -38,7 +38,7 @@ class GenderPicker extends StatelessWidget {
           SizedBox(width: 10),
           Expanded(
             child: Container(
-              height: 60,
+              height: 50,
               decoration: BoxDecoration(
                 color: Color(0xFFE3E8FB),
                 borderRadius: BorderRadius.circular(12),
@@ -51,8 +51,8 @@ class GenderPicker extends StatelessWidget {
                 title: Text('Female', style: AppTextStyles.subheading),
                 secondary: Icon(Icons.female, color: Colors.white, size: 30),
                 contentPadding: EdgeInsets.symmetric(
-                  horizontal: 5,
-                  vertical: 5,
+                  horizontal: 0,
+                  vertical: 0,
                 ),
                 controlAffinity: ListTileControlAffinity.trailing,
               ),

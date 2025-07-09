@@ -52,7 +52,7 @@ class _ExplorePageState extends State<ExplorePage> {
       backgroundColor: theme.scaffoldBackgroundColor,
       drawer: Drawer(
         backgroundColor: Colors.white,
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,6 @@ class _ExplorePageState extends State<ExplorePage> {
                   );
                 },
               ),
-
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -289,6 +288,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   signOutDialog(context);
                 },
               ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -383,7 +383,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               const SizedBox(height: 20),
               SearchBarWidget(),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
@@ -393,7 +393,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               _buildSectionHeader("Trending Now"),
               const SizedBox(height: 12),
               autoSlideCourseBanner(courses: getTrendingTop5()),

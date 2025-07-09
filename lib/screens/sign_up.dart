@@ -36,12 +36,15 @@ class _SignUpState extends State<SignUp> {
             ),
             Center(child: Text("Sign Up", style: AppTextStyles.heading)),
             SizedBox(height: 8),
-            Center(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
                 "Registration with your email and sign up to continue using our app.",
                 style: AppTextStyles.subheading,
+                textAlign: TextAlign.center,
               ),
             ),
+
             SizedBox(height: 32),
             LoginTabBar(isSignIn: false),
             Padding(
@@ -137,8 +140,8 @@ class _SignUpState extends State<SignUp> {
                       );
                     },
                     padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 80,
+                      vertical: 10,
+                      horizontal: 70,
                     ),
                   ),
                   SizedBox(height: 24),

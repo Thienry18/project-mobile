@@ -105,7 +105,7 @@ class InputPin extends StatelessWidget {
                       text: "Continue",
                       padding: const EdgeInsets.symmetric(
                         horizontal: 80,
-                        vertical: 15,
+                        vertical: 5,
                       ),
                       onPressed:
                           provider.isPinComplete()

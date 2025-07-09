@@ -159,8 +159,8 @@ class _SignInState extends State<SignIn> {
                             );
                           },
                           padding: const EdgeInsets.symmetric(
-                            vertical: 18,
-                            horizontal: 80,
+                            vertical: 10,
+                            horizontal: 70,
                           ),
                         ),
                         const SizedBox(height: 24),

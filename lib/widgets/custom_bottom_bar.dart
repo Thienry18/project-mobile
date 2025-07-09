@@ -112,7 +112,7 @@ class CustomBottomBar extends StatelessWidget {
                       backgroundColor: const Color(0xFF00C569),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
-                        vertical: 16,
+                        vertical: 10,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

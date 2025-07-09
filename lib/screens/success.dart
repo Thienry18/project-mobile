@@ -24,7 +24,7 @@ class Success extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('images/gif/setup.gif'),
+            Image.asset('assets/images/gif/setup.gif'),
             SizedBox(height: 30),
             Text('Setup Complete!', style: AppTextStyles.heading),
             SizedBox(height: 10),

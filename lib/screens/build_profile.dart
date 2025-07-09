@@ -121,7 +121,6 @@ class _BuildProfile extends State<BuildProfile> {
                     gender: gender,
                     onChanged: (val) => setState(() => gender = val ?? ''),
                   ),
-                  const SizedBox(height: 15),
 
                   // Phone Number
                   CustomTextField(
@@ -165,7 +164,7 @@ class _BuildProfile extends State<BuildProfile> {
                     },
                   ),
 
-                  const Spacer(),
+                  const SizedBox(height: 15),
 
                   // Continue Button
                   Center(
@@ -180,7 +179,7 @@ class _BuildProfile extends State<BuildProfile> {
                         );
                       },
                       padding: EdgeInsets.symmetric(
-                        vertical: 18,
+                        vertical: 10,
                         horizontal: screenWidth * 0.2, // RESPONSIF
                       ),
                     ),

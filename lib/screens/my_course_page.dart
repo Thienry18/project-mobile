@@ -15,6 +15,7 @@ import 'package:projek_mobile/screens/video_player.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/icon_circle_button.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
+import 'package:projek_mobile/widgets/share_button.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
@@ -181,7 +182,9 @@ class _MyCoursePageState extends State<MyCoursePage> {
                             top: Radius.circular(10),
                           ),
                         ),
-                        builder: (context) => _buildBottomSheet(context),
+                        builder:
+                            (context) =>
+                                _buildBottomSheet(context, course.title),
                       );
                     },
                   ),
@@ -233,85 +236,93 @@ class _MyCoursePageState extends State<MyCoursePage> {
     );
   }
 
-  Widget _buildBottomSheet(BuildContext context) {
+  Widget _buildBottomSheet(BuildContext context, String courseTitle) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            dense: true,
-            leading: const Icon(Icons.start, color: Colors.grey),
-            title: Text(
-              "Start/Continue Course",
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Color(0xFF324EAF),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              dense: true,
+              leading: const Icon(Icons.start, color: Colors.grey),
+              title: Text(
+                "Start/Continue Course",
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xFF324EAF),
+                ),
               ),
+              onTap: () => Navigator.pop(context),
             ),
-            onTap: () => Navigator.pop(context),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.workspace_premium, color: Colors.grey),
-            title: Text(
-              "View Certificate",
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Color(0xFF324EAF),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.workspace_premium, color: Colors.grey),
+              title: Text(
+                "View Certificate",
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xFF324EAF),
+                ),
               ),
+              onTap: () => Navigator.pop(context),
             ),
-            onTap: () => Navigator.pop(context),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.schedule, color: Colors.grey),
-            title: Text(
-              "Set Reminder/Schedule",
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Color(0xFF324EAF),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.schedule, color: Colors.grey),
+              title: Text(
+                "Set Reminder/Schedule",
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xFF324EAF),
+                ),
               ),
+              onTap: () => Navigator.pop(context),
             ),
-            onTap: () => Navigator.pop(context),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.share, color: Colors.grey),
-            title: Text(
-              "Share Course",
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Color(0xFF324EAF),
+            const Divider(),
+
+            // 🔽 Replace this with ShareButton custom widget
+            ListTile(
+              leading: const Icon(Icons.share, color: Colors.grey),
+              title: Text(
+                "Share Course",
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xFF324EAF),
+                ),
               ),
+              onTap: () {
+                Navigator.pop(context); // tutup bottom sheet
+                showShareOptions(context, courseTitle); // panggil fungsi global
+              },
             ),
-            onTap: () => Navigator.pop(context),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.grid_view, color: Colors.grey),
-            title: Text(
-              "View Course Details",
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Color(0xFF324EAF),
+
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.grid_view, color: Colors.grey),
+              title: Text(
+                "View Course Details",
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xFF324EAF),
+                ),
               ),
+              onTap: () => Navigator.pop(context),
             ),
-            onTap: () => Navigator.pop(context),
-          ),
-          Divider(),
-          ListTile(
-            leading: const Icon(Icons.report, color: Colors.grey),
-            title: Text(
-              "Report a Problem",
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Color(0xFF324EAF),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.report, color: Colors.grey),
+              title: Text(
+                "Report a Problem",
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xFF324EAF),
+                ),
               ),
+              onTap: () => Navigator.pop(context),
             ),
-            onTap: () => Navigator.pop(context),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
