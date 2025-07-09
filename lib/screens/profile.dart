@@ -12,6 +12,9 @@ import 'package:projek_mobile/widgets/menu_item.dart';
 import 'package:projek_mobile/widgets/toggle_item.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:projek_mobile/providers/profile_image_provider.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -25,6 +28,14 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _pickImage(BuildContext context) async {
+      final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (picked != null) {
+        final imageFile = File(picked.path);
+        context.read<ProfileImageProvider>().setImage(imageFile);
+      }
+    }
+
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
       body: SafeArea(
@@ -88,7 +99,22 @@ class _ProfileState extends State<Profile> {
               Center(
                 child: Column(
                   children: [
-                    const CircleAvatar(radius: 70),
+                    Consumer<ProfileImageProvider>(
+                      builder: (context, profileImageProvider, _) {
+                        final imageFile = profileImageProvider.image;
+                        return CircleAvatar(
+                          radius: 70,
+                          backgroundImage:
+                              imageFile != null
+                                  ? FileImage(imageFile)
+                                  : const AssetImage(
+                                        "assets/images/default_profile.png",
+                                      )
+                                      as ImageProvider, // fallback image
+                        );
+                      },
+                    ),
+
                     const SizedBox(height: 13),
                     Container(
                       padding: const EdgeInsets.symmetric(

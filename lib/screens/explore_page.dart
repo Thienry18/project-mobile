@@ -5,6 +5,7 @@ import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/course_details.dart';
@@ -18,6 +19,7 @@ import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
 import 'package:projek_mobile/screens/my_certificate.dart';
+import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key, required this.selectedCategory});
@@ -64,12 +66,22 @@ class _ExplorePageState extends State<ExplorePage> {
                   fit: BoxFit.contain,
                 ),
               ),
-              const CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(
-                  'https://i.pravatar.cc/100?img=3',
-                ),
+              Consumer<ProfileImageProvider>(
+                builder: (context, profileImageProvider, _) {
+                  final imageFile = profileImageProvider.image;
+                  return CircleAvatar(
+                    radius: 30,
+                    backgroundImage:
+                        imageFile != null
+                            ? FileImage(imageFile)
+                            : const AssetImage(
+                                  "assets/images/default_profile.png",
+                                )
+                                as ImageProvider,
+                  );
+                },
               ),
+
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -305,12 +317,23 @@ class _ExplorePageState extends State<ExplorePage> {
             },
           ),
           const SizedBox(width: 8),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/100?img=3'),
-            ),
+          Consumer<ProfileImageProvider>(
+            builder: (context, profileImageProvider, _) {
+              final imageFile = profileImageProvider.image;
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundImage:
+                      imageFile != null
+                          ? FileImage(imageFile)
+                          : const AssetImage(
+                                "assets/images/default_profile.png",
+                              )
+                              as ImageProvider,
+                ),
+              );
+            },
           ),
         ],
       ),

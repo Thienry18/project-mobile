@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/providers/password_provider.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
+import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/verify_code_provider.dart';
 import 'package:projek_mobile/screens/onboarding.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => VerifyCodeProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileImageProvider()),
         ChangeNotifierProvider(create: (_) => SetPinProvider()),
         ChangeNotifierProvider(create: (_) => PasswordProvider()),
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
