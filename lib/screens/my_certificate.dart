@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/explore_page.dart'; // untuk tombol Explore
 import 'package:projek_mobile/widgets/category_chips.dart';
+import 'package:provider/provider.dart';
 
 class CertificatePage extends StatefulWidget {
   const CertificatePage({super.key});
@@ -39,12 +41,14 @@ class _CertificatePageState extends State<CertificatePage> {
                   selectedIndexes.map((i) => categoryList[i - 1]).toList();
               return selectedCategories.contains(course.category);
             }).toList();
-
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: isDarkMode ? Colors.black : Color(0xFF324EAF),
+        foregroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF324EAF)),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -52,16 +56,15 @@ class _CertificatePageState extends State<CertificatePage> {
         title: Text(
           'My Certificate',
           style: GoogleFonts.poppins(
-            color: const Color(0xFF324EAF),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
         ),
-        backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         child: Column(
           children: [
             CategoryChips(

@@ -140,11 +140,11 @@ class _NotificationPageState extends State<NotificationPage>
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        backgroundColor: isDarkMode ? Colors.black : const Color(0xff324eaf),
         title: Text(
           "Notification",
           style: GoogleFonts.poppins(
-            color: isDarkMode ? Colors.white : const Color(0xFF324EAF),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -165,7 +165,7 @@ class _NotificationPageState extends State<NotificationPage>
           controller: _tabController,
           labelColor: const Color(0xff324eaf),
           unselectedLabelColor: Colors.grey,
-          indicatorColor: const Color(0xff324eaf),
+          // indicatorColor: const Color(0xff324eaf),
           tabs: const [
             Tab(icon: Icon(Icons.mail_outline), text: 'All'),
             Tab(icon: Icon(Icons.mark_email_unread_outlined), text: 'Unread'),

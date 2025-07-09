@@ -6,6 +6,7 @@ import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/course_details.dart';
@@ -35,6 +36,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     final theme = Theme.of(context);
 
     List<Course> filteredCourses =
@@ -49,7 +51,8 @@ class _ExplorePageState extends State<ExplorePage> {
             : trendingCourses;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor:
+          isDarkMode ? Colors.black : theme.scaffoldBackgroundColor,
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: SingleChildScrollView(
@@ -296,19 +299,19 @@ class _ExplorePageState extends State<ExplorePage> {
 
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: isDarkMode ? Colors.black : Color(0xff324eaf),
         leading: Builder(
           builder:
               (context) => IconButton(
-                icon: const Icon(Icons.menu, color: Color(0xff696969)),
+                icon: const Icon(Icons.menu, color: Colors.white),
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ),
         ),
 
         actions: [
           IconCircleButton(
-            icon: Icons.shopping_cart_outlined,
-            iconColor: Color(0xff696969),
+            icon: Icons.shopping_bag_sharp,
+            iconColor: Colors.white,
             onTap: () {
               Navigator.push(
                 context,

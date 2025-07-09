@@ -36,16 +36,18 @@ class InterestState extends State<Interest> {
     final aspectRatio = itemWidth / itemHeight;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF7A8EDA)),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).iconTheme.color,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Row(
-          children: const [
+        title: const Row(
+          children: [
             BuildStepCircle(isActive: true),
             BuildStepCircle(isActive: true),
             BuildStepCircle(isActive: false),
@@ -117,7 +119,10 @@ class InterestState extends State<Interest> {
                               color:
                                   isSelected
                                       ? Colors.green
-                                      : const Color(0xFF7A8EDA),
+                                      : Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium?.color ??
+                                          const Color(0xFF7A8EDA),
                             ),
                           ),
                         ],
