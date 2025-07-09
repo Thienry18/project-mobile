@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/widgets/share_button.dart'; // pastikan path ini sesuai
 
 class CourseDetailScreen extends StatelessWidget {
   final String title;
@@ -29,246 +30,167 @@ class CourseDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: const BackButton(color: Colors.black),
+        leading: const BackButton(),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.share, color: Colors.black),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
+          ShareButton(courseTitle: title), // Custom Share Button
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(imageUrl, fit: BoxFit.cover, width: double.infinity),
+            ),
+            const SizedBox(height: 16),
+            Text(title, style: AppTextStyles.heading.copyWith(fontSize: 20)),
+            const SizedBox(height: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isBestseller)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      'Bestseller',
+                      style: AppTextStyles.subheading.copyWith(color: Colors.orange),
+                    ),
+                  ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.star, color: Colors.amber, size: 16),
+                    const SizedBox(width: 4),
+                    Text(rating, style: AppTextStyles.body.copyWith(color: Colors.grey)),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 16),
-
-              Text(title, style: AppTextStyles.heading.copyWith(fontSize: 20)),
-              const SizedBox(height: 8),
-
+                const SizedBox(height: 8),
+                Text(instructor, style: AppTextStyles.body),
+                const SizedBox(height: 8),
+                _InfoIconText(icon: Icons.schedule, text: duration, textStyle: AppTextStyles.body),
+                const SizedBox(height: 8),
+                _InfoIconText(icon: Icons.language, text: 'English', textStyle: AppTextStyles.body),
+                const SizedBox(height: 8),
+                _InfoIconText(icon: Icons.subtitles, text: 'Available Subtitle: Indonesian', textStyle: AppTextStyles.body),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Text('About Course', style: AppTextStyles.heading.copyWith(fontSize: 16)),
+            const SizedBox(height: 8),
+            Text(
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+              style: AppTextStyles.body,
+            ),
+            const SizedBox(height: 24),
+            Text('What Skill You\'ll gain', style: AppTextStyles.heading.copyWith(fontSize: 16)),
+            const SizedBox(height: 8),
+            bulletText('Build interactive models using CV, CNN, and NLP'),
+            bulletText('Design secure & scalable cloud applications'),
+            bulletText('Increase your skills in cloud computing & ML'),
+            bulletText('Integrate machine learning into operations'),
+            const SizedBox(height: 24),
+            Text('Syllabus', style: AppTextStyles.heading.copyWith(fontSize: 16)),
+            const SizedBox(height: 8),
+            ExpansionTile(
+              title: Text('Module 1 - Introduction', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w500)),
+              children: [
+                ListTile(title: Text('• Welcome to the course', style: AppTextStyles.body)),
+                ListTile(title: Text('• AWS overview', style: AppTextStyles.body)),
+              ],
+            ),
+            const SizedBox(height: 24),
+            if (recommendedCourses.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (isBestseller)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        'Bestseller',
-                        style: AppTextStyles.subheading.copyWith(
-                          color: Colors.orange,
-                        ),
-                      ),
+                  Text('You May Like These Courses', style: AppTextStyles.heading.copyWith(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 230,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: recommendedCourses.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final course = recommendedCourses[index];
+                        return Container(
+                          width: 160,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(12),
+                                  topRight: Radius.circular(12),
+                                ),
+                                child: Image.network(
+                                  course.images,
+                                  height: 100,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (course.isBestseller)
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.yellow[100],
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        child: Text('Bestseller', style: AppTextStyles.subheading.copyWith(color: Colors.orange)),
+                                      ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      course.title,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTextStyles.body.copyWith(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      course.price,
+                                      style: AppTextStyles.heading.copyWith(fontSize: 14, color: Colors.blue),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
-                      const SizedBox(width: 4),
-                      Text(
-                        rating,
-                        style: AppTextStyles.body.copyWith(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    instructor,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.body,
-                  ),
-                  const SizedBox(height: 8),
-                  _InfoIconText(
-                    icon: Icons.schedule,
-                    text: duration,
-                    textStyle: AppTextStyles.body,
-                  ),
-                  const SizedBox(height: 8),
-                  _InfoIconText(
-                    icon: Icons.language,
-                    text: 'English',
-                    textStyle: AppTextStyles.body,
-                  ),
-                  const SizedBox(height: 8),
-                  _InfoIconText(
-                    icon: Icons.subtitles,
-                    text: 'Available Subtitle: Indonesian',
-                    textStyle: AppTextStyles.body,
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              Text(
-                'About Course',
-                style: AppTextStyles.heading.copyWith(fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                style: AppTextStyles.body,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                "What Skill You'll gain",
-                style: AppTextStyles.heading.copyWith(fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              bulletText(
-                'Build interactive models using Computer Vision, Convolutional Neural Networks and Natural Language Processing',
-              ),
-              bulletText(
-                'Design secure & scalable cloud applications and APIs',
-              ),
-              bulletText(
-                'Increase your skills in cloud computing, AI/ML, and integration',
-              ),
-              bulletText(
-                'Understand how to integrate machine learning into tools and operations',
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Syllabus',
-                style: AppTextStyles.heading.copyWith(fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              ExpansionTile(
-                title: Text(
-                  'Module 1 - Introduction',
-                  style: AppTextStyles.body.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                children: [
-                  ListTile(
-                    title: Text(
-                      '• Welcome to the course',
-                      style: AppTextStyles.body,
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('• AWS overview', style: AppTextStyles.body),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              if (recommendedCourses.isNotEmpty) ...[
-                Text(
-                  'You May Like These Courses',
-                  style: AppTextStyles.heading.copyWith(fontSize: 16),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  height: 230,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: recommendedCourses.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 12),
-                    itemBuilder: (context, index) {
-                      final course = recommendedCourses[index];
-                      return Container(
-                        width: 160,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade300),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ),
-                              child: Image.network(
-                                course.images,
-                                height: 100,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (course.isBestseller)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.yellow[100],
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text(
-                                        'Bestseller',
-                                        style: AppTextStyles.subheading
-                                            .copyWith(color: Colors.orange),
-                                      ),
-                                    ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    course.title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppTextStyles.body.copyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    '${course.price}',
-                                    style: AppTextStyles.heading.copyWith(
-                                      fontSize: 14,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ],
-          ),
+          ],
         ),
       ),
       bottomNavigationBar: Container(
@@ -276,10 +198,7 @@ class CourseDetailScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(top: BorderSide(color: Colors.grey.shade300)),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -295,16 +214,10 @@ class CourseDetailScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Price',
-                  style: AppTextStyles.subheading.copyWith(fontSize: 12),
-                ),
+                Text('Price', style: AppTextStyles.subheading.copyWith(fontSize: 12)),
                 Text(
                   price,
-                  style: AppTextStyles.heading.copyWith(
-                    fontSize: 24,
-                    color: const Color(0xff324eaf),
-                  ),
+                  style: AppTextStyles.heading.copyWith(fontSize: 24, color: const Color(0xff324eaf)),
                 ),
               ],
             ),
@@ -329,23 +242,22 @@ class CourseDetailScreen extends StatelessWidget {
                     language: 'English',
                     subtitle: 'Indonesian',
                   );
+
                   if (!cartCourses.any((c) => c.title == course.title)) {
                     cartCourses.add(course);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Added to cart')),
+                      const SnackBar(content: Text('Added to cart'), duration: Duration(seconds: 2)),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Already in cart')),
+                      const SnackBar(content: Text('Already in cart'), duration: Duration(seconds: 2)),
                     );
                   }
                 },
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Colors.green),
                   foregroundColor: Colors.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   padding: EdgeInsets.zero,
                 ),
                 child: const Icon(Icons.shopping_cart_outlined, size: 24),
@@ -359,9 +271,7 @@ class CourseDetailScreen extends StatelessWidget {
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff32CD32),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                     foregroundColor: Colors.white,
                   ),
@@ -380,13 +290,7 @@ class CourseDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         children: [
-          Text(
-            '• ',
-            style: AppTextStyles.body.copyWith(
-              fontSize: 18,
-              color: Colors.black87,
-            ),
-          ),
+          Text('• ', style: AppTextStyles.body.copyWith(fontSize: 18, color: Colors.black87)),
           Expanded(child: Text(text, style: AppTextStyles.body)),
         ],
       ),
@@ -413,7 +317,7 @@ class _InfoIconText extends StatelessWidget {
         Icon(icon, size: 16, color: Colors.grey[700]),
         const SizedBox(width: 4),
         Text(text, style: textStyle),
-      ],
-    );
-  }
+     ],
+);
+}
 }
