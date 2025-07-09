@@ -5,11 +5,13 @@ import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/history.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/widgets/cart_item_tile.dart';
 import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPage extends StatefulWidget {
@@ -284,23 +286,19 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     final cartItems = _getFilteredCartItems();
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     final isEmpty = cartItems.isEmpty;
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'My Cart',
-          style: TextStyle(
-            color: Color(0xFF324EAF),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        backgroundColor: isDarkMode ? Colors.black : const Color(0xFF324EAF),
+        foregroundColor: Colors.white,
+        title: const Text('My Cart'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF324EAF)),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.white,
         elevation: 0,
         actions: [
           IconButton(
@@ -310,10 +308,7 @@ class _CartPageState extends State<CartPage> {
                 MaterialPageRoute(builder: (context) => HistoryScreen()),
               );
             },
-            icon: Icon(
-              Icons.history_toggle_off_outlined,
-              color: Color(0xFF324EAF),
-            ),
+            icon: Icon(Icons.history_toggle_off_outlined, color: Colors.white),
           ),
           SizedBox(width: 16),
         ],

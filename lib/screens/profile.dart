@@ -1,20 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/providers/profile_image_provider.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
-import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/menu_item.dart';
+import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/toggle_item.dart';
 import 'package:provider/provider.dart';
-import 'package:projek_mobile/providers/theme_provider.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:projek_mobile/providers/profile_image_provider.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -37,64 +38,43 @@ class _ProfileState extends State<Profile> {
     }
 
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor:
+            themeNotifier.isDarkMode ? Colors.black : const Color(0xff324eaf),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          "Profile",
+          style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w700),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.diamond, color: Colors.blueAccent, size: 28),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => ComingSoon()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart_outlined, size: 28),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CartPage()),
+              );
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Profile",
-                      style: GoogleFonts.poppins(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : const Color(0xff324eaf),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ComingSoon(),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.diamond,
-                            color: Colors.blueAccent,
-                            size: 28,
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CartPage(),
-                              ),
-                            );
-                          },
-                          child: Icon(Icons.shopping_cart_outlined, size: 28),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(height: 12),
               Center(
                 child: Column(
@@ -110,11 +90,10 @@ class _ProfileState extends State<Profile> {
                                   : const AssetImage(
                                         "assets/images/default_profile.png",
                                       )
-                                      as ImageProvider, // fallback image
+                                      as ImageProvider,
                         );
                       },
                     ),
-
                     const SizedBox(height: 13),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -163,7 +142,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 22),
               MenuItem(
                 icon: Icons.person_outline,
-                iconColor: Color(0XFF696969),
+                iconColor: const Color(0XFF696969),
                 title: "Edit Profile",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -174,7 +153,7 @@ class _ProfileState extends State<Profile> {
               ),
               MenuItem(
                 icon: Icons.settings_outlined,
-                iconColor: Color(0XFF696969),
+                iconColor: const Color(0XFF696969),
                 title: "Settings",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -205,7 +184,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 25),
               MenuItem(
                 icon: Icons.lock_outline,
-                iconColor: Color(0XFF696969),
+                iconColor: const Color(0XFF696969),
                 title: "Privacy",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -216,7 +195,7 @@ class _ProfileState extends State<Profile> {
               ),
               MenuItem(
                 icon: Icons.shield_outlined,
-                iconColor: Color(0XFF696969),
+                iconColor: const Color(0XFF696969),
                 title: "Security",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -227,7 +206,7 @@ class _ProfileState extends State<Profile> {
               ),
               MenuItem(
                 icon: Icons.help_outline,
-                iconColor: Color(0XFF696969),
+                iconColor: const Color(0XFF696969),
                 title: "FAQ",
                 onTap: () {
                   Navigator.pushReplacement(
@@ -238,7 +217,7 @@ class _ProfileState extends State<Profile> {
               ),
               MenuItem(
                 icon: Icons.info_outline,
-                iconColor: Color(0XFF696969),
+                iconColor: const Color(0XFF696969),
                 title: "About App",
                 onTap: () {
                   Navigator.pushReplacement(

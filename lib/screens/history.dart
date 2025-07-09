@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -216,24 +218,20 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'History',
-          style: TextStyle(
-            color: Color(0xff324eaf),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: const Text('History'),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.white,
-        leading: const BackButton(color: Color(0xff324eaf)),
+        backgroundColor: isDarkMode ? Colors.black : const Color(0xff324eaf),
+        foregroundColor: Colors.white,
+        leading: const BackButton(color: Colors.white),
         bottom: TabBar(
           controller: _tabController,
-          labelColor: const Color(0xff324eaf),
+          labelColor: Colors.white,
           unselectedLabelColor: Colors.grey,
-          indicatorColor: const Color(0xff324eaf),
+          indicatorColor: Colors.white,
           tabs: const [
             Tab(icon: Icon(Icons.check_circle), text: 'Completed'),
             Tab(icon: Icon(Icons.cancel), text: 'Cancelled'),

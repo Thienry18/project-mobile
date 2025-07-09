@@ -45,11 +45,11 @@ class _MyCoursePageState extends State<MyCoursePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        backgroundColor: isDarkMode ? Colors.black : const Color(0xFF324EAF),
         title: Text(
           "My Course",
           style: GoogleFonts.poppins(
-            color: isDarkMode ? Colors.white : const Color(0xFF324EAF),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),

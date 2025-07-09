@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -12,7 +14,9 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return BottomNavigationBar(
+      backgroundColor: isDarkMode ? Colors.black : Colors.white,
       currentIndex: currentIndex,
       selectedItemColor: const Color(0xFF324EAF),
       unselectedItemColor: Colors.grey,
