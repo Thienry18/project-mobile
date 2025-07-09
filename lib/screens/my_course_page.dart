@@ -56,9 +56,9 @@ class _MyCoursePageState extends State<MyCoursePage> {
         ),
         centerTitle: false,
         actions: [
-          IconCircleButton(
-            icon: Icons.search,
-            onTap: () {
+          IconButton(
+            icon: const Icon(Icons.search, color: Colors.white),
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -68,10 +68,9 @@ class _MyCoursePageState extends State<MyCoursePage> {
               );
             },
           ),
-          const SizedBox(width: 10),
-          IconCircleButton(
-            icon: Icons.shopping_cart_outlined,
-            onTap: () {
+          IconButton(
+            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => CartPage()),
@@ -81,6 +80,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
           const SizedBox(width: 10),
         ],
       ),
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child:

@@ -11,6 +11,7 @@ import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/widgets/cart_item_tile.dart';
 import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
+import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -156,19 +157,13 @@ class _CartPageState extends State<CartPage> {
 
   void _handleCheckout() async {
     final prefs = await SharedPreferences.getInstance();
-
-    // Ambil riwayat pembelian sebelumnya
     final historyData = prefs.getString('purchase_history');
     final List<Map<String, dynamic>> history =
         historyData != null
             ? List<Map<String, dynamic>>.from(jsonDecode(historyData))
             : [];
-
-    // Kumpulkan semua judul course yang pernah dibeli
     final purchasedTitles = history.map((e) => e['title']).toSet();
     final myCourseTitles = myCourses.map((e) => e.title).toSet();
-
-    // Ambil item yang dipilih dan belum pernah dibeli
     final selectedItems =
         cartCourses.where((item) {
           final notInHistory = !purchasedTitles.contains(item.title);
@@ -188,26 +183,18 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    // Tambahkan ke My Courses
     for (final course in selectedItems) {
       myCourses.add(course);
     }
-
-    // Hapus dari cart yang sudah dibeli
     cartCourses.removeWhere((item) => selectedIndexes.contains(item.index));
-
     setState(() {
       selectedIndexes.clear();
       selectedPromo = null;
       promoDiscount = 0.0;
       _selectAllVisibleItems();
     });
-
-    // Simpan notifikasi dan history
     await _addCheckoutNotification(selectedItems);
     await _saveToHistory(selectedItems);
-
-    // Pindah ke halaman My Course
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => MyCoursePage()),
@@ -218,11 +205,9 @@ class _CartPageState extends State<CartPage> {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString('purchase_history');
     List<Map<String, dynamic>> history = [];
-
     if (data != null) {
       history = List<Map<String, dynamic>>.from(jsonDecode(data));
     }
-
     for (final course in purchasedCourses) {
       history.add({
         'image': course.images,
@@ -237,7 +222,6 @@ class _CartPageState extends State<CartPage> {
         "status": "completed",
       });
     }
-
     await prefs.setString('purchase_history', jsonEncode(history));
   }
 
@@ -245,31 +229,22 @@ class _CartPageState extends State<CartPage> {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString('notifications');
     List<Map<String, dynamic>> currentNotifications = [];
-
     if (data != null) {
       currentNotifications = List<Map<String, dynamic>>.from(
         jsonDecode(data).map((e) => Map<String, dynamic>.from(e)),
       );
     }
-
-    // Ambil URL gambar dari course pertama (pastikan ada)
     final imageUrl =
-        purchasedCourses.isNotEmpty
-            ? purchasedCourses
-                .first
-                .images // <- pastikan field 'image' berisi URL
-            : null;
-
+        purchasedCourses.isNotEmpty ? purchasedCourses.first.images : null;
     final newNotification = {
       'title': 'Order Completed!',
       'message':
           'Thanks for your purchase! Your course is now available in My Course. Take your time, start whenever you’re ready, and enjoy every step of your learning journey.',
-      'image': imageUrl ?? '', // default ke kosong jika tidak ada
+      'image': imageUrl ?? '',
       'date': _getCurrentFormattedDateTime(),
       'unread': true,
-      'isNetworkImage': true, // <-- flag penting agar tahu ini network image
+      'isNetworkImage': true,
     };
-
     currentNotifications.insert(0, newNotification);
     await prefs.setString('notifications', jsonEncode(currentNotifications));
   }
@@ -336,7 +311,20 @@ class _CartPageState extends State<CartPage> {
       body: Column(
         children: [
           const SizedBox(height: 10),
-          _buildCategoryChips(),
+          Padding(
+            padding: const EdgeInsets.only(left: 16), // Tambah padding kiri
+            child: CategoryChips(
+              categoryList: ['All', ...categoryList],
+              selectedIndexes: {selectedCategoryIndex},
+              onCategoryToggle: (index) {
+                setState(() {
+                  selectedCategoryIndex = index;
+                  _selectAllVisibleItems();
+                });
+              },
+            ),
+          ),
+
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -374,51 +362,36 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  Widget _buildCategoryChips() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: List.generate(categoryList.length + 1, (index) {
-          final label = index == 0 ? 'All' : categoryList[index - 1];
-          final isSelected = selectedCategoryIndex == index;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: ChoiceChip(
-              label: Text(label),
-              selected: isSelected,
-              onSelected: (_) {
-                setState(() {
-                  selectedCategoryIndex = index;
-                  _selectAllVisibleItems();
-                });
-              },
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
   Widget _buildCartList(List<Course> cartItems) {
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: cartItems.length,
       itemBuilder: (context, index) {
         final course = cartItems[index];
-        return CartItemTile(
-          course: course,
-          isSelected: selectedIndexes.contains(course.index),
-          onChanged: (isSelected) {
-            setState(() {
-              if (isSelected == true) {
-                selectedIndexes.add(course.index);
-              } else {
-                selectedIndexes.remove(course.index);
-              }
-              selectAll = selectedIndexes.length == cartItems.length;
-            });
-          },
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Builder(
+            builder: (context) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              return Container(
+                width: screenWidth - 32, // 16 left + 16 right padding
+                child: CartItemTile(
+                  course: course,
+                  isSelected: selectedIndexes.contains(course.index),
+                  onChanged: (isSelected) {
+                    setState(() {
+                      if (isSelected == true) {
+                        selectedIndexes.add(course.index);
+                      } else {
+                        selectedIndexes.remove(course.index);
+                      }
+                      selectAll = selectedIndexes.length == cartItems.length;
+                    });
+                  },
+                ),
+              );
+            },
+          ),
         );
       },
     );

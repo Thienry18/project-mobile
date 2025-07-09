@@ -12,6 +12,19 @@ class VideoPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: const BackButton(),
+        title: Text(
+          "Course Videos",
+          style: GoogleFonts.poppins(
+            color: const Color(0xFF324EAF),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: const Color(0xFF324EAF),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

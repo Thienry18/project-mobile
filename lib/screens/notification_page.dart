@@ -150,20 +150,22 @@ class _NotificationPageState extends State<NotificationPage>
         ),
         actions: [
           const SizedBox(width: 10),
-          IconCircleButton(
-            icon: Icons.shopping_cart_outlined,
-            iconColor: Color(0xff324eaf),
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => CartPage()),
-                ),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart_outlined),
+            color: Colors.white, // atau Colors.white jika AppBar-nya gelap
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => CartPage()),
+              );
+            },
           ),
+
           const SizedBox(width: 10),
         ],
         bottom: TabBar(
           controller: _tabController,
-          labelColor: const Color(0xff324eaf),
+          labelColor: Colors.white,
           unselectedLabelColor: Colors.grey,
           // indicatorColor: const Color(0xff324eaf),
           tabs: const [

@@ -309,10 +309,9 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
 
         actions: [
-          IconCircleButton(
-            icon: Icons.shopping_bag_sharp,
-            iconColor: Colors.white,
-            onTap: () {
+          IconButton(
+            icon: const Icon(Icons.shopping_cart, color: Colors.white),
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => CartPage()),
@@ -325,15 +324,23 @@ class _ExplorePageState extends State<ExplorePage> {
               final imageFile = profileImageProvider.image;
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundImage:
-                      imageFile != null
-                          ? FileImage(imageFile)
-                          : const AssetImage(
-                                "assets/images/default_profile.png",
-                              )
-                              as ImageProvider,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Profile()),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundImage:
+                        imageFile != null
+                            ? FileImage(imageFile)
+                            : const AssetImage(
+                                  "assets/images/default_profile.png",
+                                )
+                                as ImageProvider,
+                  ),
                 ),
               );
             },
