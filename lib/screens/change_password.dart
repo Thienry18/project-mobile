@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/screens/email_notification.dart';
-import 'package:projek_mobile/screens/email_notification_pin.dart';
 import 'package:projek_mobile/widgets/custom_shape_clipper.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 
-class ChangePin extends StatelessWidget {
-  ChangePin({super.key});
+class ChangePassword extends StatelessWidget {
+  ChangePassword({super.key});
 
   final TextEditingController _emailController = TextEditingController();
 
@@ -42,7 +41,7 @@ class ChangePin extends StatelessWidget {
                         height: constraints.maxWidth < 400 ? 250 : 350,
                       ),
                       Text(
-                        'Change PIN?',
+                        'Change Password?',
                         style: AppTextStyles.heading.copyWith(
                           fontSize: constraints.maxWidth < 400 ? 22 : 26,
                         ),
@@ -51,7 +50,7 @@ class ChangePin extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          'Change your PIN by submitting the email associated with your account.',
+                          'Change your Password by submitting the email associated with your account.',
                           textAlign: TextAlign.center,
                           style: AppTextStyles.subheading,
                         ),
@@ -79,7 +78,7 @@ class ChangePin extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder:
-                                      (context) => EmailNotificationPin(
+                                      (context) => EmailNotification(
                                         email: _emailController.text,
                                       ),
                                 ),

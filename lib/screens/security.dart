@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projek_mobile/screens/change_password.dart';
 import 'package:projek_mobile/screens/change_pin.dart';
 
 class SecurityScreen extends StatelessWidget {
@@ -42,7 +43,7 @@ class SecurityScreen extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => ChangePin()),
+                MaterialPageRoute(builder: (context) => ChangePassword()),
               );
             },
             titleColor: blueColor,
