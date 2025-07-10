@@ -139,7 +139,17 @@ flutter:
     - assets/images/card_image/ts_beginner.jpeg
     - assets/images/certification.png
     - assets/video/coming_soon.mp4
+    - assets/icons/paypal.png
+    - assets/icons/applepay.png
+    - assets/icons/googlepay.png
+    - assets/icons/gopay.png
+    - assets/icons/shopeepay.png
+    - assets/icons/dana.png
+    - assets/icons/ovo.png
+    - assets/icons/linkaja.png
+    - assets/icons/isaku.png
 
+ 
 
 
 

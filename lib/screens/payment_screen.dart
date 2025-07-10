@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/payment_success_screen.dart';
 import 'package:projek_mobile/widgets/checkout_handler.dart';
+import 'package:provider/provider.dart';
 
 class PaymentScreen extends StatefulWidget {
   final List<Course> selectedItems;
@@ -23,8 +27,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final List<Map<String, dynamic>> paymentMethods = [
     {'label': 'Debit/Credit Card', 'icon': Icons.credit_card},
     {'label': 'PayPal', 'iconAsset': 'assets/icons/paypal.png'},
-    {'label': 'Apple Pay', 'iconAsset': 'assets/icons/apple_pay.png'},
-    {'label': 'Google Pay', 'iconAsset': 'assets/icons/google_pay.png'},
+    {'label': 'Apple Pay', 'iconAsset': 'assets/icons/applepay.png'},
+    {'label': 'Google Pay', 'iconAsset': 'assets/icons/googlepay.png'},
     {'label': 'GoPay', 'iconAsset': 'assets/icons/gopay.png'},
     {'label': 'ShopeePay', 'iconAsset': 'assets/icons/shopeepay.png'},
     {'label': 'DANA', 'iconAsset': 'assets/icons/dana.png'},
@@ -44,9 +48,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Payment'),
+        title: Text('Payment', style: GoogleFonts.poppins()),
         backgroundColor: const Color(0xFF324EAF),
         foregroundColor: Colors.white,
       ),
@@ -90,7 +95,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       Expanded(
                         child: Text(
                           method['label'],
-                          style: const TextStyle(
+                          style: AppTextStyles.subheading.copyWith(
+                            color:
+                                isDarkMode ? Colors.white : Color(0xff324eaf),
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -115,8 +122,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
       bottomSheet: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: isDarkMode ? Colors.grey.shade900 : Colors.white,
           border: Border(top: BorderSide(color: Colors.grey)),
         ),
         child: Row(
@@ -125,7 +132,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: RichText(
                 text: TextSpan(
                   text: 'Price ',
-                  style: const TextStyle(color: Colors.black),
+                  style: AppTextStyles.body.copyWith(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
                   children: [
                     TextSpan(
                       text: '\$${totalPrice.toStringAsFixed(2)}',
@@ -163,7 +172,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 );
               },
 
-              child: const Text('Pay Now'),
+              child: Text(
+                'Pay Now',
+                style: AppTextStyles.button.copyWith(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
