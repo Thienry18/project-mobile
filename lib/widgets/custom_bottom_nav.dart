@@ -16,6 +16,7 @@ class CustomBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       backgroundColor: isDarkMode ? Colors.black : Colors.white,
       currentIndex: currentIndex,
       selectedItemColor: const Color(0xFF324EAF),

@@ -265,7 +265,7 @@ class _CartPageState extends State<CartPage> {
     final isEmpty = cartItems.isEmpty;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDarkMode ? Colors.black : Colors.white,
       appBar: AppBar(
         backgroundColor: isDarkMode ? Colors.black : const Color(0xFF324EAF),
         foregroundColor: Colors.white,
@@ -334,10 +334,10 @@ class _CartPageState extends State<CartPage> {
                 if (selectedIndexes.isNotEmpty)
                   Text(
                     "${selectedIndexes.length} Items",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF324EAF),
+                      color: isDarkMode ? Colors.white : Color(0xFF324EAF),
                     ),
                   ),
                 if (selectedIndexes.isNotEmpty)

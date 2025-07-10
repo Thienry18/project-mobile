@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class MenuItem extends StatelessWidget {
   final IconData icon;
@@ -21,6 +23,7 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
@@ -32,9 +35,7 @@ class MenuItem extends StatelessWidget {
               icon,
               color:
                   iconColor ??
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : const Color(0xff324eaf)),
+                  (isDarkMode ? Colors.white : const Color(0xff324eaf)),
             ),
             const SizedBox(width: 20),
             Expanded(
@@ -44,9 +45,7 @@ class MenuItem extends StatelessWidget {
                   fontSize: 14,
                   color:
                       textColor ??
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xff324eaf)),
+                      (isDarkMode ? Colors.white : const Color(0xff324eaf)),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -55,10 +54,7 @@ class MenuItem extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_rounded,
                   size: 20,
-                  color:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xff324eaf),
+                  color: isDarkMode ? Colors.white : const Color(0xff324eaf),
                 ),
           ],
         ),

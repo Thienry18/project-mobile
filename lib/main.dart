@@ -32,8 +32,20 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+      theme: ThemeData.light().copyWith(
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.black,
+          selectedItemColor: const Color(0xFF324EAF),
+          unselectedItemColor: Colors.grey,
+        ),
+      ),
+      darkTheme: ThemeData.dark().copyWith(
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.black,
+          selectedItemColor: const Color(0xFF324EAF),
+          unselectedItemColor: Colors.grey,
+        ),
+      ),
       themeMode: themeNotifier.themeMode,
       home: FavScreen(),
     );

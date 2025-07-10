@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 // import 'package:projek_mobile/constants/app_text_style.dart';
 
 class CustomBottomBar extends StatelessWidget {
@@ -28,6 +30,7 @@ class CustomBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final finalTotal = total - promoDiscount;
     final hasSelected = cartCount > 0;
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -37,15 +40,20 @@ class CustomBottomBar extends StatelessWidget {
             onTap: onTapVoucher,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: const Color(0xFFEDE7FF),
+              color: isDarkMode ? Colors.black : Color(0xFFEDE7FF),
               child: Row(
                 children: [
-                  Icon(Icons.local_activity_outlined, color: Color(0XFF324EAF)),
+                  Icon(
+                    Icons.local_activity_outlined,
+                    color: isDarkMode ? Colors.white : Color(0XFF324EAF),
+                  ),
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       "Tap to apply your voucher and enjoy the discount!",
-                      style: GoogleFonts.poppins(color: Color(0xFF815CFF)),
+                      style: GoogleFonts.poppins(
+                        color: isDarkMode ? Colors.white : Color(0xFF815CFF),
+                      ),
                     ),
                   ),
                 ],
@@ -55,7 +63,7 @@ class CustomBottomBar extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDarkMode ? Colors.black : Colors.white,
             border: Border(top: BorderSide(color: Colors.grey.shade300)),
           ),
           child: Column(
@@ -66,15 +74,21 @@ class CustomBottomBar extends StatelessWidget {
                   Checkbox(
                     value: selectAll,
                     onChanged: onSelectAllChanged,
-                    activeColor: const Color(0xFF324EAF),
+                    activeColor: isDarkMode ? Colors.white : Color(0xFF324EAF),
+                    checkColor: isDarkMode ? Colors.black : Colors.white,
                   ),
-                  const Text("All"),
+                  Text(
+                    "All",
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.white : Color(0xff324eaf),
+                    ),
+                  ),
                   const Spacer(),
                   if (promoDiscount > 0)
                     Text(
                       "-\$${promoDiscount.toStringAsFixed(2)}",
-                      style: const TextStyle(
-                        color: Colors.blueAccent,
+                      style: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.blueAccent,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -90,7 +104,8 @@ class CustomBottomBar extends StatelessWidget {
                         Text(
                           "Total: \$${hasSelected ? finalTotal.toStringAsFixed(2) : '0.00'}",
                           style: GoogleFonts.poppins(
-                            color: Color(0XFF324EAF),
+                            color:
+                                isDarkMode ? Colors.white : Color(0XFF324EAF),
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -109,7 +124,8 @@ class CustomBottomBar extends StatelessWidget {
                   const SizedBox(width: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00C569),
+                      backgroundColor:
+                          isDarkMode ? Colors.white : Color(0xFF00C569),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 10,
@@ -118,11 +134,11 @@ class CustomBottomBar extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: hasSelected ? onCheckout : null,
+                    onPressed: hasSelected ? onCheckout : () {},
                     child: Text(
                       "Checkout ($cartCount)",
                       style: GoogleFonts.poppins(
-                        color: Colors.white,
+                        color: isDarkMode ? Color(0xff324eaf) : Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

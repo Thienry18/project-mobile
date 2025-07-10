@@ -33,6 +33,39 @@ class _HistoryScreenState extends State<HistoryScreen>
     }
   }
 
+  void _confirmDeleteHistory(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text("Clear Purchase History"),
+            content: const Text(
+              "Are you sure you want to clear your history? This action cannot be undone.",
+            ),
+            actions: [
+              TextButton(
+                child: const Text("Cancel"),
+                onPressed: () => Navigator.of(ctx).pop(),
+              ),
+              TextButton(
+                child: const Text("Clear", style: TextStyle(color: Colors.red)),
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('purchase_history');
+                  setState(() {
+                    historyData.clear();
+                  });
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("History cleared.")),
+                  );
+                },
+              ),
+            ],
+          ),
+    );
+  }
+
   Widget _buildEmptyContent(String title) {
     return Center(
       child: Padding(
@@ -227,6 +260,13 @@ class _HistoryScreenState extends State<HistoryScreen>
         backgroundColor: isDarkMode ? Colors.black : const Color(0xff324eaf),
         foregroundColor: Colors.white,
         leading: const BackButton(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            tooltip: "Clear History",
+            onPressed: () => _confirmDeleteHistory(context),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
