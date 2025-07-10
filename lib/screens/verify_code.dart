@@ -102,7 +102,7 @@ class VerifyCode extends StatelessWidget {
                           text: "Submit",
                           padding: const EdgeInsets.symmetric(
                             horizontal: 80,
-                            vertical: 18,
+                            vertical: 0,
                           ),
                           onPressed:
                               provider.isCodeComplete()
@@ -133,7 +133,7 @@ class VerifyCode extends StatelessWidget {
                                     ).showSnackBar(snackBar);
                                   },
                         ),
-                        const SizedBox(height: 60),
+                        const SizedBox(height: 40),
                         Text(
                           "Haven't received the code ?",
                           style: GoogleFonts.poppins(

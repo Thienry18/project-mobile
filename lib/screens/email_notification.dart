@@ -39,7 +39,7 @@ class EmailNotification extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              'images/gif/email_sent.gif',
+                              'assets/images/gif/email_sent.gif',
                               height: constraints.maxWidth < 400 ? 150 : 200,
                             ),
                             const SizedBox(height: 32),
@@ -85,7 +85,7 @@ class EmailNotification extends StatelessWidget {
                                   );
                                 },
                                 padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
+                                  vertical: 10,
                                   horizontal: 4,
                                 ),
                               ),

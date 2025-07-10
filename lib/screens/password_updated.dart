@@ -26,7 +26,7 @@ class PasswordUpdated extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('images/gif/password_security.gif'),
+              Image.asset('assets/images/gif/password_security.gif'),
               const SizedBox(height: 30),
               Text('Password Updated!', style: AppTextStyles.heading),
               const SizedBox(height: 16),
@@ -47,7 +47,7 @@ class PasswordUpdated extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => SignIn()),
                     );
                   },
-                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                 ),
               ),
             ],
