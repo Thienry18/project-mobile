@@ -150,7 +150,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor:
+                    selectedIndex != null ? Colors.green : Colors.grey,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 28,
                   vertical: 14,
@@ -159,19 +160,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              onPressed: () async {
-                await CheckoutHandler.handleCheckout(
-                  context,
-                  widget.selectedItems,
-                  widget.promoDiscount,
-                );
+              onPressed:
+                  selectedIndex != null
+                      ? () async {
+                        await CheckoutHandler.handleCheckout(
+                          context,
+                          widget.selectedItems,
+                          widget.promoDiscount,
+                        );
 
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => PaymentSuccessScreen()),
-                );
-              },
-
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PaymentSuccessScreen(),
+                          ),
+                        );
+                      }
+                      : null, // tombol disabled jika belum pilih
               child: Text(
                 'Pay Now',
                 style: AppTextStyles.button.copyWith(

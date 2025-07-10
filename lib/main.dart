@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
-      home: SecurityScreen(),
+      home: Profile(),
     );
   }
 }
