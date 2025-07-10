@@ -12,6 +12,7 @@ import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/payment_method.dart';
+import 'package:projek_mobile/screens/payment_method.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/menu_item.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
@@ -57,7 +58,7 @@ class _ProfileState extends State<Profile> {
           IconButton(
             icon: const Icon(Icons.diamond, color: Colors.blueAccent, size: 28),
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ComingSoon()),
               );
@@ -194,7 +195,7 @@ class _ProfileState extends State<Profile> {
                   iconColor: const Color(0XFF696969),
                   title: "Privacy",
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ComingSoon()),
                     );
@@ -205,7 +206,7 @@ class _ProfileState extends State<Profile> {
                   iconColor: const Color(0XFF696969),
                   title: "Security",
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ComingSoon()),
                     );
@@ -216,7 +217,7 @@ class _ProfileState extends State<Profile> {
                   iconColor: const Color(0XFF696969),
                   title: "FAQ",
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ComingSoon()),
                     );
@@ -227,7 +228,7 @@ class _ProfileState extends State<Profile> {
                   iconColor: const Color(0XFF696969),
                   title: "About App",
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ComingSoon()),
                     );

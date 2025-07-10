@@ -152,6 +152,7 @@ flutter:
     - assets/images/wallet.png
     - assets/icons/mastercard.jpeg
     - assets/pdfs/certificate.pdf
+    - assets/icons/mastercard.png
 
  
 

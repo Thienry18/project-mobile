@@ -1,134 +1,117 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:projek_mobile/screens/add_new_card.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class PaymentMethodsScreen extends StatelessWidget {
   const PaymentMethodsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const blueColor = Color(0xFF324EAF);
-    const lightBlue = Color(0xFFE7EBFF);
-
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor:
+          isDarkMode ? Colors.black : Colors.white, // Latar belakang layar
       appBar: AppBar(
-        backgroundColor: blueColor,
+        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        elevation: 0,
         title: Text(
           'Payment Methods',
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: isDarkMode ? Colors.white : Color(0xff324eaf),
           ),
         ),
-        leading: const BackButton(color: Colors.white),
-        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDarkMode ? Colors.white : Color(0xff324eaf),
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Wrapper agar tampak menyatu
+            // 💡 Mulai container dengan border hanya di bagian metode pembayaran
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: blueColor),
-                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue.shade200),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                  // Header text
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 12,
+                      left: 16,
+                      right: 16,
+                      bottom: 6,
                     ),
                     child: Text(
                       'Your Payment Method',
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: blueColor,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: isDarkMode ? Colors.white : Color(0xff324eaf),
                       ),
                     ),
                   ),
-                  // MasterCard
+
+                  // MasterCard item
                   Container(
-                    decoration: const BoxDecoration(
-                      color: blueColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(0),
+                    decoration: const BoxDecoration(color: Color(0xFF2459D1)),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
                       ),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          'assets/icons/mastercard.jpeg',
-                          height: 24,
-                          width: 24,
+                      leading: Image.asset(
+                        'assets/icons/mastercard.png',
+                        width: 36,
+                        height: 36,
+                      ),
+                      title: Text(
+                        'MasterCard – **** 7220',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'MasterCard - •••• 7220',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  const Divider(height: 0, color: Colors.white),
+
                   // Add Card
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const AddNewCardScreen(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(12),
+                        bottomRight: Radius.circular(12),
+                      ),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      leading: Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.blue.shade800,
+                      ),
+                      title: Text(
+                        'Add Card',
+                        style: TextStyle(
+                          color: Colors.blue.shade800,
+                          fontWeight: FontWeight.w600,
                         ),
-                      );
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: lightBlue,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(6),
-                          bottomRight: Radius.circular(6),
-                        ),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.add_circle_outline,
-                            color: blueColor,
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'Add Card',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: blueColor,
-                            ),
-                          ),
-                        ],
-                      ),
+                      onTap: () {
+                        // Aksi tambah kartu
+                      },
                     ),
                   ),
                 ],
