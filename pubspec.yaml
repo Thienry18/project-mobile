@@ -45,7 +45,7 @@ dependencies:
   video_player: ^2.7.2
   image_picker: ^1.1.2
   share_plus: ^7.2.2
-  syncfusion_flutter_pdfviewer: ^24.2.5
+
 
 dev_dependencies:
   flutter_test:
@@ -153,6 +153,7 @@ flutter:
     - assets/icons/mastercard.jpeg
     - assets/pdfs/certificate.pdf
     - assets/icons/mastercard.png
+    - assets/images/certificate.jpg
 
  
 

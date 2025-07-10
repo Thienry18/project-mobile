@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projek_mobile/screens/pdf.dart';
+import 'package:projek_mobile/screens/certificate.dart';
 import 'package:video_player/video_player.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
@@ -75,8 +75,9 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                   context,
                   MaterialPageRoute(
                     builder:
-                        (_) => const CertificatePDFScreen(
-                          pdfPath: 'assets/pdfs/certificate.pdf',
+                        (_) => const CertificateImageScreen(
+                          imagePath:
+                              'assets/images/certificate.jpg', // sesuaikan path
                         ),
                   ),
                 );

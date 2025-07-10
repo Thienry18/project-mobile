@@ -8,6 +8,8 @@ import 'package:projek_mobile/data/my_course_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
+import 'package:projek_mobile/screens/certificate.dart';
+import 'package:projek_mobile/screens/course_details.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -280,8 +282,21 @@ class _MyCoursePageState extends State<MyCoursePage> {
                   color: Color(0xFF324EAF),
                 ),
               ),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.pop(context); // Tutup bottom sheet
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (_) => const CertificateImageScreen(
+                          imagePath:
+                              'assets/images/certificate.jpg', // sesuaikan path
+                        ),
+                  ),
+                );
+              },
             ),
+
             const Divider(),
             ListTile(
               leading: const Icon(Icons.schedule, color: Colors.grey),
@@ -319,8 +334,28 @@ class _MyCoursePageState extends State<MyCoursePage> {
                   color: Color(0xFF324EAF),
                 ),
               ),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.pop(context); // Tutup bottom sheet
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (_) => CourseDetailScreen(
+                          title: course.title,
+                          imageUrl: course.images,
+                          price: course.price,
+                          rating: course.rating,
+                          duration: course.duration,
+                          isBestseller: course.isBestseller,
+                          instructor: course.instructor,
+                          recommendedCourses:
+                              const [], // atau isi sesuai kebutuhan
+                        ),
+                  ),
+                );
+              },
             ),
+
             const Divider(),
             ListTile(
               leading: const Icon(Icons.report, color: Colors.grey),
