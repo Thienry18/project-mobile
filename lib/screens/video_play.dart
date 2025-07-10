@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projek_mobile/screens/pdf.dart';
 import 'package:video_player/video_player.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
@@ -69,17 +70,19 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
               ),
               onTap: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "Settings clicked",
-                      style: GoogleFonts.poppins(),
-                    ),
+                Navigator.pop(context); // tutup bottom sheet
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (_) => const CertificatePDFScreen(
+                          pdfPath: 'assets/pdfs/certificate.pdf',
+                        ),
                   ),
                 );
               },
             ),
+
             ListTile(
               leading: const Icon(Icons.schedule, color: Colors.grey),
               title: Text(

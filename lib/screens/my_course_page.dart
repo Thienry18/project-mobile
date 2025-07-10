@@ -191,8 +191,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
                           ),
                         ),
                         builder:
-                            (context) =>
-                                _buildBottomSheet(context, course.title),
+                            (context) => _buildBottomSheet(context, course),
                       );
                     },
                   ),
@@ -244,7 +243,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
     );
   }
 
-  Widget _buildBottomSheet(BuildContext context, String courseTitle) {
+  Widget _buildBottomSheet(BuildContext context, Course course) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
@@ -261,7 +260,15 @@ class _MyCoursePageState extends State<MyCoursePage> {
                   color: Color(0xFF324EAF),
                 ),
               ),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VideoPlayer(course: course),
+                  ),
+                );
+              },
             ),
             const Divider(),
             ListTile(
@@ -288,8 +295,6 @@ class _MyCoursePageState extends State<MyCoursePage> {
               onTap: () => Navigator.pop(context),
             ),
             const Divider(),
-
-            // 🔽 Replace this with ShareButton custom widget
             ListTile(
               leading: const Icon(Icons.share, color: Colors.grey),
               title: Text(
@@ -300,11 +305,10 @@ class _MyCoursePageState extends State<MyCoursePage> {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context); // tutup bottom sheet
-                showShareOptions(context, courseTitle); // panggil fungsi global
+                Navigator.pop(context);
+                showShareOptions(context, course.title);
               },
             ),
-
             const Divider(),
             ListTile(
               leading: const Icon(Icons.grid_view, color: Colors.grey),
