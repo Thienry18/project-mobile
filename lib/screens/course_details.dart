@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class CourseDetailScreen extends StatefulWidget {
@@ -293,10 +295,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   }
 
   Widget buildBottomBar(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Colors.grey.shade900 : Colors.white,
         border: Border(top: BorderSide(color: Colors.grey.shade300)),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
