@@ -45,6 +45,7 @@ dependencies:
   video_player: ^2.7.2
   image_picker: ^1.1.2
   share_plus: ^7.2.2
+  dependencies:
 
 dev_dependencies:
   flutter_test:

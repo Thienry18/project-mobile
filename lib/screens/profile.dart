@@ -16,6 +16,7 @@ import 'package:projek_mobile/widgets/menu_item.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/toggle_item.dart';
 import 'package:provider/provider.dart';
+import 'package:projek_mobile/screens/edit_profile.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -148,9 +149,11 @@ class _ProfileState extends State<Profile> {
                   iconColor: const Color(0XFF696969),
                   title: "Edit Profile",
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ComingSoon()),
+                      MaterialPageRoute(
+                        builder: (context) => const EditProfileScreen(),
+                      ),
                     );
                   },
                 ),
