@@ -21,17 +21,17 @@ class CartItemTile extends StatelessWidget {
     final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDarkMode ? Color(0xff324eaf) : Colors.white,
+        color: isDarkMode ? const Color(0xff324eaf) : Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
         ],
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Checkbox(
             value: isSelected,
@@ -39,7 +39,7 @@ class CartItemTile extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
             ),
-            activeColor: isDarkMode ? Colors.white : Color(0xFF324EAF),
+            activeColor: isDarkMode ? Colors.white : const Color(0xFF324EAF),
             checkColor: isDarkMode ? Colors.black : Colors.white,
           ),
           const SizedBox(width: 8),
@@ -47,13 +47,13 @@ class CartItemTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: Image.asset(
               course.images,
-              width: screenWidth * 0.15, // ⬅️ Responsif
-              height: screenWidth * 0.15,
+              width: screenWidth * 0.18, // responsif
+              height: screenWidth * 0.18,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  width: screenWidth * 0.15,
-                  height: screenWidth * 0.15,
+                  width: screenWidth * 0.18,
+                  height: screenWidth * 0.18,
                   color: Colors.blue,
                   alignment: Alignment.center,
                   child: const Icon(
@@ -76,8 +76,8 @@ class CartItemTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: isDarkMode ? Colors.white : Color(0XFF324EAF),
+                    fontSize: screenWidth < 350 ? 13 : 14,
+                    color: isDarkMode ? Colors.white : const Color(0XFF324EAF),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -89,7 +89,8 @@ class CartItemTile extends StatelessWidget {
                       '${course.rating}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: isDarkMode ? Colors.white : Color(0XFF324EAF),
+                        color:
+                            isDarkMode ? Colors.white : const Color(0XFF324EAF),
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -110,7 +111,9 @@ class CartItemTile extends StatelessWidget {
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color:
-                                !isDarkMode ? Colors.white : Color(0xFF324EAF),
+                                !isDarkMode
+                                    ? Colors.white
+                                    : const Color(0xFF324EAF),
                           ),
                         ),
                       ),
@@ -125,8 +128,8 @@ class CartItemTile extends StatelessWidget {
             '${course.price}',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: isDarkMode ? Colors.white : Color(0xFF324EAF),
+              fontSize: screenWidth < 350 ? 12 : 14,
+              color: isDarkMode ? Colors.white : const Color(0xFF324EAF),
             ),
           ),
         ],

@@ -34,6 +34,7 @@ class _NotificationPageState extends State<NotificationPage>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadNotifications();
+    clearNotifications();
   }
 
   Future<void> clearNotifications() async {

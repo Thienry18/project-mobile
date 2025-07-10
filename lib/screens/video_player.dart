@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/models/explore_model.dart';
-import 'package:projek_mobile/screens/video_play.dart'; // Sesuaikan path
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:projek_mobile/screens/video_play.dart';
+import 'package:provider/provider.dart'; // Sesuaikan path
 
 class VideoPlayer extends StatelessWidget {
   final Course course;
@@ -10,20 +12,21 @@ class VideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDarkMode ? Colors.black : Colors.white,
       appBar: AppBar(
         leading: const BackButton(),
         title: Text(
           "Course Videos",
           style: GoogleFonts.poppins(
-            color: const Color(0xFF324EAF),
+            color: isDarkMode ? Colors.white : Color(0xFF324EAF),
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: isDarkMode ? Colors.black : Colors.white,
         elevation: 0,
-        foregroundColor: const Color(0xFF324EAF),
+        foregroundColor: isDarkMode ? Colors.white : Color(0xFF324EAF),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -47,7 +50,7 @@ class VideoPlayer extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF324EAF),
+                    color: isDarkMode ? Colors.white : Color(0xFF324EAF),
                   ),
                 ),
               ),
@@ -62,7 +65,7 @@ class VideoPlayer extends StatelessWidget {
                       title: Text(
                         'Module ${index + 1} - Introduction',
                         style: GoogleFonts.poppins(
-                          color: const Color(0xFF324EAF),
+                          color: isDarkMode ? Colors.white : Color(0xFF324EAF),
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
