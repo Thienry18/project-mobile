@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:projek_mobile/widgets/share_button.dart';
 
 class AssetVideoScreen extends StatefulWidget {
   final String videoPath;
@@ -49,6 +51,100 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
     );
   }
 
+  void _showMoreOptionsSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.workspace_premium, color: Colors.grey),
+              title: Text(
+                'View Certificate',
+                style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Settings clicked",
+                      style: GoogleFonts.poppins(),
+                    ),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.schedule, color: Colors.grey),
+              title: Text(
+                'Set Reminder/Schedule',
+                style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Share clicked",
+                      style: GoogleFonts.poppins(),
+                    ),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share, color: Colors.grey),
+              title: Text(
+                'Share Course',
+                style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
+              ),
+              onTap: () {
+                Navigator.pop(context); // Tutup bottom sheet
+                showShareOptions(
+                  context,
+                  'Certificate of Achievement',
+                ); // Panggil widget share
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.grid_view, color: Colors.grey),
+              title: Text(
+                'View Course Details',
+                style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Report clicked",
+                      style: GoogleFonts.poppins(),
+                    ),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.report, color: Colors.grey),
+              title: Text(
+                'Report a problem',
+                style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
+              ),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,14 +152,13 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: const Text("Video Player"),
+        title: Text("Video Player", style: GoogleFonts.poppins()),
       ),
       body: GestureDetector(
         onTap: _toggleControls,
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Video player
             Center(
               child:
                   _controller.value.isInitialized
@@ -74,7 +169,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       : const CircularProgressIndicator(),
             ),
 
-            // Subtitle & More icons (top right)
             if (_showControls && _controller.value.isInitialized)
               Positioned(
                 top: 16,
@@ -87,24 +181,24 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       tooltip: 'Subtitles',
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Subtitle clicked")),
+                          SnackBar(
+                            content: Text(
+                              "Subtitle clicked",
+                              style: GoogleFonts.poppins(),
+                            ),
+                          ),
                         );
                       },
                     ),
                     IconButton(
                       icon: const Icon(Icons.more_vert, color: Colors.white),
                       tooltip: 'More options',
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("More options clicked")),
-                        );
-                      },
+                      onPressed: () => _showMoreOptionsSheet(context),
                     ),
                   ],
                 ),
               ),
 
-            // Progress bar (bottom)
             if (_showControls && _controller.value.isInitialized)
               Positioned(
                 bottom: 60,
@@ -121,7 +215,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 ),
               ),
 
-            // Kontrol utama di tengah
             if (_showControls && _controller.value.isInitialized)
               Positioned(
                 child: Row(
@@ -133,7 +226,12 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       iconSize: 32,
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Previous clicked")),
+                          SnackBar(
+                            content: Text(
+                              "Previous clicked",
+                              style: GoogleFonts.poppins(),
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -175,7 +273,12 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       iconSize: 32,
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Next clicked")),
+                          SnackBar(
+                            content: Text(
+                              "Next clicked",
+                              style: GoogleFonts.poppins(),
+                            ),
+                          ),
                         );
                       },
                     ),
