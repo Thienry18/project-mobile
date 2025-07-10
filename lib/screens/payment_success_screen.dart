@@ -1,0 +1,106 @@
+import 'package:flutter/material.dart';
+import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/screens/explore_page.dart';
+import 'package:projek_mobile/screens/my_course_page.dart';
+
+class PaymentSuccessScreen extends StatelessWidget {
+  const PaymentSuccessScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF324EAF),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF324EAF),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/payment_success.png',
+                height: isMobile ? 180 : 250,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                'Payment Successful!',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 14),
+              const Text(
+                'Thank you for your payment. Your course is now unlocked and ready to access. Happy learning!\n\nGo to My Course page to learn your new course!',
+                style: TextStyle(color: Colors.white70),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) =>
+                              ExplorePage(selectedCategory: categoryselected),
+                    ),
+                    (route) => false,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF324EAF),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 14,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text('Continue Shopping'),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => const MyCoursePage()),
+                    (route) => false,
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.white),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 14,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text('Go to My Course'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
