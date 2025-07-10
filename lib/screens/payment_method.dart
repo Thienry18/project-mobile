@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:projek_mobile/screens/add_new_card.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -8,24 +10,23 @@ class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
+    const blueColor = Color(0xFF324EAF);
+
     return Scaffold(
-      backgroundColor:
-          isDarkMode ? Colors.black : Colors.white, // Latar belakang layar
+      backgroundColor: isDarkMode ? Colors.black : Colors.white,
       appBar: AppBar(
-        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        backgroundColor: blueColor,
         elevation: 0,
         title: Text(
           'Payment Methods',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: isDarkMode ? Colors.white : Color(0xff324eaf),
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            color: Colors.white,
           ),
         ),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: isDarkMode ? Colors.white : Color(0xff324eaf),
-          ),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -34,7 +35,7 @@ class PaymentMethodsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 💡 Mulai container dengan border hanya di bagian metode pembayaran
+            // Container utama
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.blue.shade200),
@@ -43,7 +44,7 @@ class PaymentMethodsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header text
+                  // Header
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 12,
@@ -53,65 +54,79 @@ class PaymentMethodsScreen extends StatelessWidget {
                     ),
                     child: Text(
                       'Your Payment Method',
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: GoogleFonts.poppins(
+                        fontSize: 13.5,
                         fontWeight: FontWeight.w600,
-                        color: isDarkMode ? Colors.white : Color(0xff324eaf),
+                        color: blueColor,
                       ),
                     ),
                   ),
 
-                  // MasterCard item
-                  Container(
-                    decoration: const BoxDecoration(color: Color(0xFF2459D1)),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      leading: Image.asset(
-                        'assets/icons/mastercard.png',
-                        width: 36,
-                        height: 36,
-                      ),
-                      title: Text(
-                        'MasterCard – **** 7220',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                  // Kartu MasterCard
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(0),
+                      topRight: Radius.circular(0),
+                    ),
+                    child: Container(
+                      color: blueColor,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        leading: Image.asset(
+                          'assets/icons/mastercard.png',
+                          width: 26,
+                          height: 26,
+                        ),
+                        title: Text(
+                          'MasterCard – •••• 7220',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13.5,
+                          ),
                         ),
                       ),
                     ),
                   ),
 
                   // Add Card
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12),
-                      ),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
                     ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      leading: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.blue.shade800,
-                      ),
-                      title: Text(
-                        'Add Card',
-                        style: TextStyle(
-                          color: Colors.blue.shade800,
-                          fontWeight: FontWeight.w600,
+                    child: Container(
+                      color: Colors.blue.shade50,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
                         ),
+                        leading: Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.blue.shade800,
+                          size: 22,
+                        ),
+                        title: Text(
+                          'Add Card',
+                          style: GoogleFonts.poppins(
+                            color: Colors.blue.shade800,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13.5,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddNewCardScreen(),
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        // Aksi tambah kartu
-                      },
                     ),
                   ),
                 ],
