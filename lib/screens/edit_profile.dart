@@ -78,7 +78,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: blueColor,
+                        color: const Color(0xFF324EAF),
                       ),
                     ),
                   ),
@@ -88,10 +88,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             const SizedBox(height: 24),
 
             _buildLabel("Username"),
-            _buildTextField(_usernameController, blueColor),
+            _buildTextField(_usernameController, const Color(0xFF324EAF)),
 
             _buildLabel("Full Name"),
-            _buildTextField(_fullnameController, blueColor),
+            _buildTextField(_fullnameController, const Color(0xFF324EAF)),
 
             _buildLabel("Status"),
             _buildTextField(_statusController, grayTextColor, readOnly: true),
@@ -129,13 +129,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
 
             _buildLabel("Country"),
-            _buildTextField(_countryController, blueColor),
+            _buildTextField(_countryController, const Color(0xFF324EAF)),
 
             _buildLabel("Email Address"),
-            _buildTextField(_emailController, blueColor),
+            _buildTextField(_emailController, const Color(0xFF324EAF)),
 
             _buildLabel("Phone Number"),
-            _buildTextField(_phoneController, blueColor),
+            _buildTextField(_phoneController, const Color(0xFF324EAF)),
           ],
         ),
       ),
@@ -148,7 +148,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Text(
         label,
         textAlign: TextAlign.left,
-        style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey),
+        style: GoogleFonts.poppins(fontSize: 13, color: Colors.black),
       ),
     );
   }
