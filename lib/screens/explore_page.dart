@@ -354,19 +354,19 @@ class _ExplorePageState extends State<ExplorePage> {
             case 0:
               break;
             case 1:
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => MyCoursePage()),
               );
               break;
             case 2:
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => NotificationPage()),
               );
               break;
             case 3:
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => Profile()),
               );
@@ -449,7 +449,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
@@ -514,7 +514,7 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ComingSoon()),
             );

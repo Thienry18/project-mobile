@@ -80,7 +80,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/image_card/sql_bootcamp.jpeg',
+    images: 'assets/images/card_image/sql_bootcamp.jpeg',
     title: 'Complete SQL Bootcamp 2025: Go from Zero to Hero',
     duration: '41h 15m',
     rating: '4.8 (457,675)',
@@ -106,7 +106,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images_card_image/stack_dev.jpeg',
+    images: 'assets/images/card_image/stack_dev.jpeg',
     title: 'The Complete MERN Stack Developer Course 2025',
     duration: '70h 35m',
     rating: '4.6 (308,500)',
@@ -262,7 +262,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/python.jpg',
+    images: 'assets/images/card_image/python.jpg',
     title: 'R Programming A-Z™: R For Data Science With Real Exercises!',
     duration: '10h 33m',
     rating: '4.6 (112,345)',
@@ -301,7 +301,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/card_images/ztm_swift.jpg',
+    images: 'assets/images/card_image/ztm_swift.jpg',
     title: 'Swift 5 iOS Application Developer Bootcamp',
     duration: '60h 0m',
     rating: '4.7 (120,000)',
@@ -314,7 +314,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/card_images/flutter.jpg',
+    images: 'assets/images/card_image/flutter.jpg',
     title: 'Kotlin for Android Development: Beginner to Advanced',
     duration: '40h 0m',
     rating: '4.6 (85,000)',
@@ -327,7 +327,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/card_images/flutter_guide.jpeg',
+    images: 'assets/images/card_image/flutter_guide.jpeg',
     title: 'Dart and Flutter: The Complete Developer’s Guide',
     duration: '55h 0m',
     rating: '4.8 (110,000)',
@@ -340,7 +340,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/card_images/typescript.jpg',
+    images: 'assets/images/card_image/typescript.jpg',
     title: 'TypeScript: The Complete Developer’s Guide',
     duration: '30h 0m',
     rating: '4.7 (75,000)',
@@ -353,7 +353,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/card_images/go.jpg',
+    images: 'assets/images/card_image/go.jpg',
     title: 'Go: The Complete Developer’s Guide',
     duration: '45h 0m',
     rating: '4.6 (65,000)',
@@ -366,7 +366,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/card_images/sql.jpg',
+    images: 'assets/images/card_image/sql.jpg',
     title: 'SQL for Data Analysis: Beginner to Advanced',
     duration: '20h 0m',
     rating: '4.7 (90,000)',
@@ -379,7 +379,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/card_images/html.jpg',
+    images: 'assets/images/card_image/html.jpg',
     title: 'HTML and CSS: Build Responsive Websites',
     duration: '25h 0m',
     rating: '4.8 (100,000)',
@@ -496,7 +496,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assetsimages/card_image/kotlin_beginner.jpeg',
+    images: 'assets/images/card_image/kotlin_beginner.jpeg',
     title:
         'Kotlin for Beginners - Learn Kotlin Programming for Android Development',
     duration: '27h 0m',

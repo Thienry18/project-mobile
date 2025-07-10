@@ -45,7 +45,6 @@ dependencies:
   video_player: ^2.7.2
   image_picker: ^1.1.2
   share_plus: ^7.2.2
-  dependencies:
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +72,7 @@ flutter:
     - assets/images/finger_print.png
     - assets/images/forgot_password.png
     - assets/icons/google.svg
+    - assets/images/payment_success.png
     - assets/icons/facebook.svg
     - assets/icons/linkedin.svg
     - assets/images/gif/coding_program.gif
@@ -112,6 +112,7 @@ flutter:
     - assets/images/card_image/R.jpg
     - assets/images/card_image/php.jpeg
     - assets/images/card_image/web_bootcamp.jpeg
+    - assets/images/card_image/web_dev_bootcamp.jpeg
     - assets/images/card_image/sql_bootcamp.jpeg
     - assets/images/card_image/ios_development.jpeg
     - assets/images/card_image/stack_dev.jpeg
