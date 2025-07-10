@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CartItemTile extends StatelessWidget {
   final Course course;
@@ -15,11 +17,14 @@ class CartItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Color(0xff324eaf) : Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
@@ -34,20 +39,21 @@ class CartItemTile extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
             ),
-            activeColor: const Color(0xFF324EAF),
+            activeColor: isDarkMode ? Colors.white : Color(0xFF324EAF),
+            checkColor: isDarkMode ? Colors.black : Colors.white,
           ),
           const SizedBox(width: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Image.asset(
               course.images,
-              width: 60,
-              height: 60,
+              width: screenWidth * 0.15, // ⬅️ Responsif
+              height: screenWidth * 0.15,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  width: 60,
-                  height: 60,
+                  width: screenWidth * 0.15,
+                  height: screenWidth * 0.15,
                   color: Colors.blue,
                   alignment: Alignment.center,
                   child: const Icon(
@@ -68,10 +74,10 @@ class CartItemTile extends StatelessWidget {
                   course.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
-                    color: Color(0XFF324EAF),
+                    color: isDarkMode ? Colors.white : Color(0XFF324EAF),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -81,9 +87,9 @@ class CartItemTile extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       '${course.rating}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Color(0XFF324EAF),
+                        color: isDarkMode ? Colors.white : Color(0XFF324EAF),
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -98,12 +104,13 @@ class CartItemTile extends StatelessWidget {
                           color: const Color(0xFFFDFD02),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Bestseller',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF324EAF),
+                            color:
+                                !isDarkMode ? Colors.white : Color(0xFF324EAF),
                           ),
                         ),
                       ),
@@ -116,10 +123,10 @@ class CartItemTile extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             '${course.price}',
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
-              color: Color(0xFF324EAF),
+              color: isDarkMode ? Colors.white : Color(0xFF324EAF),
             ),
           ),
         ],

@@ -6,6 +6,7 @@ import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
@@ -16,6 +17,7 @@ import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/icon_circle_button.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
+import 'package:provider/provider.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
@@ -30,7 +32,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
 
     final filteredCourses =
         selectedIndexes.contains(0)
@@ -142,12 +144,13 @@ class _MyCoursePageState extends State<MyCoursePage> {
   }
 
   Widget _buildCourseCardList(List<Course> courseList) {
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return ListView.builder(
       itemCount: courseList.length,
       itemBuilder: (context, index) {
         final course = courseList[index];
         return Card(
-          color: Colors.white,
+          color: isDarkMode ? Colors.black : Colors.white,
           margin: const EdgeInsets.symmetric(vertical: 8),
           child: Stack(
             children: [
@@ -163,13 +166,18 @@ class _MyCoursePageState extends State<MyCoursePage> {
                   ),
                   title: Text(
                     course.title,
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          isDarkMode ? Colors.white : const Color(0xFF324EAF),
+                    ),
                   ),
                   subtitle: Text(
                     course.category,
                     style: GoogleFonts.poppins(
                       fontSize: 12,
-                      color: Colors.grey,
+                      color: isDarkMode ? Colors.white70 : Colors.grey,
                     ),
                   ),
                   trailing: IconButton(
