@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
@@ -7,13 +5,12 @@ import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/history.dart';
-import 'package:projek_mobile/screens/my_course_page.dart';
+import 'package:projek_mobile/screens/payment_screen.dart';
 import 'package:projek_mobile/widgets/cart_item_tile.dart';
 import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -155,27 +152,17 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  void _handleCheckout() async {
-    final prefs = await SharedPreferences.getInstance();
-    final historyData = prefs.getString('purchase_history');
-    final List<Map<String, dynamic>> history =
-        historyData != null
-            ? List<Map<String, dynamic>>.from(jsonDecode(historyData))
-            : [];
-    final purchasedTitles = history.map((e) => e['title']).toSet();
-    final myCourseTitles = myCourses.map((e) => e.title).toSet();
+  void _handleCheckout() {
+    final historyTitles = myCourses.map((e) => e.title).toSet();
     final selectedItems =
         cartCourses.where((item) {
-          final notInHistory = !purchasedTitles.contains(item.title);
-          final notInMyCourses = !myCourseTitles.contains(item.title);
           return selectedIndexes.contains(item.index) &&
-              notInHistory &&
-              notInMyCourses;
+              !historyTitles.contains(item.title);
         }).toList();
 
     if (selectedItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("No new courses to purchase."),
           duration: Duration(seconds: 3),
         ),
@@ -183,79 +170,16 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    for (final course in selectedItems) {
-      myCourses.add(course);
-    }
-    cartCourses.removeWhere((item) => selectedIndexes.contains(item.index));
-    setState(() {
-      selectedIndexes.clear();
-      selectedPromo = null;
-      promoDiscount = 0.0;
-      _selectAllVisibleItems();
-    });
-    await _addCheckoutNotification(selectedItems);
-    await _saveToHistory(selectedItems);
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => MyCoursePage()),
+      MaterialPageRoute(
+        builder:
+            (_) => PaymentScreen(
+              selectedItems: selectedItems,
+              promoDiscount: promoDiscount,
+            ),
+      ),
     );
-  }
-
-  Future<void> _saveToHistory(List<Course> purchasedCourses) async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString('purchase_history');
-    List<Map<String, dynamic>> history = [];
-    if (data != null) {
-      history = List<Map<String, dynamic>>.from(jsonDecode(data));
-    }
-    for (final course in purchasedCourses) {
-      history.add({
-        'image': course.images,
-        'title': course.title,
-        'rating': course.rating,
-        'price':
-            double.tryParse(course.price.replaceAll(RegExp(r'[^\d.]'), '')) ??
-            0.0,
-        'isBestseller': course.isBestseller,
-        'duration': course.duration,
-        'category': course.category,
-        "status": "completed",
-      });
-    }
-    await prefs.setString('purchase_history', jsonEncode(history));
-  }
-
-  Future<void> _addCheckoutNotification(List<Course> purchasedCourses) async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString('notifications');
-    List<Map<String, dynamic>> currentNotifications = [];
-    if (data != null) {
-      currentNotifications = List<Map<String, dynamic>>.from(
-        jsonDecode(data).map((e) => Map<String, dynamic>.from(e)),
-      );
-    }
-    final imageUrl =
-        purchasedCourses.isNotEmpty ? purchasedCourses.first.images : null;
-    final newNotification = {
-      'title': 'Order Completed!',
-      'message':
-          'Thanks for your purchase! Your course is now available in My Course. Take your time, start whenever you’re ready, and enjoy every step of your learning journey.',
-      'image': imageUrl ?? '',
-      'date': _getCurrentFormattedDateTime(),
-      'unread': true,
-      'isNetworkImage': true,
-    };
-    currentNotifications.insert(0, newNotification);
-    await prefs.setString('notifications', jsonEncode(currentNotifications));
-  }
-
-  String _getCurrentFormattedDateTime() {
-    final now = DateTime.now();
-    final hour = now.hour > 12 ? now.hour - 12 : now.hour;
-    final amPm = now.hour >= 12 ? 'P.M.' : 'A.M.';
-    final formatted =
-        '${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}-${now.year} $hour:${now.minute.toString().padLeft(2, '0')} $amPm';
-    return formatted;
   }
 
   @override
