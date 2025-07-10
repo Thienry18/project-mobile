@@ -158,9 +158,9 @@ class _ProfileState extends State<Profile> {
                   },
                 ),
                 MenuItem(
-                  icon: Icons.settings_outlined,
+                  icon: Icons.payment_outlined,
                   iconColor: const Color(0XFF696969),
-                  title: "Settings",
+                  title: "Payment Methods",
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
@@ -168,7 +168,6 @@ class _ProfileState extends State<Profile> {
                     );
                   },
                 ),
-                const SizedBox(height: 25),
                 ToggleItem(
                   icon: Icons.dark_mode_outlined,
                   title: "Dark Mode",
@@ -187,7 +186,6 @@ class _ProfileState extends State<Profile> {
                     });
                   },
                 ),
-                const SizedBox(height: 25),
                 MenuItem(
                   icon: Icons.lock_outline,
                   iconColor: const Color(0XFF696969),
