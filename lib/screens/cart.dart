@@ -170,7 +170,7 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder:

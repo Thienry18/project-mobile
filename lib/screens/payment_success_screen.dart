@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
+import 'package:provider/provider.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
   const PaymentSuccessScreen({super.key});
@@ -9,11 +11,12 @@ class PaymentSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
+    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF324EAF),
+      backgroundColor: isDarkMode ? Colors.black : Color(0xFF324EAF),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF324EAF),
+        backgroundColor: isDarkMode ? Colors.black : Color(0xFF324EAF),
         foregroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
@@ -33,7 +36,7 @@ class PaymentSuccessScreen extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
               const SizedBox(height: 30),
-              const Text(
+              Text(
                 'Payment Successful!',
                 style: TextStyle(
                   color: Colors.white,
@@ -61,8 +64,12 @@ class PaymentSuccessScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF324EAF),
+                  backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                  side: BorderSide(
+                    color: isDarkMode ? Colors.white : const Color(0xFF324EAF),
+                  ),
+                  foregroundColor:
+                      isDarkMode ? Colors.white : const Color(0xFF324EAF),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 28,
                     vertical: 14,
@@ -74,7 +81,7 @@ class PaymentSuccessScreen extends StatelessWidget {
                 icon: const Icon(Icons.arrow_forward),
                 label: const Text('Continue Shopping'),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 20),
               OutlinedButton.icon(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
