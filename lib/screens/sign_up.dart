@@ -48,7 +48,6 @@ class _SignUpState extends State<SignUp> {
       return;
     }
 
-    // If all is valid
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => BuildProfile()),

@@ -100,32 +100,36 @@ class _CertificatePageState extends State<CertificatePage> {
   }
 
   Widget _buildCertificateCard(course) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF324EAF),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.asset(course.images, height: 150, fit: BoxFit.cover),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Text(
-              course.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
+    return Card(
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF324EAF),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10),
+              ),
+              child: Image.asset(course.images, height: 150, fit: BoxFit.cover),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Text(
+                course.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
