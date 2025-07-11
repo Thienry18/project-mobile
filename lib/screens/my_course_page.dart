@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
@@ -20,6 +22,7 @@ import 'package:projek_mobile/widgets/icon_circle_button.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
@@ -31,6 +34,41 @@ class MyCoursePage extends StatefulWidget {
 class _MyCoursePageState extends State<MyCoursePage> {
   final List<String> alllist = ['All', ...categoryList];
   Set<int> selectedIndexes = {0};
+  @override
+  void initState() {
+    super.initState();
+    _loadStoredCourses();
+  }
+
+  Future<void> _loadStoredCourses() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('my_courses');
+    if (data != null) {
+      final decoded = jsonDecode(data);
+      setState(() {
+        myCourses.clear();
+        myCourses.addAll(
+          List<Course>.from(
+            decoded.map(
+              (e) => Course(
+                index: e['index'],
+                title: e['title'],
+                price: e['price'],
+                images: e['images'],
+                category: e['category'],
+                rating: e['rating'],
+                duration: e['duration'],
+                isBestseller: e['isBestseller'],
+                instructor: e['instructor'],
+                language: e['language'],
+                subtitle: e['subtitle'],
+              ),
+            ),
+          ),
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
