@@ -36,7 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _dobController = TextEditingController(text: data.dob);
     _genderController = TextEditingController(text: data.gender);
     _countryController = TextEditingController(text: data.country);
-    _emailController = TextEditingController(text: _emailController.text);
+    _emailController = TextEditingController(text: "@gmail.com");
     _phoneController = TextEditingController(text: data.phoneNumber);
   }
 
