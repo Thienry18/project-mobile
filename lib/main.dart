@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
-      home: ExplorePage(selectedCategory: ""),
+      home: FavScreen(),
     );
   }
 }

@@ -45,16 +45,20 @@ class FavBody extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Positioned(
-                  top: 0,
-                  left: 135,
+                  top: 50,
+                  left: 155,
                   child: Hero(
                     tag: 'circle-shape',
-                    child: Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF97F0AC),
-                        shape: BoxShape.circle,
+                    child: SizedBox(
+                      width: 140,
+                      height: 140,
+                      child: CircularProgressIndicator(
+                        value: step / step,
+                        strokeWidth: 20,
+                        backgroundColor: Colors.grey.shade200,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xff40CE62),
+                        ),
                       ),
                     ),
                   ),
