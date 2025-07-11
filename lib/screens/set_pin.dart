@@ -127,21 +127,6 @@ class SetPinScreen extends StatelessWidget {
                               }
                               : () {},
                     ),
-                    CustomButton(
-                      text: "Skip",
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 80,
-                        vertical: 15,
-                      ),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Success(),
-                          ),
-                        );
-                      },
-                    ),
                   ],
                 ),
               ),
