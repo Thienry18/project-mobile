@@ -23,6 +23,7 @@ import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
@@ -67,6 +68,17 @@ class _MyCoursePageState extends State<MyCoursePage> {
           ),
         );
       });
+    }
+  }
+
+  void openGoogleForm() async {
+    final url = Uri.parse(
+      'https://docs.google.com/forms/d/e/1FAIpQLSf1Y-EDqmFYjf7_k4XJ6WPbpk2DbeKHvjGoHK_IbgDWrZK4QA/viewform?usp=dialog',
+    );
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Tidak bisa membuka form';
     }
   }
 
@@ -404,7 +416,10 @@ class _MyCoursePageState extends State<MyCoursePage> {
                   color: Color(0xFF324EAF),
                 ),
               ),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.pop(context);
+                openGoogleForm();
+              },
             ),
           ],
         ),
