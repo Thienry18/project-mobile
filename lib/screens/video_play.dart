@@ -165,6 +165,13 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
     );
   }
 
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${duration.inHours > 0 ? '${twoDigits(duration.inHours)}:' : ''}$minutes:$seconds";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -252,14 +259,55 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                       bottom: 60,
                       left: 20,
                       right: 20,
-                      child: VideoProgressIndicator(
-                        _controller,
-                        allowScrubbing: true,
-                        colors: VideoProgressColors(
-                          playedColor: Colors.white,
-                          bufferedColor: Colors.grey,
-                          backgroundColor: Colors.grey[700]!,
-                        ),
+                      child: Column(
+                        children: [
+                          Slider(
+                            value: _controller.value.position.inMilliseconds
+                                .toDouble()
+                                .clamp(
+                                  0,
+                                  _controller.value.duration.inMilliseconds
+                                      .toDouble(),
+                                ),
+                            min: 0,
+                            max:
+                                _controller.value.duration.inMilliseconds
+                                    .toDouble(),
+                            activeColor: Colors.white,
+                            inactiveColor: Colors.grey,
+                            onChanged: (value) {
+                              setState(() {
+                                _controller.seekTo(
+                                  Duration(milliseconds: value.toInt()),
+                                );
+                              });
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _formatDuration(_controller.value.position),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Text(
+                                  _formatDuration(_controller.value.duration),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   if (_showControls && _controller.value.isInitialized)
