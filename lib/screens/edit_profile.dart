@@ -2,9 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:projek_mobile/models/user_profile.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  final UserProfile userProfile;
+
+  const EditProfileScreen({super.key, required this.userProfile});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -14,16 +17,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
-  final _usernameController = TextEditingController(text: "moon_gayoung031205");
-  final _fullnameController = TextEditingController(text: "Moon Ga Young");
-  final _statusController = TextEditingController(text: "Student");
-  final _dobController = TextEditingController(text: "03/12/2005");
-  final _genderController = TextEditingController(text: "Female");
-  final _countryController = TextEditingController(text: "Indonesia");
-  final _emailController = TextEditingController(
-    text: "moon_gayoung@gmail.com",
-  );
-  final _phoneController = TextEditingController(text: "+628-5219-815-021");
+  late TextEditingController _usernameController;
+  late TextEditingController _fullnameController;
+  late TextEditingController _statusController;
+  late TextEditingController _dobController;
+  late TextEditingController _genderController;
+  late TextEditingController _countryController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+
+  @override
+  void initState() {
+    super.initState();
+    final data = widget.userProfile;
+    _usernameController = TextEditingController(text: data.username);
+    _fullnameController = TextEditingController(text: data.fullName);
+    _statusController = TextEditingController(text: "Student");
+    _dobController = TextEditingController(text: data.dob);
+    _genderController = TextEditingController(text: data.gender);
+    _countryController = TextEditingController(text: data.country);
+    _emailController = TextEditingController(text: _emailController.text);
+    _phoneController = TextEditingController(text: data.phoneNumber);
+  }
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -78,7 +93,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: const Color(0xFF324EAF),
+                        color: blueColor,
                       ),
                     ),
                   ),
@@ -88,10 +103,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             const SizedBox(height: 24),
 
             _buildLabel("Username"),
-            _buildTextField(_usernameController, const Color(0xFF324EAF)),
+            _buildTextField(_usernameController, blueColor),
 
             _buildLabel("Full Name"),
-            _buildTextField(_fullnameController, const Color(0xFF324EAF)),
+            _buildTextField(_fullnameController, blueColor),
 
             _buildLabel("Status"),
             _buildTextField(_statusController, grayTextColor, readOnly: true),
@@ -129,13 +144,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
 
             _buildLabel("Country"),
-            _buildTextField(_countryController, const Color(0xFF324EAF)),
+            _buildTextField(_countryController, blueColor),
 
             _buildLabel("Email Address"),
-            _buildTextField(_emailController, const Color(0xFF324EAF)),
+            _buildTextField(_emailController, blueColor),
 
             _buildLabel("Phone Number"),
-            _buildTextField(_phoneController, const Color(0xFF324EAF)),
+            _buildTextField(_phoneController, blueColor),
           ],
         ),
       ),
@@ -147,7 +162,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       padding: const EdgeInsets.only(top: 16, bottom: 4),
       child: Text(
         label,
-        textAlign: TextAlign.left,
         style: GoogleFonts.poppins(fontSize: 13, color: Colors.black),
       ),
     );

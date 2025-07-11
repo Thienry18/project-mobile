@@ -19,6 +19,36 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   bool _agreeToTerms = false;
 
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _handleSignIn() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email and password must not be empty.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const InputPin()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -82,6 +112,7 @@ class _SignInState extends State<SignIn> {
                             color: Colors.white,
                           ),
                           keyboardType: TextInputType.emailAddress,
+                          controller: _emailController,
                         ),
                         const SizedBox(height: 16),
                         CustomTextField(
@@ -91,6 +122,7 @@ class _SignInState extends State<SignIn> {
                             color: Colors.white,
                           ),
                           obscureText: true,
+                          controller: _passwordController,
                         ),
                         const SizedBox(height: 16),
                         Row(
@@ -150,14 +182,7 @@ class _SignInState extends State<SignIn> {
                         const SizedBox(height: 18),
                         CustomButton(
                           text: 'Sign In',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const InputPin(),
-                              ),
-                            );
-                          },
+                          onPressed: _handleSignIn,
                           padding: const EdgeInsets.symmetric(
                             vertical: 10,
                             horizontal: 70,
@@ -165,7 +190,6 @@ class _SignInState extends State<SignIn> {
                         ),
                         const SizedBox(height: 24),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(

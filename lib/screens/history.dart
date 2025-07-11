@@ -95,22 +95,24 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  Widget _buildCompletedList() {
-    final completedItems =
-        historyData.where((item) => item['status'] == 'completed').toList();
+  Widget _buildHistoryList(String status) {
+    final filteredItems =
+        historyData.where((item) => item['status'] == status).toList();
 
-    if (completedItems.isEmpty) {
-      return _buildEmptyContent("No Completed Orders");
+    if (filteredItems.isEmpty) {
+      return _buildEmptyContent(
+        "No ${status[0].toUpperCase() + status.substring(1)} Orders",
+      );
     }
 
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
-            itemCount: completedItems.length,
+            itemCount: filteredItems.length,
             padding: const EdgeInsets.all(16),
             itemBuilder: (context, index) {
-              final item = completedItems[index];
+              final item = filteredItems[index];
               return Container(
                 margin: const EdgeInsets.only(bottom: 16),
                 padding: const EdgeInsets.all(12),
@@ -194,9 +196,15 @@ class _HistoryScreenState extends State<HistoryScreen>
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'Completed',
-                          style: TextStyle(color: Colors.green, fontSize: 12),
+                        Text(
+                          status[0].toUpperCase() + status.substring(1),
+                          style: TextStyle(
+                            color:
+                                status == 'completed'
+                                    ? Colors.green
+                                    : Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                         Text(
                           '\$${(item['price'] as double).toStringAsFixed(2)}',
@@ -212,31 +220,6 @@ class _HistoryScreenState extends State<HistoryScreen>
                 ),
               );
             },
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey, width: 0.2)),
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                "Total Purchases",
-                style: TextStyle(color: Colors.grey),
-              ),
-              Text(
-                "\$${completedItems.fold(0.0, (sum, item) => sum + (item['price'] ?? 0.0)).toStringAsFixed(2)}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color(0xff324eaf),
-                ),
-              ),
-            ],
           ),
         ),
       ],
@@ -281,8 +264,8 @@ class _HistoryScreenState extends State<HistoryScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildCompletedList(),
-          _buildEmptyContent("No Cancelled Orders"),
+          _buildHistoryList("completed"),
+          _buildHistoryList("cancelled"),
         ],
       ),
     );

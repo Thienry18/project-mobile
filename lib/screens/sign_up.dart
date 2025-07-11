@@ -17,12 +17,53 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _agreeToTerms = false;
+
+  void _handleSignUp() {
+    String username = _usernameController.text.trim();
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String confirmPassword = _confirmPasswordController.text.trim();
+
+    if (username.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
+      _showError("Please fill in all fields.");
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showError("Passwords do not match.");
+      return;
+    }
+
+    if (!_agreeToTerms) {
+      _showError("You must agree to the Terms and Privacy Policy.");
+      return;
+    }
+
+    // If all is valid
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BuildProfile()),
+    );
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -44,31 +85,34 @@ class _SignUpState extends State<SignUp> {
                 textAlign: TextAlign.center,
               ),
             ),
-
             SizedBox(height: 32),
             LoginTabBar(isSignIn: false),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Column(
                 children: [
                   CustomTextField(
+                    controller: _usernameController,
                     labelText: 'Enter your username',
                     prefixIcon: Icon(Icons.person, color: Colors.white),
                   ),
                   SizedBox(height: 16),
                   CustomTextField(
+                    controller: _emailController,
                     labelText: 'Enter your email',
                     prefixIcon: Icon(Icons.email_outlined, color: Colors.white),
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 16),
                   CustomTextField(
+                    controller: _passwordController,
                     labelText: 'Enter your password',
                     prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
                     obscureText: true,
                   ),
                   SizedBox(height: 16),
                   CustomTextField(
+                    controller: _confirmPasswordController,
                     labelText: 'Re-enter your password',
                     prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
                     obscureText: true,
@@ -133,12 +177,7 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(height: 32),
                   CustomButton(
                     text: 'Sign Up',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => BuildProfile()),
-                      );
-                    },
+                    onPressed: _handleSignUp,
                     padding: const EdgeInsets.symmetric(
                       vertical: 10,
                       horizontal: 70,

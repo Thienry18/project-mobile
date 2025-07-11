@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
+import 'package:projek_mobile/models/user_profile.dart';
 import 'package:projek_mobile/screens/interest.dart';
 import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
@@ -7,6 +9,7 @@ import 'package:projek_mobile/widgets/gender_picker.dart';
 import 'package:projek_mobile/widgets/profile_image.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BuildProfile extends StatefulWidget {
   const BuildProfile({super.key});
@@ -23,30 +26,66 @@ class _BuildProfile extends State<BuildProfile> {
   String phoneNumber = '';
   String country = '';
 
+  void _handleContinue() async {
+    if (username.isEmpty ||
+        fullName.isEmpty ||
+        dob.isEmpty ||
+        gender.isEmpty ||
+        phoneNumber.isEmpty ||
+        country.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please complete all fields.')),
+      );
+      return;
+    }
+
+    final user = UserProfile(
+      username: username,
+      fullName: fullName,
+      dob: dob,
+      gender: gender,
+      phoneNumber: phoneNumber,
+      country: country,
+    );
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(
+      'user_profile',
+      jsonEncode({
+        'username': user.username,
+        'fullName': user.fullName,
+        'dob': user.dob,
+        'gender': user.gender,
+        'phoneNumber': user.phoneNumber,
+        'country': user.country,
+      }),
+    );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Interest()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: SizedBox(
-          width:
-              double
-                  .infinity, // atau pakai double.infinity di bawah kalau tidak pakai centerTitle
-          child: Row(
-            children: const [
-              BuildStepCircle(isActive: true),
-              BuildStepCircle(isActive: false),
-              BuildStepCircle(isActive: false),
-            ],
-          ),
+        title: const Row(
+          children: [
+            BuildStepCircle(isActive: true),
+            BuildStepCircle(isActive: false),
+            BuildStepCircle(isActive: false),
+          ],
         ),
       ),
       body: SafeArea(
@@ -65,13 +104,11 @@ class _BuildProfile extends State<BuildProfile> {
                   Text(
                     'Take a moment to fill in your profile so we can create a more personalized and seamless journey for you.',
                     style: AppTextStyles.subheading,
-                    textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 20),
                   const Center(child: ProfileImage()),
                   const SizedBox(height: 25),
 
-                  // Username
                   CustomTextField(
                     prefixIcon: const Icon(Icons.person, color: Colors.white),
                     hintText: 'Username',
@@ -79,7 +116,6 @@ class _BuildProfile extends State<BuildProfile> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Full Name
                   CustomTextField(
                     prefixIcon: const Icon(Icons.badge, color: Colors.white),
                     hintText: 'Full name',
@@ -87,7 +123,6 @@ class _BuildProfile extends State<BuildProfile> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Date of Birth
                   CustomTextField(
                     prefixIcon: const Icon(
                       Icons.calendar_today,
@@ -115,13 +150,12 @@ class _BuildProfile extends State<BuildProfile> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Gender Picker
                   GenderPicker(
                     gender: gender,
                     onChanged: (val) => setState(() => gender = val ?? ''),
                   ),
+                  const SizedBox(height: 15),
 
-                  // Phone Number
                   CustomTextField(
                     prefixIcon: const Icon(Icons.phone, color: Colors.white),
                     hintText: 'Phone number',
@@ -130,7 +164,6 @@ class _BuildProfile extends State<BuildProfile> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Country Picker
                   CustomTextField(
                     prefixIcon: const Icon(Icons.public, color: Colors.white),
                     hintText: country.isEmpty ? 'Country' : country,
@@ -138,48 +171,21 @@ class _BuildProfile extends State<BuildProfile> {
                     onTap: () {
                       showCountryPicker(
                         context: context,
-                        countryListTheme: CountryListThemeData(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20.0),
-                            topRight: Radius.circular(20.0),
-                          ),
-                          inputDecoration: InputDecoration(
-                            labelText: 'Search',
-                            hintText: 'Start typing to search',
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color(0xFF8C98A8).withOpacity(0.2),
-                              ),
-                            ),
-                          ),
-                        ),
-                        onSelect: (Country selectedCountry) {
-                          setState(() {
-                            country = selectedCountry.name;
-                          });
+                        onSelect: (c) {
+                          setState(() => country = c.name);
                         },
                       );
                     },
                   ),
+                  const SizedBox(height: 30),
 
-                  const SizedBox(height: 15),
-
-                  // Continue Button
                   Center(
                     child: CustomButton(
                       text: 'Continue',
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Interest(),
-                          ),
-                        );
-                      },
+                      onPressed: _handleContinue,
                       padding: EdgeInsets.symmetric(
                         vertical: 10,
-                        horizontal: screenWidth * 0.2, // RESPONSIF
+                        horizontal: screenWidth * 0.2,
                       ),
                     ),
                   ),

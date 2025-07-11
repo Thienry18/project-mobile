@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/data/interest_data.dart';
+import 'package:projek_mobile/models/user_profile.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
+import 'package:projek_mobile/screens/edit_profile.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
@@ -14,7 +17,7 @@ import 'package:projek_mobile/widgets/menu_item.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/toggle_item.dart';
 import 'package:provider/provider.dart';
-import 'package:projek_mobile/screens/edit_profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -25,6 +28,32 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   bool isNotificationEnabled = false;
+  UserProfile? userProfile;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('user_profile');
+
+    if (data != null) {
+      final json = jsonDecode(data);
+      setState(() {
+        userProfile = UserProfile(
+          username: json['username'],
+          fullName: json['fullName'],
+          dob: json['dob'],
+          gender: json['gender'],
+          phoneNumber: json['phoneNumber'],
+          country: json['country'],
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +63,7 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor:
-            themeNotifier.isDarkMode ? Colors.black : const Color(0xff324eaf),
+        backgroundColor: isDarkMode ? Colors.black : const Color(0xff324eaf),
         foregroundColor: Colors.white,
         elevation: 0,
         title: Text(
@@ -111,7 +139,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       const SizedBox(height: 18),
                       Text(
-                        "Moon Ga-young",
+                        userProfile?.fullName ?? "Your Name",
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -134,17 +162,23 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 const SizedBox(height: 22),
+
+                /// === Menu Items ===
                 MenuItem(
                   icon: Icons.person_outline,
                   iconColor: const Color(0XFF696969),
                   title: "Edit Profile",
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const EditProfileScreen(),
-                      ),
-                    );
+                    if (userProfile != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  EditProfileScreen(userProfile: userProfile!),
+                        ),
+                      );
+                    }
                   },
                 ),
                 MenuItem(
@@ -182,45 +216,41 @@ class _ProfileState extends State<Profile> {
                   icon: Icons.lock_outline,
                   iconColor: const Color(0XFF696969),
                   title: "Privacy",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ComingSoon()),
-                    );
-                  },
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ComingSoon()),
+                      ),
                 ),
                 MenuItem(
                   icon: Icons.shield_outlined,
                   iconColor: const Color(0XFF696969),
                   title: "Security",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ComingSoon()),
-                    );
-                  },
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ComingSoon()),
+                      ),
                 ),
                 MenuItem(
                   icon: Icons.help_outline,
                   iconColor: const Color(0XFF696969),
                   title: "FAQ",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ComingSoon()),
-                    );
-                  },
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ComingSoon()),
+                      ),
                 ),
                 MenuItem(
                   icon: Icons.info_outline,
                   iconColor: const Color(0XFF696969),
                   title: "About App",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ComingSoon()),
-                    );
-                  },
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ComingSoon()),
+                      ),
                 ),
                 const SizedBox(height: 25),
                 MenuItem(
@@ -230,10 +260,7 @@ class _ProfileState extends State<Profile> {
                   textColor: Colors.red,
                   trailing: Icon(
                     Icons.arrow_forward_rounded,
-                    color:
-                        Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.red,
+                    color: isDarkMode ? Colors.white : Colors.red,
                     size: 20,
                   ),
                   onTap: () {

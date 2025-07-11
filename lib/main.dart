@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
-      home: Profile(),
+      home: FavScreen(),
     );
   }
 }
