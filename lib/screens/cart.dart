@@ -236,7 +236,7 @@ class _CartPageState extends State<CartPage> {
         children: [
           const SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.only(left: 16), // Tambah padding kiri
+            padding: const EdgeInsets.only(left: 16),
             child: CategoryChips(
               categoryList: ['All', ...categoryList],
               selectedIndexes: {selectedCategoryIndex},
@@ -298,7 +298,7 @@ class _CartPageState extends State<CartPage> {
             builder: (context) {
               final screenWidth = MediaQuery.of(context).size.width;
               return Container(
-                width: screenWidth - 32, // 16 left + 16 right padding
+                width: screenWidth - 32,
                 child: CartItemTile(
                   course: course,
                   isSelected: selectedIndexes.contains(course.index),

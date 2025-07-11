@@ -219,7 +219,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     context,
                     MaterialPageRoute(
                       builder: (_) => const ReviewSliderScreen(),
-                    ), // ✅ Ganti ke ContactScreen
+                    ),
                   );
                 },
               ),

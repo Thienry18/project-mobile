@@ -390,7 +390,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
             label: "Set Reminder/Schedule",
             onTap: () {
               Navigator.pop(context);
-              _pickScheduleDateTime(); // Tambahkan fungsi ini seperti sebelumnya
+              _pickScheduleDateTime();
             },
           ),
           _buildDivider(),

@@ -107,7 +107,6 @@ class VerifyCode extends StatelessWidget {
                           onPressed:
                               provider.isCodeComplete()
                                   ? () {
-                                    // Navigasi jika kode lengkap
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -116,7 +115,6 @@ class VerifyCode extends StatelessWidget {
                                     );
                                   }
                                   : () {
-                                    // Tampilkan SnackBar jika kode tidak lengkap
                                     final snackBar = SnackBar(
                                       content: const Text(
                                         'Please enter the complete 6-digit code.',
@@ -144,9 +142,7 @@ class VerifyCode extends StatelessWidget {
                         ),
                         const SizedBox(height: 3),
                         InkWell(
-                          onTap: () {
-                            // TODO: Implement resend code functionality
-                          },
+                          onTap: () {},
                           child: Text("Resend code", style: AppTextStyles.link),
                         ),
                       ],

@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
-import 'package:projek_mobile/screens/explore_page.dart'; // untuk tombol Explore
+import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class CertificatePage extends StatefulWidget {
 
 class _CertificatePageState extends State<CertificatePage> {
   late final List<String> fullCategoryList;
-  final Set<int> selectedIndexes = {0}; // Default: 'All' selected
+  final Set<int> selectedIndexes = {0};
 
   @override
   void initState() {
@@ -110,14 +110,10 @@ class _CertificatePageState extends State<CertificatePage> {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.asset(
-              course.images,
-              height: 150, // dipendekkan dari 100 ke 80
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset(course.images, height: 150, fit: BoxFit.cover),
           ),
           Padding(
-            padding: const EdgeInsets.all(6.0), // diperkecil dari 8 ke 6
+            padding: const EdgeInsets.all(6.0),
             child: Text(
               course.title,
               maxLines: 2,
