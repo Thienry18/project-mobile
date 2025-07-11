@@ -9,6 +9,7 @@ import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
+import 'package:projek_mobile/screens/contact.dart';
 import 'package:projek_mobile/screens/course_details.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
@@ -216,7 +217,9 @@ class _ExplorePageState extends State<ExplorePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => ComingSoon()),
+                    MaterialPageRoute(
+                      builder: (_) => const ReviewSliderScreen(),
+                    ), // ✅ Ganti ke ContactScreen
                   );
                 },
               ),

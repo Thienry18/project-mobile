@@ -154,6 +154,9 @@ flutter:
     - assets/pdfs/certificate.pdf
     - assets/icons/mastercard.png
     - assets/images/certificate.jpg
+    - assets/profile/delvin.jpg
+    - assets/profile/thienry.jpg
+    - assets/profile/Andrian.jpg
 
  
 
