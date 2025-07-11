@@ -1,3 +1,4 @@
+// ✅ CheckoutHandler.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/data/cart_data.dart';
@@ -11,15 +12,11 @@ class CheckoutHandler {
     List<Course> selectedItems,
     double promoDiscount,
   ) async {
-    for (final course in selectedItems) {
-      myCourses.add(course);
-    }
-
     cartCourses.removeWhere((item) => selectedItems.contains(item));
 
     final prefs = await SharedPreferences.getInstance();
 
-    // Save to History
+    // ✅ Save to purchase history
     final data = prefs.getString('purchase_history');
     List<Map<String, dynamic>> history =
         data != null ? List<Map<String, dynamic>>.from(jsonDecode(data)) : [];
@@ -38,10 +35,9 @@ class CheckoutHandler {
         'status': 'completed',
       });
     }
-
     await prefs.setString('purchase_history', jsonEncode(history));
 
-    // Save Notification
+    // ✅ Save notification
     final notifData = prefs.getString('notifications');
     List<Map<String, dynamic>> currentNotifs =
         notifData != null
@@ -51,15 +47,41 @@ class CheckoutHandler {
     final newNotif = {
       'title': 'Order Completed!',
       'message':
-          'Thanks for your purchase! Your course is now available in My Course. Take your time, start whenever you’re ready, and enjoy every step of your learning journey.',
+          'Thanks for your purchase! Your course is now available in My Course.',
       'image': selectedItems.first.images,
       'date': _getCurrentFormattedDateTime(),
       'unread': true,
       'isNetworkImage': true,
     };
-
     currentNotifs.insert(0, newNotif);
     await prefs.setString('notifications', jsonEncode(currentNotifs));
+
+    // ✅ Save to my_courses (prevent duplicates)
+    final existingCourseData = prefs.getString('my_courses');
+    List<Map<String, dynamic>> currentCourses =
+        existingCourseData != null
+            ? List<Map<String, dynamic>>.from(jsonDecode(existingCourseData))
+            : [];
+
+    for (final course in selectedItems) {
+      if (!currentCourses.any((c) => c['title'] == course.title)) {
+        currentCourses.add({
+          'index': course.index,
+          'title': course.title,
+          'price': course.price,
+          'images': course.images,
+          'category': course.category,
+          'rating': course.rating,
+          'duration': course.duration,
+          'isBestseller': course.isBestseller,
+          'instructor': course.instructor,
+          'language': course.language,
+          'subtitle': course.subtitle,
+        });
+      }
+    }
+
+    await prefs.setString('my_courses', jsonEncode(currentCourses));
   }
 
   static String _getCurrentFormattedDateTime() {
