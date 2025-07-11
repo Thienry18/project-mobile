@@ -4,6 +4,7 @@ import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:projek_mobile/screens/cart.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -55,20 +56,26 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       appBar: AppBar(
         leading: const BackButton(),
         actions: [
-          IconButton(
-            icon: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? Colors.red : null,
+          Tooltip(
+            message: isFavorite ? 'Remove from Favorites' : 'Add to Favorites',
+            child: IconButton(
+              icon: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: isFavorite ? Colors.red : null,
+              ),
+              onPressed: () {
+                setState(() {
+                  isFavorite = !isFavorite;
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                isFavorite = !isFavorite;
-              });
-            },
           ),
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () => showShareOptions(context, widget.title),
+          Tooltip(
+            message: 'Share',
+            child: IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: () => showShareOptions(context, widget.title),
+            ),
           ),
         ],
       ),
@@ -177,13 +184,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
               ),
               children: [
                 ListTile(
-                  title: Text(
-                    '• Welcome to the course',
-                    style: AppTextStyles.body,
-                  ),
+                  title: Text('• Coming Soon', style: AppTextStyles.body),
                 ),
                 ListTile(
-                  title: Text('• AWS overview', style: AppTextStyles.body),
+                  title: Text('• Coming Soon', style: AppTextStyles.body),
                 ),
               ],
             ),
@@ -388,7 +392,36 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             child: SizedBox(
               height: 48,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  final course = Course(
+                    title: widget.title,
+                    images: widget.imageUrl,
+                    price: widget.price,
+                    rating: widget.rating,
+                    duration: widget.duration,
+                    isBestseller: widget.isBestseller,
+                    index: DateTime.now().millisecondsSinceEpoch,
+                    category: '',
+                    instructor: widget.instructor,
+                    language: 'English',
+                    subtitle: 'Indonesian',
+                  );
+
+                  if (!cartCourses.any((c) => c.title == course.title)) {
+                    cartCourses.add(course);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CartPage()),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Already in cart'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xff32CD32),
                   shape: RoundedRectangleBorder(

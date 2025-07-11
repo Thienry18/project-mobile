@@ -244,10 +244,13 @@ class _HistoryScreenState extends State<HistoryScreen>
         foregroundColor: Colors.white,
         leading: const BackButton(color: Colors.white),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.delete_outline),
-            tooltip: "Clear History",
-            onPressed: () => _confirmDeleteHistory(context),
+          Tooltip(
+            message: 'Clear History',
+            child: IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: "Clear History",
+              onPressed: () => _confirmDeleteHistory(context),
+            ),
           ),
         ],
         bottom: TabBar(

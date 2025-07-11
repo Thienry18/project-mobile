@@ -143,25 +143,34 @@ class _MyCoursePageState extends State<MyCoursePage> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => SearchScreen(courseList: trendingCourses),
-                ),
-              );
-            },
+          Tooltip(
+            message: 'Search',
+            child: IconButton(
+              icon: const Icon(Icons.search, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => SearchScreen(courseList: trendingCourses),
+                  ),
+                );
+              },
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const CartPage()),
-              );
-            },
+          Tooltip(
+            message: 'Cart',
+            child: IconButton(
+              icon: const Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CartPage()),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -288,19 +297,22 @@ class _MyCoursePageState extends State<MyCoursePage> {
                       color: isDarkMode ? Colors.white70 : Colors.grey,
                     ),
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(10),
+                  trailing: Tooltip(
+                    message: 'More options',
+                    child: IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(10),
+                            ),
                           ),
-                        ),
-                        builder: (_) => _buildBottomSheet(context, course),
-                      );
-                    },
+                          builder: (_) => _buildBottomSheet(context, course),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),

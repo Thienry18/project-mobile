@@ -47,11 +47,14 @@ class _CertificatePageState extends State<CertificatePage> {
       appBar: AppBar(
         backgroundColor: isDarkMode ? Colors.black : Color(0xFF324EAF),
         foregroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        leading: Tooltip(
+          message: 'Back',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         title: Text(
           'My Certificate',

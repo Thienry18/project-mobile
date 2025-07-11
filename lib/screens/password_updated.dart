@@ -11,11 +11,14 @@ class PasswordUpdated extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF7A8EDA)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        leading: Tooltip(
+          message: 'Back',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF7A8EDA)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         elevation: 0,
         backgroundColor: Colors.white,

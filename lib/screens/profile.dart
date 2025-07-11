@@ -72,23 +72,33 @@ class _ProfileState extends State<Profile> {
           style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.diamond, color: Colors.blueAccent, size: 28),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ComingSoon()),
-              );
-            },
+          Tooltip(
+            message: 'premium',
+            child: IconButton(
+              icon: const Icon(
+                Icons.diamond,
+                color: Colors.blueAccent,
+                size: 28,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ComingSoon()),
+                );
+              },
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined, size: 28),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CartPage()),
-              );
-            },
+          Tooltip(
+            message: 'Cart',
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart_outlined, size: 28),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartPage()),
+                );
+              },
+            ),
           ),
         ],
       ),

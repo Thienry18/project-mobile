@@ -144,15 +144,18 @@ class _NotificationPageState extends State<NotificationPage>
         ),
         actions: [
           const SizedBox(width: 10),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined),
-            color: Colors.white,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => CartPage()),
-              );
-            },
+          Tooltip(
+            message: 'Cart',
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart_outlined),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => CartPage()),
+                );
+              },
+            ),
           ),
 
           const SizedBox(width: 10),

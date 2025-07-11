@@ -73,15 +73,18 @@ class _ExplorePageState extends State<ExplorePage> {
               Consumer<ProfileImageProvider>(
                 builder: (context, profileImageProvider, _) {
                   final imageFile = profileImageProvider.image;
-                  return CircleAvatar(
-                    radius: 30,
-                    backgroundImage:
-                        imageFile != null
-                            ? FileImage(imageFile)
-                            : const AssetImage(
-                                  "assets/images/default_profile.png",
-                                )
-                                as ImageProvider,
+                  return Tooltip(
+                    message: 'Profile',
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundImage:
+                          imageFile != null
+                              ? FileImage(imageFile)
+                              : const AssetImage(
+                                    "assets/images/default_profile.png",
+                                  )
+                                  as ImageProvider,
+                    ),
                   );
                 },
               ),
@@ -305,44 +308,58 @@ class _ExplorePageState extends State<ExplorePage> {
         backgroundColor: isDarkMode ? Colors.black : Color(0xff324eaf),
         leading: Builder(
           builder:
-              (context) => IconButton(
-                icon: const Icon(Icons.menu, color: Colors.white),
-                onPressed: () => Scaffold.of(context).openDrawer(),
+              (context) => Tooltip(
+                message: 'Menu',
+                child: IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.white),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
               ),
         ),
 
         actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => CartPage()),
-              );
-            },
+          Tooltip(
+            message: 'Cart',
+            child: IconButton(
+              icon: const Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => CartPage()),
+                );
+              },
+            ),
           ),
           const SizedBox(width: 8),
           Consumer<ProfileImageProvider>(
             builder: (context, profileImageProvider, _) {
               final imageFile = profileImageProvider.image;
-              return Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Profile()),
-                    );
-                  },
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundImage:
-                        imageFile != null
-                            ? FileImage(imageFile)
-                            : const AssetImage(
-                                  "assets/images/default_profile.png",
-                                )
-                                as ImageProvider,
+              return Tooltip(
+                message: 'Profile',
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Profile(),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundImage:
+                          imageFile != null
+                              ? FileImage(imageFile)
+                              : const AssetImage(
+                                    "assets/images/default_profile.png",
+                                  )
+                                  as ImageProvider,
+                    ),
                   ),
                 ),
               );
@@ -684,12 +701,15 @@ class _ExplorePageState extends State<ExplorePage> {
                       }
                     });
                   },
-                  child: Icon(
-                    isFavorited
-                        ? Icons.shopping_cart
-                        : Icons.shopping_cart_outlined,
-                    color: isFavorited ? Colors.green : Colors.white,
-                    size: 20,
+                  child: Tooltip(
+                    message: isFavorited ? 'Remove' : 'Add',
+                    child: Icon(
+                      isFavorited
+                          ? Icons.shopping_cart
+                          : Icons.shopping_cart_outlined,
+                      color: isFavorited ? Colors.green : Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
