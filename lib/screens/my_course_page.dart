@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
@@ -17,9 +16,8 @@ import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/screens/video_player.dart';
-import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
-import 'package:projek_mobile/widgets/icon_circle_button.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
+import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,6 +33,8 @@ class MyCoursePage extends StatefulWidget {
 class _MyCoursePageState extends State<MyCoursePage> {
   final List<String> alllist = ['All', ...categoryList];
   Set<int> selectedIndexes = {0};
+  DateTime? _scheduledDateTime;
+
   @override
   void initState() {
     super.initState();
@@ -82,6 +82,40 @@ class _MyCoursePageState extends State<MyCoursePage> {
     }
   }
 
+  Future<void> _pickScheduleDateTime() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().add(const Duration(days: 1)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+
+    if (date == null) return;
+
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (time == null) return;
+
+    final scheduled = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+
+    setState(() {
+      _scheduledDateTime = scheduled;
+    });
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Reminder has been set!')));
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
@@ -108,7 +142,6 @@ class _MyCoursePageState extends State<MyCoursePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: false,
         actions: [
           IconButton(
             icon: const Icon(Icons.search, color: Colors.white),
@@ -116,8 +149,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => SearchScreen(courseList: trendingCourses),
+                  builder: (_) => SearchScreen(courseList: trendingCourses),
                 ),
               );
             },
@@ -127,40 +159,65 @@ class _MyCoursePageState extends State<MyCoursePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CartPage()),
+                MaterialPageRoute(builder: (_) => const CartPage()),
               );
             },
           ),
-          const SizedBox(width: 10),
         ],
       ),
-
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child:
-            myCourses.isEmpty
-                ? _buildEmptyState(isDarkMode)
-                : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
-                    CategoryChips(
-                      categoryList: alllist,
-                      selectedIndexes: selectedIndexes,
-                      onCategoryToggle: (index) {
-                        setState(() {
-                          if (selectedIndexes.contains(index)) {
-                            selectedIndexes.remove(index);
-                          } else {
-                            selectedIndexes.add(index);
-                          }
-                        });
-                      },
+      body: Column(
+        children: [
+          if (_scheduledDateTime != null)
+            Container(
+              width: double.infinity,
+              color: Colors.green.shade50,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              child: Row(
+                children: [
+                  const Icon(Icons.schedule, color: Colors.green),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Reminder set on: ${_scheduledDateTime!.toLocal().toString().substring(0, 16)}',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: Colors.green[900],
+                      ),
                     ),
-                    const SizedBox(height: 16),
-                    Expanded(child: _buildCourseCardList(filteredCourses)),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+            ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child:
+                  myCourses.isEmpty
+                      ? _buildEmptyState(isDarkMode)
+                      : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 8),
+                          CategoryChips(
+                            categoryList: alllist,
+                            selectedIndexes: selectedIndexes,
+                            onCategoryToggle: (index) {
+                              setState(() {
+                                selectedIndexes.contains(index)
+                                    ? selectedIndexes.remove(index)
+                                    : selectedIndexes.add(index);
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Expanded(
+                            child: _buildCourseCardList(filteredCourses),
+                          ),
+                        ],
+                      ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 1,
@@ -180,13 +237,13 @@ class _MyCoursePageState extends State<MyCoursePage> {
             case 2:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => NotificationPage()),
+                MaterialPageRoute(builder: (_) => const NotificationPage()),
               );
               break;
             case 3:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => Profile()),
+                MaterialPageRoute(builder: (_) => const Profile()),
               );
               break;
           }
@@ -202,7 +259,6 @@ class _MyCoursePageState extends State<MyCoursePage> {
       itemBuilder: (context, index) {
         final course = courseList[index];
         return Card(
-          color: isDarkMode ? Colors.black : Colors.white,
           margin: const EdgeInsets.symmetric(vertical: 8),
           child: Stack(
             children: [
@@ -242,8 +298,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
                             top: Radius.circular(10),
                           ),
                         ),
-                        builder:
-                            (context) => _buildBottomSheet(context, course),
+                        builder: (_) => _buildBottomSheet(context, course),
                       );
                     },
                   ),
@@ -297,135 +352,117 @@ class _MyCoursePageState extends State<MyCoursePage> {
 
   Widget _buildBottomSheet(BuildContext context, Course course) {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              dense: true,
-              leading: const Icon(Icons.start, color: Colors.grey),
-              title: Text(
-                "Start/Continue Course",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xFF324EAF),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildBottomSheetTile(
+            icon: Icons.start,
+            label: "Start/Continue Course",
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => VideoPlayer(course: course)),
+              );
+            },
+          ),
+          _buildDivider(),
+          _buildBottomSheetTile(
+            icon: Icons.workspace_premium,
+            label: "View Certificate",
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => const CertificateImageScreen(
+                        imagePath: 'assets/images/certificate.jpg',
+                      ),
                 ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VideoPlayer(course: course),
-                  ),
-                );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.workspace_premium, color: Colors.grey),
-              title: Text(
-                "View Certificate",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xFF324EAF),
+              );
+            },
+          ),
+          _buildDivider(),
+          _buildBottomSheetTile(
+            icon: Icons.schedule,
+            label: "Set Reminder/Schedule",
+            onTap: () {
+              Navigator.pop(context);
+              _pickScheduleDateTime(); // Tambahkan fungsi ini seperti sebelumnya
+            },
+          ),
+          _buildDivider(),
+          _buildBottomSheetTile(
+            icon: Icons.share,
+            label: "Share Course",
+            onTap: () {
+              Navigator.pop(context);
+              showShareOptions(context, course.title);
+            },
+          ),
+          _buildDivider(),
+          _buildBottomSheetTile(
+            icon: Icons.grid_view,
+            label: "View Course Details",
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => CourseDetailScreen(
+                        title: course.title,
+                        imageUrl: course.images,
+                        price: course.price,
+                        rating: course.rating,
+                        duration: course.duration,
+                        isBestseller: course.isBestseller,
+                        instructor: course.instructor,
+                        recommendedCourses: const [],
+                      ),
                 ),
-              ),
-              onTap: () {
-                Navigator.pop(context); // Tutup bottom sheet
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (_) => const CertificateImageScreen(
-                          imagePath:
-                              'assets/images/certificate.jpg', // sesuaikan path
-                        ),
-                  ),
-                );
-              },
-            ),
-
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.schedule, color: Colors.grey),
-              title: Text(
-                "Set Reminder/Schedule",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xFF324EAF),
-                ),
-              ),
-              onTap: () => Navigator.pop(context),
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.share, color: Colors.grey),
-              title: Text(
-                "Share Course",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xFF324EAF),
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                showShareOptions(context, course.title);
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.grid_view, color: Colors.grey),
-              title: Text(
-                "View Course Details",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xFF324EAF),
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(context); // Tutup bottom sheet
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (_) => CourseDetailScreen(
-                          title: course.title,
-                          imageUrl: course.images,
-                          price: course.price,
-                          rating: course.rating,
-                          duration: course.duration,
-                          isBestseller: course.isBestseller,
-                          instructor: course.instructor,
-                          recommendedCourses:
-                              const [], // atau isi sesuai kebutuhan
-                        ),
-                  ),
-                );
-              },
-            ),
-
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.report, color: Colors.grey),
-              title: Text(
-                "Report a Problem",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xFF324EAF),
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                openGoogleForm();
-              },
-            ),
-          ],
-        ),
+              );
+            },
+          ),
+          _buildDivider(),
+          _buildBottomSheetTile(
+            icon: Icons.report,
+            label: "Report a Problem",
+            onTap: () {
+              Navigator.pop(context);
+              openGoogleForm();
+            },
+          ),
+        ],
       ),
     );
   }
+
+  Widget _buildBottomSheetTile({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      horizontalTitleGap: 8,
+      leading: Icon(icon, color: Colors.grey.shade700, size: 18),
+      title: Text(
+        label,
+        style: GoogleFonts.poppins(
+          fontSize: 13,
+          color: const Color(0xFF324EAF),
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildDivider() => const Divider(height: 0, thickness: 0.5);
 
   Widget _buildEmptyState(bool isDarkMode) {
     return Column(
@@ -454,33 +491,30 @@ class _MyCoursePageState extends State<MyCoursePage> {
           ),
         ),
         const SizedBox(height: 20),
-        Center(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => ExplorePage(selectedCategory: categoryselected),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ExplorePage(selectedCategory: categoryselected),
               ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Explore", style: TextStyle(color: Colors.white)),
-                  SizedBox(width: 6),
-                  Icon(Icons.arrow_right_alt, color: Colors.white),
-                ],
-              ),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Explore", style: TextStyle(color: Colors.white)),
+                SizedBox(width: 6),
+                Icon(Icons.arrow_right_alt, color: Colors.white),
+              ],
             ),
           ),
         ),
