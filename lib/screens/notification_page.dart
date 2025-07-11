@@ -222,15 +222,6 @@ class _NotificationPageState extends State<NotificationPage>
         spaceBetweenChildren: 8,
         children: [
           SpeedDialChild(
-            child: const Icon(Icons.settings, color: Colors.white),
-            backgroundColor: const Color(0xff324eaf),
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => ComingSoon()),
-                ),
-          ),
-          SpeedDialChild(
             child: const Icon(Icons.delete, color: Colors.white),
             backgroundColor:
                 isDeleteMode ? Colors.red : const Color(0xff324eaf),

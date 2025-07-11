@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
@@ -11,7 +8,6 @@ import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
-import 'package:projek_mobile/screens/payment_method.dart';
 import 'package:projek_mobile/screens/payment_method.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/menu_item.dart';
@@ -32,14 +28,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _pickImage(BuildContext context) async {
-      final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (picked != null) {
-        final imageFile = File(picked.path);
-        context.read<ProfileImageProvider>().setImage(imageFile);
-      }
-    }
-
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     final isDarkMode = themeNotifier.isDarkMode;
 

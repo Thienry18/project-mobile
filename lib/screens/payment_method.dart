@@ -1,11 +1,36 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/screens/add_new_card.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class PaymentMethodsScreen extends StatelessWidget {
+class PaymentMethodsScreen extends StatefulWidget {
   const PaymentMethodsScreen({super.key});
+
+  @override
+  State<PaymentMethodsScreen> createState() => _PaymentMethodsScreenState();
+}
+
+class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
+  List<Map<String, dynamic>> savedCards = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCards();
+  }
+
+  Future<void> _loadSavedCards() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('user_cards');
+    if (data != null) {
+      setState(() {
+        savedCards = List<Map<String, dynamic>>.from(jsonDecode(data));
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +60,6 @@ class PaymentMethodsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Container utama
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.blue.shade200),
@@ -44,16 +68,13 @@ class PaymentMethodsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header
                   Padding(
-                    padding: const EdgeInsets.only(
-                      top: 12,
-                      left: 16,
-                      right: 16,
-                      bottom: 6,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
                     child: Text(
-                      'Your Payment Method',
+                      'Your Payment Methods',
                       style: GoogleFonts.poppins(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w600,
@@ -61,50 +82,48 @@ class PaymentMethodsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Column(
+                    children:
+                        savedCards.map((card) {
+                          final cleanNumber = card['number']
+                              .toString()
+                              .replaceAll(' ', '');
+                          final last4 = cleanNumber.substring(
+                            cleanNumber.length - 4,
+                          );
 
-                  // Kartu MasterCard
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(0),
-                      topRight: Radius.circular(0),
-                    ),
-                    child: Container(
-                      color: blueColor,
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        leading: Image.asset(
-                          'assets/icons/mastercard.png',
-                          width: 26,
-                          height: 26,
-                        ),
-                        title: Text(
-                          'MasterCard – •••• 7220',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13.5,
-                          ),
-                        ),
-                      ),
-                    ),
+                          return Container(
+                            color: blueColor,
+                            margin: const EdgeInsets.only(bottom: 1),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 4,
+                              ),
+                              leading: Image.asset(
+                                'assets/icons/mastercard.png',
+                                width: 26,
+                                height: 26,
+                              ),
+                              title: Text(
+                                '${card['type']} – •••• $last4',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13.5,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                   ),
-
-                  // Add Card
                   ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12),
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(12),
                     ),
                     child: Container(
                       color: Colors.blue.shade50,
                       child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
                         leading: Icon(
                           Icons.add_circle_outline,
                           color: Colors.blue.shade800,
@@ -118,13 +137,16 @@ class PaymentMethodsScreen extends StatelessWidget {
                             fontSize: 13.5,
                           ),
                         ),
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const AddNewCardScreen(),
                             ),
                           );
+                          if (result == true) {
+                            _loadSavedCards();
+                          }
                         },
                       ),
                     ),
