@@ -14,9 +14,10 @@ import 'package:projek_mobile/screens/course_details.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
+import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
-import 'package:projek_mobile/widgets/icon_circle_button.dart';
+import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
@@ -120,52 +121,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(
-                  Icons.diamond,
-                  color: Color(0xff696969),
-                  size: 16,
-                ),
-                title: Text(
-                  'Upgrade to Premium',
-                  style: GoogleFonts.poppins(
-                    color: Color(0xff324eaf),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => ComingSoon()),
-                  );
-                },
-              ),
-              ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(
-                  Icons.checklist_outlined,
-                  color: Color(0xff696969),
-                  size: 16,
-                ),
-                title: Text(
-                  'Daily Check-in',
-                  style: GoogleFonts.poppins(
-                    color: Color(0xff324eaf),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => CartPage()),
-                  );
-                },
-              ),
+
               ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
@@ -202,6 +158,35 @@ class _ExplorePageState extends State<ExplorePage> {
                 dense: true,
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(
+                  Icons.search,
+                  color: Color(0xff696969),
+                  size: 16,
+                ),
+                title: Text(
+                  'Search Course',
+                  style: GoogleFonts.poppins(
+                    color: Color(0xff324eaf),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => SearchScreen(
+                            courseList: trendingCourses,
+                          ), // ganti sesuai list yang tersedia
+                    ),
+                  );
+                },
+              ),
+
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(
                   Icons.badge,
                   color: Color(0xff696969),
                   size: 16,
@@ -223,29 +208,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   );
                 },
               ),
-              ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(
-                  Icons.question_answer,
-                  color: Color(0xff696969),
-                  size: 16,
-                ),
-                title: Text(
-                  'Help Center',
-                  style: GoogleFonts.poppins(
-                    color: Color(0xff324eaf),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => ComingSoon()),
-                  );
-                },
-              ),
+
               SizedBox(height: 40),
               Text(
                 'More Option',
@@ -255,29 +218,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(
-                  Icons.settings,
-                  color: Color(0xff696969),
-                  size: 16,
-                ),
-                title: Text(
-                  'Settings',
-                  style: GoogleFonts.poppins(
-                    color: Color(0xff324eaf),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => ComingSoon()),
-                  );
-                },
-              ),
+
               ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
