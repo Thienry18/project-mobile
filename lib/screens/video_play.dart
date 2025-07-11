@@ -15,6 +15,7 @@ class AssetVideoScreen extends StatefulWidget {
 class _AssetVideoScreenState extends State<AssetVideoScreen> {
   late VideoPlayerController _controller;
   bool _showControls = true;
+  DateTime? _scheduledDateTime;
 
   @override
   void initState() {
@@ -52,6 +53,42 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
     );
   }
 
+  Future<void> _pickScheduleDateTime() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().add(const Duration(days: 1)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+
+    if (date == null) return;
+
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (time == null) return;
+
+    final scheduled = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+
+    setState(() {
+      _scheduledDateTime = scheduled;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Reminder has been set!", style: GoogleFonts.poppins()),
+      ),
+    );
+  }
+
   void _showMoreOptionsSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -82,7 +119,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 );
               },
             ),
-
             ListTile(
               leading: const Icon(Icons.schedule, color: Colors.grey),
               title: Text(
@@ -91,14 +127,7 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
               ),
               onTap: () {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "Share clicked",
-                      style: GoogleFonts.poppins(),
-                    ),
-                  ),
-                );
+                _pickScheduleDateTime();
               },
             ),
             ListTile(
@@ -112,7 +141,6 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 showShareOptions(context, 'Certificate of Achievement');
               },
             ),
-
             ListTile(
               leading: const Icon(Icons.grid_view, color: Colors.grey),
               title: Text(
@@ -124,20 +152,12 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      "Report clicked",
+                      "View Course clicked",
                       style: GoogleFonts.poppins(),
                     ),
                   ),
                 );
               },
-            ),
-            ListTile(
-              leading: const Icon(Icons.report, color: Colors.grey),
-              title: Text(
-                'Report a problem',
-                style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
-              ),
-              onTap: () => Navigator.pop(context),
             ),
           ],
         );
@@ -154,139 +174,169 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
         foregroundColor: Colors.white,
         title: Text("Video Player", style: GoogleFonts.poppins()),
       ),
-      body: GestureDetector(
-        onTap: _toggleControls,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Center(
-              child:
-                  _controller.value.isInitialized
-                      ? AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller),
-                      )
-                      : const CircularProgressIndicator(),
-            ),
-
-            if (_showControls && _controller.value.isInitialized)
-              Positioned(
-                top: 16,
-                right: 16,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.subtitles, color: Colors.white),
-                      tooltip: 'Subtitles',
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Subtitle clicked",
-                              style: GoogleFonts.poppins(),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.more_vert, color: Colors.white),
-                      tooltip: 'More options',
-                      onPressed: () => _showMoreOptionsSheet(context),
-                    ),
-                  ],
-                ),
-              ),
-
-            if (_showControls && _controller.value.isInitialized)
-              Positioned(
-                bottom: 60,
-                left: 20,
-                right: 20,
-                child: VideoProgressIndicator(
-                  _controller,
-                  allowScrubbing: true,
-                  colors: VideoProgressColors(
-                    playedColor: Colors.white,
-                    bufferedColor: Colors.grey,
-                    backgroundColor: Colors.grey[700]!,
-                  ),
-                ),
-              ),
-
-            if (_showControls && _controller.value.isInitialized)
-              Positioned(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.skip_previous),
-                      color: Colors.white,
-                      iconSize: 32,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Previous clicked",
-                              style: GoogleFonts.poppins(),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(width: 12),
-                    IconButton(
-                      icon: const Icon(Icons.replay_10),
-                      color: Colors.white,
-                      iconSize: 32,
-                      onPressed: _skipBackward,
-                    ),
-                    const SizedBox(width: 12),
-                    IconButton(
-                      icon: Icon(
-                        _controller.value.isPlaying
-                            ? Icons.pause_circle_filled
-                            : Icons.play_circle_fill,
+      body: Column(
+        children: [
+          if (_scheduledDateTime != null)
+            Container(
+              width: double.infinity,
+              color: Colors.green.shade50,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              child: Row(
+                children: [
+                  const Icon(Icons.schedule, color: Colors.green),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Reminder set on: ${_scheduledDateTime!.toLocal().toString().substring(0, 16)}',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: Colors.green[900],
                       ),
-                      color: Colors.white,
-                      iconSize: 48,
-                      onPressed: () {
-                        setState(() {
-                          _controller.value.isPlaying
-                              ? _controller.pause()
-                              : _controller.play();
-                        });
-                      },
                     ),
-                    const SizedBox(width: 12),
-                    IconButton(
-                      icon: const Icon(Icons.forward_10),
-                      color: Colors.white,
-                      iconSize: 32,
-                      onPressed: _skipForward,
-                    ),
-                    const SizedBox(width: 12),
-                    IconButton(
-                      icon: const Icon(Icons.skip_next),
-                      color: Colors.white,
-                      iconSize: 32,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Next clicked",
-                              style: GoogleFonts.poppins(),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-          ],
-        ),
+            ),
+          Expanded(
+            child: GestureDetector(
+              onTap: _toggleControls,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Center(
+                    child:
+                        _controller.value.isInitialized
+                            ? AspectRatio(
+                              aspectRatio: _controller.value.aspectRatio,
+                              child: VideoPlayer(_controller),
+                            )
+                            : const CircularProgressIndicator(),
+                  ),
+                  if (_showControls && _controller.value.isInitialized)
+                    Positioned(
+                      top: 16,
+                      right: 16,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.subtitles,
+                              color: Colors.white,
+                            ),
+                            tooltip: 'Subtitles',
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Subtitle clicked",
+                                    style: GoogleFonts.poppins(),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.more_vert,
+                              color: Colors.white,
+                            ),
+                            tooltip: 'More options',
+                            onPressed: () => _showMoreOptionsSheet(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (_showControls && _controller.value.isInitialized)
+                    Positioned(
+                      bottom: 60,
+                      left: 20,
+                      right: 20,
+                      child: VideoProgressIndicator(
+                        _controller,
+                        allowScrubbing: true,
+                        colors: VideoProgressColors(
+                          playedColor: Colors.white,
+                          bufferedColor: Colors.grey,
+                          backgroundColor: Colors.grey[700]!,
+                        ),
+                      ),
+                    ),
+                  if (_showControls && _controller.value.isInitialized)
+                    Positioned(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.skip_previous),
+                            color: Colors.white,
+                            iconSize: 32,
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Previous clicked",
+                                    style: GoogleFonts.poppins(),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 12),
+                          IconButton(
+                            icon: const Icon(Icons.replay_10),
+                            color: Colors.white,
+                            iconSize: 32,
+                            onPressed: _skipBackward,
+                          ),
+                          const SizedBox(width: 12),
+                          IconButton(
+                            icon: Icon(
+                              _controller.value.isPlaying
+                                  ? Icons.pause_circle_filled
+                                  : Icons.play_circle_fill,
+                            ),
+                            color: Colors.white,
+                            iconSize: 48,
+                            onPressed: () {
+                              setState(() {
+                                _controller.value.isPlaying
+                                    ? _controller.pause()
+                                    : _controller.play();
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 12),
+                          IconButton(
+                            icon: const Icon(Icons.forward_10),
+                            color: Colors.white,
+                            iconSize: 32,
+                            onPressed: _skipForward,
+                          ),
+                          const SizedBox(width: 12),
+                          IconButton(
+                            icon: const Icon(Icons.skip_next),
+                            color: Colors.white,
+                            iconSize: 32,
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Next clicked",
+                                    style: GoogleFonts.poppins(),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

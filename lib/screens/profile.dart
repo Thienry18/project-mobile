@@ -222,16 +222,7 @@ class _ProfileState extends State<Profile> {
                     });
                   },
                 ),
-                MenuItem(
-                  icon: Icons.lock_outline,
-                  iconColor: const Color(0XFF696969),
-                  title: "Privacy",
-                  onTap:
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ComingSoon()),
-                      ),
-                ),
+
                 MenuItem(
                   icon: Icons.shield_outlined,
                   iconColor: const Color(0XFF696969),
@@ -244,26 +235,7 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                 ),
-                MenuItem(
-                  icon: Icons.help_outline,
-                  iconColor: const Color(0XFF696969),
-                  title: "FAQ",
-                  onTap:
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ComingSoon()),
-                      ),
-                ),
-                MenuItem(
-                  icon: Icons.info_outline,
-                  iconColor: const Color(0XFF696969),
-                  title: "About App",
-                  onTap:
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ComingSoon()),
-                      ),
-                ),
+
                 const SizedBox(height: 25),
                 MenuItem(
                   icon: Icons.logout,

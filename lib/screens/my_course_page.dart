@@ -439,14 +439,6 @@ class _MyCoursePageState extends State<MyCoursePage> {
             },
           ),
           _buildDivider(),
-          _buildBottomSheetTile(
-            icon: Icons.report,
-            label: "Report a Problem",
-            onTap: () {
-              Navigator.pop(context);
-              openGoogleForm();
-            },
-          ),
         ],
       ),
     );
