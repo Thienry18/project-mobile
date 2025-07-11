@@ -50,7 +50,6 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       if (existing != null) {
         cardList = List<Map<String, dynamic>>.from(jsonDecode(existing));
 
-        // ❌ Cek duplikat kartu
         final isDuplicate = cardList.any((card) {
           final existingNumber = card['number'].toString().replaceAll(' ', '');
           return existingNumber == newCardNumber;
@@ -68,12 +67,11 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
         }
       }
 
-      // ✅ Tambah kartu
       cardList.add(newCard);
       await prefs.setString('user_cards', jsonEncode(cardList));
 
       if (!mounted) return;
-      Navigator.pop(context, true); // kembali ke payment method
+      Navigator.pop(context, true);
     }
   }
 

@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/screens/forgot_password.dart';
-import 'package:projek_mobile/screens/verify_code.dart';
 import 'package:projek_mobile/screens/verify_code_pin.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 
@@ -27,11 +26,14 @@ class EmailNotificationPin extends StatelessWidget {
                     children: [
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                        child: Tooltip(
+                          message: 'Back',
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 40),

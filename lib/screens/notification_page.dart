@@ -144,15 +144,18 @@ class _NotificationPageState extends State<NotificationPage>
         ),
         actions: [
           const SizedBox(width: 10),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined),
-            color: Colors.white, // atau Colors.white jika AppBar-nya gelap
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => CartPage()),
-              );
-            },
+          Tooltip(
+            message: 'Cart',
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart_outlined),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => CartPage()),
+                );
+              },
+            ),
           ),
 
           const SizedBox(width: 10),
@@ -161,7 +164,6 @@ class _NotificationPageState extends State<NotificationPage>
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.grey,
-          // indicatorColor: const Color(0xff324eaf),
           tabs: const [
             Tab(icon: Icon(Icons.mail_outline), text: 'All'),
             Tab(icon: Icon(Icons.mark_email_unread_outlined), text: 'Unread'),

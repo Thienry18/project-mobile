@@ -24,7 +24,6 @@ class _ProfileImageState extends State<ProfileImage> {
         _imageFile = imageFile;
       });
 
-      // Simpan ke provider
       context.read<ProfileImageProvider>().setImage(imageFile);
     }
   }

@@ -74,15 +74,18 @@ class _ExplorePageState extends State<ExplorePage> {
               Consumer<ProfileImageProvider>(
                 builder: (context, profileImageProvider, _) {
                   final imageFile = profileImageProvider.image;
-                  return CircleAvatar(
-                    radius: 30,
-                    backgroundImage:
-                        imageFile != null
-                            ? FileImage(imageFile)
-                            : const AssetImage(
-                                  "assets/images/default_profile.png",
-                                )
-                                as ImageProvider,
+                  return Tooltip(
+                    message: 'Profile',
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundImage:
+                          imageFile != null
+                              ? FileImage(imageFile)
+                              : const AssetImage(
+                                    "assets/images/default_profile.png",
+                                  )
+                                  as ImageProvider,
+                    ),
                   );
                 },
               ),
@@ -204,7 +207,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     context,
                     MaterialPageRoute(
                       builder: (_) => const ReviewSliderScreen(),
-                    ), // ✅ Ganti ke ContactScreen
+                    ),
                   );
                 },
               ),
@@ -246,44 +249,58 @@ class _ExplorePageState extends State<ExplorePage> {
         backgroundColor: isDarkMode ? Colors.black : Color(0xff324eaf),
         leading: Builder(
           builder:
-              (context) => IconButton(
-                icon: const Icon(Icons.menu, color: Colors.white),
-                onPressed: () => Scaffold.of(context).openDrawer(),
+              (context) => Tooltip(
+                message: 'Menu',
+                child: IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.white),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
               ),
         ),
 
         actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => CartPage()),
-              );
-            },
+          Tooltip(
+            message: 'Cart',
+            child: IconButton(
+              icon: const Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => CartPage()),
+                );
+              },
+            ),
           ),
           const SizedBox(width: 8),
           Consumer<ProfileImageProvider>(
             builder: (context, profileImageProvider, _) {
               final imageFile = profileImageProvider.image;
-              return Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Profile()),
-                    );
-                  },
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundImage:
-                        imageFile != null
-                            ? FileImage(imageFile)
-                            : const AssetImage(
-                                  "assets/images/default_profile.png",
-                                )
-                                as ImageProvider,
+              return Tooltip(
+                message: 'Profile',
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Profile(),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundImage:
+                          imageFile != null
+                              ? FileImage(imageFile)
+                              : const AssetImage(
+                                    "assets/images/default_profile.png",
+                                  )
+                                  as ImageProvider,
+                    ),
                   ),
                 ),
               );
@@ -532,154 +549,163 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
         );
       },
-      child: Container(
-        width: 151,
-        decoration: BoxDecoration(
-          color: const Color(0xFF324EAF),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
-        ),
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(10),
-              ),
-              child: Image.asset(
-                imageUrl,
-                height: 100,
-                width: 151,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              bottom: 60,
-              left: 8,
-              right: 8,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(Icons.schedule, size: 10, color: Colors.white),
-                      const SizedBox(width: 4),
-                      Text(
-                        duration,
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, size: 10, color: Colors.yellow),
-                      const SizedBox(width: 4),
-                      Text(
-                        rating,
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 30,
-              right: 8,
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    if (isFavorited) {
-                      favoriteCourses.remove(index);
-                      cartCourses.removeWhere(
-                        (course) => course.index == index,
-                      );
-                    } else {
-                      favoriteCourses.add(index);
-                      final course = trendingCourses.firstWhere(
-                        (c) => c.index == index,
-                      );
-                      cartCourses.add(course);
-                    }
-                  });
-                },
-                child: Icon(
-                  isFavorited
-                      ? Icons.shopping_cart
-                      : Icons.shopping_cart_outlined,
-                  color: isFavorited ? Colors.green : Colors.white,
-                  size: 20,
+      child: Card(
+        child: Container(
+          width: 151,
+          decoration: BoxDecoration(
+            color: const Color(0xFF324EAF),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+          ),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(10),
+                ),
+                child: Image.asset(
+                  imageUrl,
+                  height: 100,
+                  width: 151,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 5,
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(10),
-                  ),
-                  color: Color(0xFF324EAF),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Positioned(
+                bottom: 60,
+                left: 8,
+                right: 8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (isBestseller)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 4,
+                    Text(
+                      title,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.schedule,
+                          size: 10,
+                          color: Colors.white,
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow,
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          'Bestseller',
+                        const SizedBox(width: 4),
+                        Text(
+                          duration,
                           style: GoogleFonts.poppins(
                             fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF324EAF),
+                            color: Colors.white,
                           ),
                         ),
-                      )
-                    else
-                      const SizedBox(),
-                    Text(
-                      price,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 15,
-                      ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, size: 10, color: Colors.yellow),
+                        const SizedBox(width: 4),
+                        Text(
+                          rating,
+                          style: GoogleFonts.poppins(
+                            fontSize: 10,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                bottom: 30,
+                right: 8,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      if (isFavorited) {
+                        favoriteCourses.remove(index);
+                        cartCourses.removeWhere(
+                          (course) => course.index == index,
+                        );
+                      } else {
+                        favoriteCourses.add(index);
+                        final course = trendingCourses.firstWhere(
+                          (c) => c.index == index,
+                        );
+                        cartCourses.add(course);
+                      }
+                    });
+                  },
+                  child: Tooltip(
+                    message: isFavorited ? 'Remove' : 'Add',
+                    child: Icon(
+                      isFavorited
+                          ? Icons.shopping_cart
+                          : Icons.shopping_cart_outlined,
+                      color: isFavorited ? Colors.green : Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 5,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(10),
+                    ),
+                    color: Color(0xFF324EAF),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (isBestseller)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow,
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            'Bestseller',
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: const Color(0xFF324EAF),
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(),
+                      Text(
+                        price,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

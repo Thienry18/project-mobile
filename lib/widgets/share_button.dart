@@ -70,8 +70,8 @@ Widget _buildShareIcon(
 ) {
   return GestureDetector(
     onTap: () {
-      Navigator.pop(context); // tutup modal dulu
-      onTap(); // lalu share
+      Navigator.pop(context);
+      onTap();
     },
     child: Column(
       children: [

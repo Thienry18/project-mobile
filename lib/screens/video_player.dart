@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/video_play.dart';
-import 'package:provider/provider.dart'; // Sesuaikan path
+import 'package:provider/provider.dart';
 
 class VideoPlayer extends StatelessWidget {
   final Course course;
@@ -33,7 +33,6 @@ class VideoPlayer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Gambar course
               Image.asset(
                 course.images,
                 width: double.infinity,
@@ -41,8 +40,6 @@ class VideoPlayer extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
               const SizedBox(height: 16),
-
-              // Judul
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
@@ -55,8 +52,6 @@ class VideoPlayer extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // 9 ExpansionTiles
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -90,7 +85,6 @@ class VideoPlayer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title row with number icon
           Row(
             children: [
               CircleAvatar(

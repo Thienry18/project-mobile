@@ -46,11 +46,14 @@ class _SearchScreenState extends State<SearchScreen> {
             border: InputBorder.none,
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.grey),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        leading: Tooltip(
+          message: 'Back',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.grey),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         actions: [
           Padding(

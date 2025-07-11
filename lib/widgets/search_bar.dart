@@ -11,7 +11,6 @@ class SearchBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // Expanded biar responsif penuh
         Expanded(
           child: GestureDetector(
             onTap: () {

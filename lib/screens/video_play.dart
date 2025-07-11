@@ -70,14 +70,13 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
               ),
               onTap: () {
-                Navigator.pop(context); // tutup bottom sheet
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder:
                         (_) => const CertificateImageScreen(
-                          imagePath:
-                              'assets/images/certificate.jpg', // sesuaikan path
+                          imagePath: 'assets/images/certificate.jpg',
                         ),
                   ),
                 );
@@ -109,11 +108,8 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
               ),
               onTap: () {
-                Navigator.pop(context); // Tutup bottom sheet
-                showShareOptions(
-                  context,
-                  'Certificate of Achievement',
-                ); // Panggil widget share
+                Navigator.pop(context);
+                showShareOptions(context, 'Certificate of Achievement');
               },
             ),
 

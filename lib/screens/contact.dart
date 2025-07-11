@@ -62,7 +62,7 @@ class _ReviewSliderScreenState extends State<ReviewSliderScreen> {
 
   double _calculateScale(int index) {
     final diff = (_pageController.page ?? _currentPage) - index;
-    return 1.0 - (diff.abs() * 0.3).clamp(0.0, 0.3); // scale: 0.7 - 1.0
+    return 1.0 - (diff.abs() * 0.3).clamp(0.0, 0.3);
   }
 
   double _calculateRadius(double scale) {

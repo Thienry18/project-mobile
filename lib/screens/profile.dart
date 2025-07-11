@@ -12,6 +12,7 @@ import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/payment_method.dart';
+import 'package:projek_mobile/screens/security.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/menu_item.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
@@ -71,23 +72,33 @@ class _ProfileState extends State<Profile> {
           style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.diamond, color: Colors.blueAccent, size: 28),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ComingSoon()),
-              );
-            },
+          Tooltip(
+            message: 'premium',
+            child: IconButton(
+              icon: const Icon(
+                Icons.diamond,
+                color: Colors.blueAccent,
+                size: 28,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ComingSoon()),
+                );
+              },
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined, size: 28),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CartPage()),
-              );
-            },
+          Tooltip(
+            message: 'Cart',
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart_outlined, size: 28),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartPage()),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -163,7 +174,6 @@ class _ProfileState extends State<Profile> {
                 ),
                 const SizedBox(height: 22),
 
-                /// === Menu Items ===
                 MenuItem(
                   icon: Icons.person_outline,
                   iconColor: const Color(0XFF696969),
@@ -229,7 +239,9 @@ class _ProfileState extends State<Profile> {
                   onTap:
                       () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ComingSoon()),
+                        MaterialPageRoute(
+                          builder: (context) => SecurityScreen(),
+                        ),
                       ),
                 ),
                 MenuItem(

@@ -19,9 +19,12 @@ class PaymentSuccessScreen extends StatelessWidget {
         backgroundColor: isDarkMode ? Colors.black : Color(0xFF324EAF),
         foregroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+        leading: Tooltip(
+          message: 'Back',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
       ),
       body: Center(

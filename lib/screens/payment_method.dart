@@ -50,9 +50,12 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
             color: Colors.white,
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+        leading: Tooltip(
+          message: 'Back',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
       ),
       body: Padding(

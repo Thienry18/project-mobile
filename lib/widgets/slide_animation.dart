@@ -17,7 +17,6 @@ Widget autoSlideCourseBanner({
   );
 }
 
-// ...existing code...
 class _AutoSlideCourseBannerWidget extends StatefulWidget {
   final List<Course> courses;
   final double? height;
@@ -67,7 +66,6 @@ class _AutoSlideCourseBannerWidgetState
     return LayoutBuilder(
       builder: (context, constraints) {
         final double width = constraints.maxWidth;
-        // Gunakan aspect ratio 16:9 atau fallback ke widget.height jika ada
         final double height = widget.height ?? width * 9 / 16;
 
         return Column(
@@ -180,5 +178,3 @@ class _AutoSlideCourseBannerWidgetState
     );
   }
 }
-
-// ...existing code...

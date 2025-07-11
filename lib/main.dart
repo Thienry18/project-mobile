@@ -6,6 +6,8 @@ import 'package:projek_mobile/providers/verify_code_provider.dart';
 import 'package:projek_mobile/screens/add_new_card.dart';
 import 'package:projek_mobile/screens/contact.dart';
 import 'package:projek_mobile/screens/edit_profile.dart';
+import 'package:projek_mobile/screens/explore_page.dart';
+import 'package:projek_mobile/screens/interest.dart';
 import 'package:projek_mobile/screens/onboarding.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/screens/reset_password.dart';
@@ -53,7 +55,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
-      home: FavScreen(),
+      home: ExplorePage(selectedCategory: ""),
     );
   }
 }

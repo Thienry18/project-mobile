@@ -1,8 +1,6 @@
-// ✅ CheckoutHandler.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/data/cart_data.dart';
-import 'package:projek_mobile/data/my_course_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,7 +14,6 @@ class CheckoutHandler {
 
     final prefs = await SharedPreferences.getInstance();
 
-    // ✅ Save to purchase history
     final data = prefs.getString('purchase_history');
     List<Map<String, dynamic>> history =
         data != null ? List<Map<String, dynamic>>.from(jsonDecode(data)) : [];
@@ -37,7 +34,6 @@ class CheckoutHandler {
     }
     await prefs.setString('purchase_history', jsonEncode(history));
 
-    // ✅ Save notification
     final notifData = prefs.getString('notifications');
     List<Map<String, dynamic>> currentNotifs =
         notifData != null
@@ -56,7 +52,6 @@ class CheckoutHandler {
     currentNotifs.insert(0, newNotif);
     await prefs.setString('notifications', jsonEncode(currentNotifs));
 
-    // ✅ Save to my_courses (prevent duplicates)
     final existingCourseData = prefs.getString('my_courses');
     List<Map<String, dynamic>> currentCourses =
         existingCourseData != null
