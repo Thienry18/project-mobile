@@ -2,10 +2,10 @@ class Course {
   final String images;
   final String title;
   final String duration;
-  final String rating;
+  final String rating; // contoh: "4.7 (365,859)"
   final String price;
   final bool isBestseller;
-  final int index;
+  final int index; // dipakai sebagai PK (idx) di DB
   final String category;
   final String instructor;
   final String language;
@@ -25,6 +25,7 @@ class Course {
     required this.subtitle,
   });
 
+  // Ambil angka rating untuk disimpan di kolom rating_number (denormalized)
   double get ratingNumber {
     final part = rating.split(' ').first;
     return double.tryParse(part) ?? 0.0;
@@ -49,17 +50,20 @@ class Course {
 
   factory Course.fromMap(Map<String, dynamic> map) {
     return Course(
-      images: map['images'],
-      title: map['title'],
-      duration: map['duration'],
-      rating: (map['rating_text'] ?? '${map['rating_number']}') as String,
-      price: map['price'],
-      isBestseller: (map['is_bestseller'] == 1),
-      index: map['idx'],
-      category: map['category'],
-      instructor: map['instructor'],
-      language: map['language'],
-      subtitle: map['subtitle'],
+      images: map['images'] as String,
+      title: map['title'] as String,
+      duration: map['duration'] as String,
+      // fallback jika rating_text null (harusnya tidak)
+      rating:
+          (map['rating_text'] as String?) ??
+          (map['rating_number'] != null ? '${map['rating_number']}' : '0.0'),
+      price: map['price'] as String,
+      isBestseller: (map['is_bestseller'] as int) == 1,
+      index: map['idx'] as int,
+      category: map['category'] as String,
+      instructor: map['instructor'] as String,
+      language: map['language'] as String,
+      subtitle: map['subtitle'] as String,
     );
   }
 }

@@ -5,8 +5,8 @@ class ExploreRepository {
   final _db = DbHelper.instance;
 
   Future<void> seedIfEmpty(List<Course> courses) async {
-    final count = await _db.count();
-    if (count == 0) {
+    final n = await _db.count();
+    if (n == 0) {
       await _db.insertAll(courses);
     }
   }
@@ -15,4 +15,7 @@ class ExploreRepository {
 
   Future<List<Course>> getRecommendedForYou(String category) =>
       _db.getRecommendedForYou(category);
+
+  // >>> Tambahan: expose semua data
+  Future<List<Course>> getAll() => _db.getAll();
 }
