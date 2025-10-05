@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projek_mobile/models/user_profile.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/providers/profile_image_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserProfile userProfile;
@@ -26,6 +30,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
 
+  final _formKey = GlobalKey<FormState>();
+  final _auth = AuthRepository();
+
+  String? _currentEmail; // email aktif (sebelum diubah)
+  String? _dbAvatarPath; // avatar dari DB/SP (jika ada)
+  bool _saving = false;
+
   @override
   void initState() {
     super.initState();
@@ -36,16 +47,120 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _dobController = TextEditingController(text: data.dob);
     _genderController = TextEditingController(text: data.gender);
     _countryController = TextEditingController(text: data.country);
-    _emailController = TextEditingController(text: "@gmail.com");
+    _emailController = TextEditingController(
+      text: "@gmail.com",
+    ); // nanti di-replace dari SP
     _phoneController = TextEditingController(text: data.phoneNumber);
+
+    _bootstrap();
+  }
+
+  Future<void> _bootstrap() async {
+    final prefs = await SharedPreferences.getInstance();
+    _currentEmail = prefs.getString('user_email');
+    final spUsername = prefs.getString('user_username');
+    final spAvatar = prefs.getString('user_avatar_path');
+
+    // Prefill email / username dari SP jika ada
+    if ((_currentEmail ?? '').isNotEmpty) {
+      _emailController.text = _currentEmail!;
+    }
+    if ((spUsername ?? '').isNotEmpty) {
+      _usernameController.text = spUsername!;
+    }
+    if ((spAvatar ?? '').isNotEmpty) {
+      _dbAvatarPath = spAvatar;
+    }
+
+    // Ambil avatar dari DB kalau perlu
+    if (_currentEmail != null) {
+      final user = await _auth.getUserByEmail(_currentEmail!);
+      if (user != null) {
+        final avatar = (user['avatar_path'] as String?) ?? '';
+        if (avatar.trim().isNotEmpty) {
+          _dbAvatarPath = avatar;
+        }
+        // kalau username di DB ada, dan field kosong → pakai dari DB
+        final dbUsername = user['username'] as String?;
+        if ((_usernameController.text.trim().isEmpty) &&
+            (dbUsername != null && dbUsername.trim().isNotEmpty)) {
+          _usernameController.text = dbUsername;
+        }
+      }
+    }
+    setState(() {});
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
     if (pickedFile != null) {
+      final file = File(pickedFile.path);
       setState(() {
-        _imageFile = File(pickedFile.path);
+        _imageFile = file;
       });
+      // Update provider supaya avatar global langsung berubah
+      if (mounted) {
+        context.read<ProfileImageProvider>().setImage(file);
+      }
+    }
+  }
+
+  void _showSnack(String msg, {bool error = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: error ? Colors.red : Colors.green,
+      ),
+    );
+  }
+
+  Future<void> _save() async {
+    if (_saving) return;
+    if (!_formKey.currentState!.validate()) return;
+
+    if ((_currentEmail ?? '').isEmpty) {
+      _showSnack('No active session. Please sign in again.', error: true);
+      return;
+    }
+
+    final newUsername = _usernameController.text.trim();
+    final newEmail = _emailController.text.trim().toLowerCase();
+    final avatarPath = _imageFile?.path ?? _dbAvatarPath;
+
+    setState(() => _saving = true);
+
+    try {
+      await _auth.updateProfile(
+        currentEmail: _currentEmail!,
+        newEmail: newEmail.isNotEmpty ? newEmail : null,
+        username: newUsername.isNotEmpty ? newUsername : null,
+        avatarPath: (avatarPath ?? '').isNotEmpty ? avatarPath : null,
+      );
+
+      final prefs = await SharedPreferences.getInstance();
+      if (newUsername.isNotEmpty) {
+        await prefs.setString('user_username', newUsername);
+      }
+      if (newEmail.isNotEmpty && newEmail != _currentEmail) {
+        await prefs.setString('user_email', newEmail);
+      }
+      if ((avatarPath ?? '').isNotEmpty) {
+        await prefs.setString('user_avatar_path', avatarPath!);
+      }
+
+      _showSnack('Profile updated successfully.');
+      if (!mounted) return;
+      Navigator.pop(
+        context,
+        true,
+      ); // kirim tanda berhasil agar screen sebelumnya refresh
+    } catch (e) {
+      _showSnack(e.toString().replaceFirst('Exception: ', ''), error: true);
+    } finally {
+      if (mounted) setState(() => _saving = false);
     }
   }
 
@@ -53,6 +168,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     const blueColor = Color(0xFF324EAF);
     const grayTextColor = Colors.grey;
+
+    // Pilih sumber avatar:
+    final providerImage = context.watch<ProfileImageProvider>().image;
+    ImageProvider avatarProvider;
+    if (providerImage != null) {
+      avatarProvider = FileImage(providerImage);
+    } else if (_imageFile != null) {
+      avatarProvider = FileImage(_imageFile!);
+    } else if ((_dbAvatarPath ?? '').isNotEmpty) {
+      avatarProvider = FileImage(File(_dbAvatarPath!));
+    } else {
+      avatarProvider = const NetworkImage(
+        'https://i.pinimg.com/736x/cf/1d/84/cf1d84e5c5290f2cd1d1b77a7f3429f6.jpg',
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -66,92 +196,138 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
         leading: const BackButton(color: Colors.white),
+        actions: [
+          TextButton(
+            onPressed: _saving ? null : _save,
+            child:
+                _saving
+                    ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                    : Text(
+                      'Save',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 55,
-                    backgroundImage:
-                        _imageFile != null
-                            ? FileImage(_imageFile!)
-                            : const NetworkImage(
-                                  'https://i.pinimg.com/736x/cf/1d/84/cf1d84e5c5290f2cd1d1b77a7f3429f6.jpg',
-                                )
-                                as ImageProvider,
-                  ),
-                  const SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: Text(
-                      'Upload/Change Photo',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: blueColor,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    CircleAvatar(radius: 55, backgroundImage: avatarProvider),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: _pickImage,
+                      child: Text(
+                        'Upload/Change Photo',
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: blueColor,
+                        ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              _buildLabel("Username"),
+              _buildEditableField(
+                controller: _usernameController,
+                color: blueColor,
+                validator:
+                    (v) =>
+                        (v == null || v.trim().isEmpty)
+                            ? 'Username must not be empty'
+                            : null,
+              ),
+
+              _buildLabel("Full Name"),
+              _buildEditableField(
+                controller: _fullnameController,
+                color: blueColor,
+              ),
+
+              _buildLabel("Status"),
+              _buildEditableField(
+                controller: _statusController,
+                color: grayTextColor,
+                readOnly: true,
+              ),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildLabel("Date of Birth"),
+                        _buildEditableField(
+                          controller: _dobController,
+                          color: grayTextColor,
+                          readOnly: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildLabel("Gender"),
+                        _buildEditableField(
+                          controller: _genderController,
+                          color: grayTextColor,
+                          readOnly: true,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
 
-            _buildLabel("Username"),
-            _buildTextField(_usernameController, blueColor),
+              _buildLabel("Country"),
+              _buildEditableField(
+                controller: _countryController,
+                color: blueColor,
+              ),
 
-            _buildLabel("Full Name"),
-            _buildTextField(_fullnameController, blueColor),
+              _buildLabel("Email Address"),
+              _buildEditableField(
+                controller: _emailController,
+                color: blueColor,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) {
+                    return 'Email must not be empty';
+                  }
+                  if (!_auth.isValidGmail(v.trim())) {
+                    return 'Email must be a valid @gmail.com address';
+                  }
+                  return null;
+                },
+              ),
 
-            _buildLabel("Status"),
-            _buildTextField(_statusController, grayTextColor, readOnly: true),
-
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildLabel("Date of Birth"),
-                      _buildTextField(
-                        _dobController,
-                        grayTextColor,
-                        readOnly: true,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildLabel("Gender"),
-                      _buildTextField(
-                        _genderController,
-                        grayTextColor,
-                        readOnly: true,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            _buildLabel("Country"),
-            _buildTextField(_countryController, blueColor),
-
-            _buildLabel("Email Address"),
-            _buildTextField(_emailController, blueColor),
-
-            _buildLabel("Phone Number"),
-            _buildTextField(_phoneController, blueColor),
-          ],
+              _buildLabel("Phone Number"),
+              _buildEditableField(
+                controller: _phoneController,
+                color: blueColor,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -167,19 +343,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildTextField(
-    TextEditingController controller,
-    Color color, {
+  Widget _buildEditableField({
+    required TextEditingController controller,
+    required Color color,
     bool readOnly = false,
+    String? Function(String?)? validator,
   }) {
     return Container(
       padding: const EdgeInsets.only(bottom: 8),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.grey, width: 0.6)),
       ),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         readOnly: readOnly,
+        validator: validator,
         style: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w500,
