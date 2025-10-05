@@ -7,25 +7,21 @@ class ExploreProvider extends ChangeNotifier {
 
   ExploreProvider(this.repository);
 
-  List<Course> trending = []; // top 5
-  List<Course> recommended = []; // top 5 sesuai kategori
-  List<Course> all = []; // SEMUA course dari DB
+  List<Course> trending = [];
+  List<Course> recommended = [];
+  List<Course> all = [];
   bool isLoading = false;
 
-  /// Default load saat app start (boleh pilih kategori default)
   Future<void> loadData() async {
     await loadByCategory('Python');
   }
 
-  /// Load data sesuai kategori + ambil seluruh data untuk list/filter/search
   Future<void> loadByCategory(String category) async {
     isLoading = true;
     notifyListeners();
 
-    // ambil semua dulu untuk kebutuhan list/filter/search
     all = await repository.getAll();
 
-    // bagian berukuran kecil untuk section di homepage
     trending = await repository.getTrendingTop5();
     recommended = await repository.getRecommendedForYou(category);
 
@@ -33,7 +29,6 @@ class ExploreProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// gabungkan unik kalau suatu saat kamu butuh
   List<Course> get allUnique {
     if (all.isNotEmpty) return all;
     final map = <int, Course>{};

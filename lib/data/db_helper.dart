@@ -18,11 +18,8 @@ class DbHelper {
   }
 
   Future<Database> _openDb() async {
-    final dbPath = await getDatabasesPath(); // dari sqflite
-    final path = p.join(
-      dbPath,
-      _dbName,
-    ); // pakai package path (bukan path_provider)
+    final dbPath = await getDatabasesPath();
+    final path = p.join(dbPath, _dbName);
 
     return openDatabase(
       path,
@@ -45,7 +42,6 @@ class DbHelper {
           );
         ''');
 
-        // (opsional) index untuk performa
         await db.execute(
           'CREATE INDEX IF NOT EXISTS idx_bestseller ON $table(is_bestseller, rating_number DESC);',
         );
@@ -63,7 +59,6 @@ class DbHelper {
     _db = null;
   }
 
-  // ---------- CRUD / Query ----------
   Future<int> count() async {
     final db = await database;
     final res = await db.rawQuery('SELECT COUNT(*) as n FROM $table');
@@ -112,7 +107,6 @@ class DbHelper {
     return rows.map(Course.fromMap).toList();
   }
 
-  // >>> Tambahan: ambil SEMUA data (untuk list/filter/search)
   Future<List<Course>> getAll({int? limit, int? offset}) async {
     final db = await database;
     final rows = await db.query(

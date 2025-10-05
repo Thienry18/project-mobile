@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
-
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/providers/explore_provider.dart';
-
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/contact.dart';
@@ -19,7 +16,6 @@ import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
-
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
@@ -27,7 +23,6 @@ import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
 import 'package:projek_mobile/screens/my_certificate.dart';
-
 import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -45,7 +40,6 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   void initState() {
     super.initState();
-    // Load data dari DB sesuai kategori pilihan awal (fallback ke 'Python')
     Future.microtask(() {
       final p = context.read<ExploreProvider>();
       final initialCat =
@@ -60,13 +54,10 @@ class _ExplorePageState extends State<ExplorePage> {
     final isDarkMode = context.watch<ThemeNotifier>().isDarkMode;
     final p = context.watch<ExploreProvider>();
 
-    // Data dari provider
-    final List<Course> trending = p.trending; // Top 5
-    final List<Course> recommended =
-        p.recommended; // Top 5 by selected category
-    final List<Course> allCourses = p.all; // SEMUA course dari DB
+    final List<Course> trending = p.trending;
+    final List<Course> recommended = p.recommended;
+    final List<Course> allCourses = p.all;
 
-    // Filter chips menggunakan SEMUA data
     final List<Course> filteredCourses =
         selectedIndexes.isNotEmpty
             ? allCourses.where((course) {
@@ -79,7 +70,6 @@ class _ExplorePageState extends State<ExplorePage> {
       backgroundColor:
           isDarkMode ? Colors.black : theme.scaffoldBackgroundColor,
 
-      // === Drawer ===
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: SingleChildScrollView(
@@ -262,7 +252,6 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
       ),
 
-      // === AppBar ===
       appBar: AppBar(
         elevation: 0,
         backgroundColor: isDarkMode ? Colors.black : const Color(0xff324eaf),
@@ -327,7 +316,6 @@ class _ExplorePageState extends State<ExplorePage> {
         ],
       ),
 
-      // === Bottom Nav ===
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 0,
         onTap: (index) {
@@ -356,7 +344,6 @@ class _ExplorePageState extends State<ExplorePage> {
         },
       ),
 
-      // === Body ===
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -391,20 +378,16 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Trending Now (Top 5 dari DB)
                       _buildSectionHeader("Trending Now"),
                       const SizedBox(height: 12),
                       autoSlideCourseBanner(courses: trending),
 
                       const SizedBox(height: 30),
 
-                      // Recommended for You berdasarkan selectedCategory
                       if (widget.selectedCategory.isNotEmpty) ...[
                         _buildSectionHeader("Recommended for You"),
                         const SizedBox(height: 12),
-                        _buildCourseCardList(
-                          trending,
-                        ), // tampilkan ringkas juga
+                        _buildCourseCardList(trending),
                       ],
 
                       const SizedBox(height: 30),
@@ -489,7 +472,6 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Daftar berdasarkan kategori yang dipilih — SEMUA data
                       _buildCourseCardList(filteredCourses),
                     ],
                   ),
@@ -567,7 +549,7 @@ class _ExplorePageState extends State<ExplorePage> {
     bool isBestseller = false,
   }) {
     final isFavorited = favoriteCourses.contains(index);
-    final allCourses = context.read<ExploreProvider>().all; // SEMUA course
+    final allCourses = context.read<ExploreProvider>().all;
 
     return GestureDetector(
       onTap: () {
