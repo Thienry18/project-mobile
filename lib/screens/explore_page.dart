@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
+
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:projek_mobile/providers/explore_provider.dart';
+
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/contact.dart';
@@ -15,6 +19,7 @@ import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
+
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
@@ -22,6 +27,7 @@ import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
 import 'package:projek_mobile/screens/my_certificate.dart';
+
 import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -37,24 +43,43 @@ class _ExplorePageState extends State<ExplorePage> {
   Set<int> selectedIndexes = {0};
 
   @override
-  Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
-    final theme = Theme.of(context);
+  void initState() {
+    super.initState();
+    // Load data dari DB sesuai kategori pilihan awal (fallback ke 'Python')
+    Future.microtask(() {
+      final p = context.read<ExploreProvider>();
+      final initialCat =
+          widget.selectedCategory.isEmpty ? 'Python' : widget.selectedCategory;
+      return p.loadByCategory(initialCat);
+    });
+  }
 
-    List<Course> filteredCourses =
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = context.watch<ThemeNotifier>().isDarkMode;
+    final p = context.watch<ExploreProvider>();
+
+    // Data dari provider
+    final List<Course> trending = p.trending; // Top 5
+    final List<Course> recommended =
+        p.recommended; // Top 5 by selected category
+    final List<Course> allCourses = p.all; // SEMUA course dari DB
+
+    // Filter chips menggunakan SEMUA data
+    final List<Course> filteredCourses =
         selectedIndexes.isNotEmpty
-            ? trendingCourses
-                .where(
-                  (course) => selectedIndexes.contains(
-                    categoryList.indexOf(course.category),
-                  ),
-                )
-                .toList()
-            : trendingCourses;
+            ? allCourses.where((course) {
+              final catIdx = categoryList.indexOf(course.category);
+              return selectedIndexes.contains(catIdx);
+            }).toList()
+            : allCourses;
 
     return Scaffold(
       backgroundColor:
           isDarkMode ? Colors.black : theme.scaffoldBackgroundColor,
+
+      // === Drawer ===
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: SingleChildScrollView(
@@ -96,9 +121,9 @@ class _ExplorePageState extends State<ExplorePage> {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: Color(0XFF969696),
+                  color: const Color(0XFF969696),
                   borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black26,
                       blurRadius: 4,
@@ -119,12 +144,11 @@ class _ExplorePageState extends State<ExplorePage> {
               Text(
                 "Account",
                 style: GoogleFonts.poppins(
-                  color: Color(0xFF7A8EDA),
+                  color: const Color(0xFF7A8EDA),
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-
               ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
@@ -136,7 +160,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 title: Text(
                   'My Certificate',
                   style: GoogleFonts.poppins(
-                    color: Color(0XFF324EAF),
+                    color: const Color(0XFF324EAF),
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
@@ -148,11 +172,11 @@ class _ExplorePageState extends State<ExplorePage> {
                   );
                 },
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Text(
                 'Support',
                 style: GoogleFonts.poppins(
-                  color: Color(0xFF7A8EDA),
+                  color: const Color(0xFF7A8EDA),
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
@@ -168,7 +192,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 title: Text(
                   'Search Course',
                   style: GoogleFonts.poppins(
-                    color: Color(0xff324eaf),
+                    color: const Color(0xff324eaf),
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
@@ -178,14 +202,12 @@ class _ExplorePageState extends State<ExplorePage> {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (_) => SearchScreen(
-                            courseList: trendingCourses,
-                          ), // ganti sesuai list yang tersedia
+                          (_) =>
+                              SearchScreen(courseList: allCourses), // dari DB
                     ),
                   );
                 },
               ),
-
               ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
@@ -197,7 +219,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 title: Text(
                   'Contact Support',
                   style: GoogleFonts.poppins(
-                    color: Color(0xff324eaf),
+                    color: const Color(0xff324eaf),
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
@@ -211,17 +233,15 @@ class _ExplorePageState extends State<ExplorePage> {
                   );
                 },
               ),
-
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Text(
                 'More Option',
                 style: GoogleFonts.poppins(
-                  color: Color(0xFF7A8EDA),
+                  color: const Color(0xFF7A8EDA),
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-
               ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
@@ -234,9 +254,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                onTap: () {
-                  signOutDialog(context);
-                },
+                onTap: () => signOutDialog(context),
               ),
               const SizedBox(height: 30),
             ],
@@ -244,9 +262,10 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
       ),
 
+      // === AppBar ===
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: isDarkMode ? Colors.black : Color(0xff324eaf),
+        backgroundColor: isDarkMode ? Colors.black : const Color(0xff324eaf),
         leading: Builder(
           builder:
               (context) => Tooltip(
@@ -257,7 +276,6 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
               ),
         ),
-
         actions: [
           Tooltip(
             message: 'Cart',
@@ -269,7 +287,7 @@ class _ExplorePageState extends State<ExplorePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => CartPage()),
+                  MaterialPageRoute(builder: (_) => const CartPage()),
                 );
               },
             ),
@@ -308,6 +326,8 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
         ],
       ),
+
+      // === Bottom Nav ===
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 0,
         onTap: (index) {
@@ -317,142 +337,162 @@ class _ExplorePageState extends State<ExplorePage> {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => MyCoursePage()),
+                MaterialPageRoute(builder: (_) => const MyCoursePage()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => NotificationPage()),
+                MaterialPageRoute(builder: (_) => const NotificationPage()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => Profile()),
+                MaterialPageRoute(builder: (_) => const Profile()),
               );
               break;
           }
         },
       ),
+
+      // === Body ===
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ListView(
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                "What would you want\nto learn today?",
-                style: GoogleFonts.poppins(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color:
-                      theme.brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xff324eaf),
-                ),
-              ),
-              const SizedBox(height: 20),
-              SearchBarWidget(),
-              const SizedBox(height: 20),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  'assets/motivation_banner.png',
-                  height: 204,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height: 20),
-              _buildSectionHeader("Trending Now"),
-              const SizedBox(height: 12),
-              autoSlideCourseBanner(courses: getTrendingTop5()),
-              const SizedBox(height: 30),
-              if (widget.selectedCategory.isNotEmpty) ...[
-                _buildSectionHeader("Recommended for You"),
-                const SizedBox(height: 12),
-                _buildCourseCardList(getTrendingTop5()),
-              ],
-              const SizedBox(height: 30),
-              if (widget.selectedCategory.isNotEmpty &&
-                  getRecommendedForYou(categoryselected).isNotEmpty) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: TextSpan(
+          child:
+              p.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView(
+                    children: [
+                      const SizedBox(height: 10),
+                      Text(
+                        "What would you want\nto learn today?",
                         style: GoogleFonts.poppins(
-                          fontSize: 18,
+                          fontSize: 26,
                           fontWeight: FontWeight.bold,
-                          color: theme.textTheme.bodyLarge?.color,
+                          color:
+                              theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : const Color(0xff324eaf),
                         ),
-                        children: [
-                          TextSpan(
-                            text: "Popular for ",
-                            style: TextStyle(
-                              color:
-                                  theme.brightness == Brightness.dark
-                                      ? Colors.white
-                                      : const Color(0xff324eaf),
-                            ),
-                          ),
-                          TextSpan(
-                            text: categoryselected,
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => const Scaffold(
-                                  body: Center(child: Text("Coming Soon")),
+                      const SizedBox(height: 20),
+                      const SearchBarWidget(),
+                      const SizedBox(height: 20),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          'assets/motivation_banner.png',
+                          height: 204,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Trending Now (Top 5 dari DB)
+                      _buildSectionHeader("Trending Now"),
+                      const SizedBox(height: 12),
+                      autoSlideCourseBanner(courses: trending),
+
+                      const SizedBox(height: 30),
+
+                      // Recommended for You berdasarkan selectedCategory
+                      if (widget.selectedCategory.isNotEmpty) ...[
+                        _buildSectionHeader("Recommended for You"),
+                        const SizedBox(height: 12),
+                        _buildCourseCardList(
+                          trending,
+                        ), // tampilkan ringkas juga
+                      ],
+
+                      const SizedBox(height: 30),
+
+                      if (widget.selectedCategory.isNotEmpty &&
+                          recommended.isNotEmpty) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.textTheme.bodyLarge?.color,
                                 ),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "See All",
-                        style: GoogleFonts.poppins(
-                          color: Colors.green,
-                          fontWeight: FontWeight.w600,
+                                children: [
+                                  TextSpan(
+                                    text: "Popular for ",
+                                    style: TextStyle(
+                                      color:
+                                          theme.brightness == Brightness.dark
+                                              ? Colors.white
+                                              : const Color(0xff324eaf),
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: widget.selectedCategory,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => const Scaffold(
+                                          body: Center(
+                                            child: Text("Coming Soon"),
+                                          ),
+                                        ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "See All",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 12),
+                        _buildCourseCardList(recommended),
+                      ],
+
+                      const SizedBox(height: 20),
+
+                      _buildSectionHeader("Categories"),
+                      const SizedBox(height: 12),
+                      CategoryChips(
+                        categoryList: categoryList,
+                        selectedIndexes: selectedIndexes,
+                        onCategoryToggle: (index) {
+                          setState(() {
+                            if (selectedIndexes.contains(index)) {
+                              selectedIndexes.remove(index);
+                            } else {
+                              selectedIndexes.add(index);
+                            }
+                          });
+                        },
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                _buildCourseCardList(getRecommendedForYou(categoryselected)),
-              ],
-              const SizedBox(height: 20),
-              _buildSectionHeader("Categories"),
-              const SizedBox(height: 12),
-              CategoryChips(
-                categoryList: categoryList,
-                selectedIndexes: selectedIndexes,
-                onCategoryToggle: (index) {
-                  setState(() {
-                    if (selectedIndexes.contains(index)) {
-                      selectedIndexes.remove(index);
-                    } else {
-                      selectedIndexes.add(index);
-                    }
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildCourseCardList(filteredCourses),
-            ],
-          ),
+                      const SizedBox(height: 16),
+
+                      // Daftar berdasarkan kategori yang dipilih — SEMUA data
+                      _buildCourseCardList(filteredCourses),
+                    ],
+                  ),
         ),
       ),
     );
@@ -477,7 +517,7 @@ class _ExplorePageState extends State<ExplorePage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ComingSoon()),
+              MaterialPageRoute(builder: (context) => const ComingSoon()),
             );
           },
           child: Text(
@@ -527,6 +567,7 @@ class _ExplorePageState extends State<ExplorePage> {
     bool isBestseller = false,
   }) {
     final isFavorited = favoriteCourses.contains(index);
+    final allCourses = context.read<ExploreProvider>().all; // SEMUA course
 
     return GestureDetector(
       onTap: () {
@@ -543,7 +584,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   isBestseller: isBestseller,
                   instructor: instructor,
                   recommendedCourses: [
-                    ...getRecommendedForYou(categoryselected),
+                    ...context.read<ExploreProvider>().recommended,
                   ],
                 ),
           ),
@@ -635,8 +676,9 @@ class _ExplorePageState extends State<ExplorePage> {
                         );
                       } else {
                         favoriteCourses.add(index);
-                        final course = trendingCourses.firstWhere(
+                        final course = allCourses.firstWhere(
                           (c) => c.index == index,
+                          orElse: () => allCourses.first,
                         );
                         cartCourses.add(course);
                       }
@@ -674,9 +716,9 @@ class _ExplorePageState extends State<ExplorePage> {
                             horizontal: 6,
                             vertical: 4,
                           ),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.yellow,
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
                             ),
@@ -686,7 +728,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
-                              color: const Color(0xFF324EAF),
+                              color: Color(0xFF324EAF),
                             ),
                           ),
                         )
