@@ -4,8 +4,9 @@ import 'package:projek_mobile/models/explore_model.dart';
 
 class DbHelper {
   static const _dbName = 'explore_courses.db';
-  static const _dbVersion = 1;
-  static const table = 'courses';
+  static const _dbVersion = 2; // NAIKKAN versi ke 2 agar tabel users dibuat
+  static const courseTable = 'courses';
+  static const userTable = 'users';
 
   static final DbHelper instance = DbHelper._();
   DbHelper._();
@@ -25,8 +26,9 @@ class DbHelper {
       path,
       version: _dbVersion,
       onCreate: (db, version) async {
+        // Courses
         await db.execute('''
-          CREATE TABLE $table (
+          CREATE TABLE $courseTable (
             idx INTEGER PRIMARY KEY,
             images TEXT NOT NULL,
             title TEXT NOT NULL,
@@ -41,14 +43,35 @@ class DbHelper {
             subtitle TEXT NOT NULL
           );
         ''');
+        await db.execute(
+          'CREATE INDEX IF NOT EXISTS idx_bestseller ON $courseTable(is_bestseller, rating_number DESC);',
+        );
+        await db.execute(
+          'CREATE INDEX IF NOT EXISTS idx_category_title ON $courseTable(category, title);',
+        );
 
-        await db.execute(
-          'CREATE INDEX IF NOT EXISTS idx_bestseller ON $table(is_bestseller, rating_number DESC);',
-        );
-        await db.execute(
-          'CREATE INDEX IF NOT EXISTS idx_category_title ON $table(category, title);',
-        );
+        // Users
+        await _createUsersTable(db);
       },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await _createUsersTable(db);
+        }
+      },
+    );
+  }
+
+  Future<void> _createUsersTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $userTable (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at INTEGER NOT NULL
+      );
+    ''');
+    await db.execute(
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON $userTable(email);',
     );
   }
 
@@ -59,9 +82,10 @@ class DbHelper {
     _db = null;
   }
 
+  // =============== COURSES (tetap seperti sebelumnya) ===============
   Future<int> count() async {
     final db = await database;
-    final res = await db.rawQuery('SELECT COUNT(*) as n FROM $table');
+    final res = await db.rawQuery('SELECT COUNT(*) as n FROM $courseTable');
     final n = res.first['n'];
     if (n is int) return n;
     if (n is num) return n.toInt();
@@ -74,7 +98,7 @@ class DbHelper {
       final batch = txn.batch();
       for (final c in list) {
         batch.insert(
-          table,
+          courseTable,
           c.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
@@ -86,7 +110,7 @@ class DbHelper {
   Future<List<Course>> getTrendingTop5() async {
     final db = await database;
     final rows = await db.query(
-      table,
+      courseTable,
       where: 'is_bestseller = ?',
       whereArgs: [1],
       orderBy: 'rating_number DESC, title ASC',
@@ -99,7 +123,7 @@ class DbHelper {
     final db = await database;
     final key = category.toLowerCase();
     final rows = await db.query(
-      table,
+      courseTable,
       where: 'LOWER(title) LIKE ? OR LOWER(category) LIKE ?',
       whereArgs: ['%$key%', '%$key%'],
       limit: 5,
@@ -110,7 +134,7 @@ class DbHelper {
   Future<List<Course>> getAll({int? limit, int? offset}) async {
     final db = await database;
     final rows = await db.query(
-      table,
+      courseTable,
       orderBy: 'title ASC',
       limit: limit,
       offset: offset,
@@ -118,8 +142,28 @@ class DbHelper {
     return rows.map(Course.fromMap).toList();
   }
 
-  Future<void> deleteAll() async {
+  // ==================== USERS (baru) ====================
+  Future<int> createUser({
+    required String email,
+    required String passwordHash,
+  }) async {
     final db = await database;
-    await db.delete(table);
+    return db.insert(userTable, {
+      'email': email,
+      'password_hash': passwordHash,
+      'created_at': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
+  Future<Map<String, dynamic>?> getUserByEmail(String email) async {
+    final db = await database;
+    final rows = await db.query(
+      userTable,
+      where: 'LOWER(email) = ?',
+      whereArgs: [email.toLowerCase()],
+      limit: 1,
+    );
+    if (rows.isEmpty) return null;
+    return rows.first;
   }
 }

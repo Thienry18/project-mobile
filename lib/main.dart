@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:projek_mobile/data/auth_gate.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/password_provider.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/providers/verify_code_provider.dart';
-import 'package:projek_mobile/screens/onboarding.dart';
+
 import 'package:projek_mobile/data/explore_repository.dart';
 import 'package:projek_mobile/providers/explore_provider.dart';
 import 'package:projek_mobile/data/explore_data.dart' show trendingCourses;
+
+import 'package:projek_mobile/data/auth_gate.dart'; // <-- pakai AuthGate
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +58,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
-      home: FavScreen(),
+      home: const AuthGate(), // <<<<<< inilah pengganti FavScreen
     );
   }
 }
