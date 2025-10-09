@@ -4,7 +4,7 @@ import 'package:projek_mobile/models/explore_model.dart';
 
 class DbHelper {
   static const _dbName = 'explore_courses.db';
-  static const _dbVersion = 2; // NAIKKAN versi ke 2 agar tabel users dibuat
+  static const _dbVersion = 2;
   static const courseTable = 'courses';
   static const userTable = 'users';
 
