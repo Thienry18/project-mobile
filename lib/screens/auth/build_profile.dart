@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/models/user_profile.dart';
-import 'package:projek_mobile/screens/interest.dart';
+import 'package:projek_mobile/screens/auth/interest.dart';
 import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/gender_picker.dart';

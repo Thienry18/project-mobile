@@ -8,6 +8,8 @@ import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SetPinScreen extends StatelessWidget {
   const SetPinScreen({super.key});
@@ -117,7 +119,24 @@ class SetPinScreen extends StatelessWidget {
                       ),
                       onPressed:
                           provider.isPinComplete()
-                              ? () {
+                              ? () async {
+                                final pin = provider.getPin();
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                final email = prefs.getString('user_email');
+                                final auth = AuthRepository();
+                                if (email != null && email.isNotEmpty) {
+                                  try {
+                                    await auth.updateProfile(
+                                      currentEmail: email,
+                                      pin: pin,
+                                    );
+                                    await prefs.setBool('is_logged_in', true);
+                                  } catch (_) {
+                                    // ignore errors for now
+                                  }
+                                }
+
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
