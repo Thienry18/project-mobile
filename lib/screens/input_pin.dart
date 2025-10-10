@@ -123,6 +123,8 @@ class InputPin extends StatelessWidget {
                                       (user ?? {})['pin'] as String? ?? '';
                                   if (storedPin.isNotEmpty &&
                                       storedPin == entered) {
+                                    // Mark user as logged in for future app launches
+                                    await prefs.setBool('is_logged_in', true);
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
