@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 
@@ -17,6 +18,28 @@ class DatabaseService {
   static Database? _database;
   static final DatabaseService instance = DatabaseService._();
   DatabaseService._();
+  // Streams for reactive UI
+  // Broadcast so multiple listeners can subscribe
+  final _usersController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+
+  Stream<List<Map<String, dynamic>>> get usersStream => _usersController.stream;
+  // Courses stream
+  final _coursesController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+  Stream<List<Map<String, dynamic>>> get coursesStream =>
+      _coursesController.stream;
+
+  // Cart stream (all cart rows; consumers filter by user_id)
+  final _cartController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+  Stream<List<Map<String, dynamic>>> get cartStream => _cartController.stream;
+
+  // Notifications stream
+  final _notificationsController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+  Stream<List<Map<String, dynamic>>> get notificationsStream =>
+      _notificationsController.stream;
 
   // Getter utama
   Future<Database> get database async {
@@ -77,6 +100,20 @@ class DatabaseService {
       print('⚠️ Could not seed courses into app_database.db: $e');
     }
     print('✅ All tables created successfully.');
+
+    // Emit initial snapshots for any listeners
+    try {
+      await emitUsers();
+    } catch (_) {}
+    try {
+      await emitCourses();
+    } catch (_) {}
+    try {
+      await emitCarts();
+    } catch (_) {}
+    try {
+      await emitNotifications();
+    } catch (_) {}
   }
 
   // ====================== ON UPGRADE ======================
@@ -102,5 +139,56 @@ class DatabaseService {
     await deleteDatabase(path);
     _database = null;
     print('🗑️ Database reset completed.');
+  }
+
+  // Emit current users list to the usersStream
+  Future<void> emitUsers() async {
+    try {
+      final db = await database;
+      final rows = await DatabaseUser.getAllUsers(db);
+      _usersController.add(rows);
+    } catch (e, st) {
+      _usersController.addError(e, st);
+    }
+  }
+
+  Future<void> emitCourses() async {
+    try {
+      final db = await database;
+      final rows = await DatabaseCourse.getAllCourses(db);
+      _coursesController.add(rows);
+    } catch (e, st) {
+      _coursesController.addError(e, st);
+    }
+  }
+
+  Future<void> emitCarts() async {
+    try {
+      final db = await database;
+      final rows = await db.query(DatabaseCart.table, orderBy: 'added_at DESC');
+      _cartController.add(rows);
+    } catch (e, st) {
+      _cartController.addError(e, st);
+    }
+  }
+
+  Future<void> emitNotifications() async {
+    try {
+      final db = await database;
+      final rows = await db.query(
+        DatabaseNotification.table,
+        orderBy: 'created_at DESC',
+      );
+      _notificationsController.add(rows);
+    } catch (e, st) {
+      _notificationsController.addError(e, st);
+    }
+  }
+
+  // IMPORTANT: do not close controllers unless app is shutting down
+  void disposeStreams() {
+    try {
+      _usersController.close();
+    } catch (_) {}
   }
 }
