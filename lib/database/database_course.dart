@@ -1,3 +1,4 @@
+import 'package:projek_mobile/models/explore_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseCourse {
@@ -39,5 +40,39 @@ class DatabaseCourse {
 
   static Future<int> deleteCourse(Database db, int id) async {
     return await db.delete(table, where: 'idx = ?', whereArgs: [id]);
+  }
+
+  static Future<void> insertTrendingCourses(
+    Database db,
+    List<Course> courses,
+  ) async {
+    // Cek apakah tabel sudah ada data biar tidak duplikat
+    final existing = await db.query(table);
+    if (existing.isNotEmpty) {
+      print('✅ Course data already exists, skipping insert.');
+      return;
+    }
+
+    for (final course in courses) {
+      final ratingParts = course.rating.split(' ');
+      final ratingNumber = double.tryParse(ratingParts.first) ?? 0.0;
+
+      await db.insert(table, {
+        'idx': course.index,
+        'images': course.images,
+        'title': course.title,
+        'duration': course.duration,
+        'rating_text': course.rating,
+        'rating_number': ratingNumber,
+        'price': course.price,
+        'is_bestseller': course.isBestseller ? 1 : 0,
+        'category': course.category,
+        'instructor': course.instructor,
+        'language': course.language,
+        'subtitle': course.subtitle,
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+
+    print('✅ ${courses.length} trending courses inserted successfully.');
   }
 }
