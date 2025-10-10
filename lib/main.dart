@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/data/auth_gate.dart';
+import 'package:projek_mobile/screens/database_test_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/password_provider.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
-      home: const AuthGate(), // <<<<<< inilah pengganti FavScreen
+      home: DatabaseTestScreen(), // <<<<<< inilah pengganti FavScreen
     );
   }
 }
