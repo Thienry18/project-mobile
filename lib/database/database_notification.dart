@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:projek_mobile/database/database_service.dart';
 
 class DatabaseNotification {
   static const table = 'notifications';
@@ -32,6 +33,15 @@ class DatabaseNotification {
     );
   }
 
+  static Future<int> insertNotificationForApp(Map<String, dynamic> data) async {
+    final db = await DatabaseService.instance.database;
+    final res = await insertNotification(db, data);
+    try {
+      await DatabaseService.instance.emitNotifications();
+    } catch (_) {}
+    return res;
+  }
+
   static Future<List<Map<String, dynamic>>> getUserNotifications(
     Database db,
     int userId,
@@ -53,11 +63,47 @@ class DatabaseNotification {
     );
   }
 
+  static Future<int> markAsReadForApp(int id) async {
+    final db = await DatabaseService.instance.database;
+    final res = await markAsRead(db, id);
+    try {
+      await DatabaseService.instance.emitNotifications();
+    } catch (_) {}
+    return res;
+  }
+
   static Future<int> deleteNotification(Database db, int id) async {
     return await db.delete(table, where: 'id = ?', whereArgs: [id]);
   }
 
+  static Future<int> deleteNotificationForApp(int id) async {
+    final db = await DatabaseService.instance.database;
+    final res = await deleteNotification(db, id);
+    try {
+      await DatabaseService.instance.emitNotifications();
+    } catch (_) {}
+    return res;
+  }
+
   static Future<void> clearAll(Database db, int userId) async {
     await db.delete(table, where: 'user_id = ?', whereArgs: [userId]);
+  }
+
+  static Future<void> clearAllForApp(int userId) async {
+    final db = await DatabaseService.instance.database;
+    final res = await clearAll(db, userId);
+    try {
+      await DatabaseService.instance.emitNotifications();
+    } catch (_) {}
+    return res;
+  }
+
+  /// Reactive stream that emits notifications for a given user id
+  static Stream<List<Map<String, dynamic>>> watchNotificationsForUser(
+    int userId,
+  ) {
+    return DatabaseService.instance.notificationsStream.map((rows) {
+      return rows.where((r) => (r['user_id'] as int?) == userId).toList();
+    });
   }
 }
