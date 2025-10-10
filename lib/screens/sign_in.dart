@@ -8,6 +8,8 @@ import 'package:projek_mobile/widgets/social_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/custom_shape_clipper.dart' as clipper;
 import 'package:projek_mobile/widgets/custom_button.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -17,10 +19,10 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  bool _agreeToTerms = false;
-
+  bool _agreeToTerms = false; // dipakai sebagai "Remember Me" visual
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _auth = AuthRepository();
 
   @override
   void dispose() {
@@ -29,20 +31,34 @@ class _SignInState extends State<SignIn> {
     super.dispose();
   }
 
-  void _handleSignIn() {
+  void _showError(String msg) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(backgroundColor: Colors.red, content: Text(msg)));
+  }
+
+  Future<void> _handleSignIn() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email and password must not be empty.'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      _showError('Email and password must not be empty.');
       return;
     }
 
+    final ok = await _auth.verifyCredentials(email, password);
+    if (!ok) {
+      _showError('Invalid email or password.');
+      return;
+    }
+
+    // Mark logged in + simpan email untuk ditampilkan di Profile
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_logged_in', true);
+    await prefs.setString('user_email', email.toLowerCase());
+
+    // Lanjut flow kamu ke InputPin (seperti sebelumnya)
+    if (!mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const InputPin()),

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
-import 'package:projek_mobile/screens/build_profile.dart';
 import 'package:projek_mobile/screens/sign_in.dart';
 import 'package:projek_mobile/widgets/login_tab_bar.dart';
 import 'package:projek_mobile/widgets/social_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/custom_shape_clipper.dart' as clipper;
 import 'package:projek_mobile/widgets/custom_button.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // <-- tambah ini
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -17,47 +18,83 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _agreeToTerms = false;
 
-  void _handleSignUp() {
-    String username = _usernameController.text.trim();
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
-    String confirmPassword = _confirmPasswordController.text.trim();
+  final _auth = AuthRepository();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(backgroundColor: Colors.red, content: Text(message)),
+    );
+  }
+
+  void _showOk(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(backgroundColor: Colors.green, content: Text(message)),
+    );
+  }
+
+  Future<void> _handleSignUp() async {
+    final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirm = _confirmPasswordController.text;
 
     if (username.isEmpty ||
         email.isEmpty ||
         password.isEmpty ||
-        confirmPassword.isEmpty) {
+        confirm.isEmpty) {
       _showError("Please fill in all fields.");
       return;
     }
-
-    if (password != confirmPassword) {
+    if (!_auth.isValidGmail(email)) {
+      _showError("Email must be a valid @gmail.com address.");
+      return;
+    }
+    if (!_auth.isValidPassword(password)) {
+      _showError(
+        "Password must be at least 8 chars and include uppercase, lowercase, and a symbol.",
+      );
+      return;
+    }
+    if (password != confirm) {
       _showError("Passwords do not match.");
       return;
     }
-
     if (!_agreeToTerms) {
       _showError("You must agree to the Terms and Privacy Policy.");
       return;
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => BuildProfile()),
-    );
-  }
+    try {
+      await _auth.register(email, password);
 
-  void _showError(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+      // >>> simpan username agar Profile bisa tampilkan "Your Name" -> username
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_username', username);
+
+      _showOk("Registration successful. Please sign in.");
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const SignIn()),
+      );
+    } catch (e) {
+      _showError(e.toString().replaceFirst('Exception: ', ''));
+    }
   }
 
   @override
@@ -75,7 +112,7 @@ class _SignUpState extends State<SignUp> {
               ],
             ),
             Center(child: Text("Sign Up", style: AppTextStyles.heading)),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
@@ -84,8 +121,8 @@ class _SignUpState extends State<SignUp> {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 32),
-            LoginTabBar(isSignIn: false),
+            const SizedBox(height: 32),
+            const LoginTabBar(isSignIn: false),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Column(
@@ -93,30 +130,39 @@ class _SignUpState extends State<SignUp> {
                   CustomTextField(
                     controller: _usernameController,
                     labelText: 'Enter your username',
-                    prefixIcon: Icon(Icons.person, color: Colors.white),
+                    prefixIcon: const Icon(Icons.person, color: Colors.white),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   CustomTextField(
                     controller: _emailController,
                     labelText: 'Enter your email',
-                    prefixIcon: Icon(Icons.email_outlined, color: Colors.white),
+                    prefixIcon: const Icon(
+                      Icons.email_outlined,
+                      color: Colors.white,
+                    ),
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   CustomTextField(
                     controller: _passwordController,
                     labelText: 'Enter your password',
-                    prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
+                    prefixIcon: const Icon(
+                      Icons.lock_outline,
+                      color: Colors.white,
+                    ),
                     obscureText: true,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   CustomTextField(
                     controller: _confirmPasswordController,
                     labelText: 'Re-enter your password',
-                    prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
+                    prefixIcon: const Icon(
+                      Icons.lock_outline,
+                      color: Colors.white,
+                    ),
                     obscureText: true,
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       Checkbox(
@@ -130,23 +176,26 @@ class _SignUpState extends State<SignUp> {
                           states,
                         ) {
                           if (states.contains(WidgetState.selected)) {
-                            return Color(0xFF324eaf);
+                            return const Color(0xFF324eaf);
                           }
-                          return Color(0xFFE3E8FB);
+                          return const Color(0xFFE3E8FB);
                         }),
                         side:
                             _agreeToTerms
-                                ? BorderSide(color: Color(0xff324eaf), width: 2)
-                                : BorderSide(color: Colors.transparent),
+                                ? const BorderSide(
+                                  color: Color(0xff324eaf),
+                                  width: 2,
+                                )
+                                : const BorderSide(color: Colors.transparent),
                         checkColor: Colors.white,
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: RichText(
                           text: TextSpan(
                             style: AppTextStyles.body,
                             children: [
-                              TextSpan(
+                              const TextSpan(
                                 text:
                                     'By creating this account, I acknowledge that I have read and agree to the ',
                               ),
@@ -158,7 +207,7 @@ class _SignUpState extends State<SignUp> {
                                   decoration: TextDecoration.underline,
                                 ),
                               ),
-                              TextSpan(text: ' and '),
+                              const TextSpan(text: ' and '),
                               TextSpan(
                                 text: 'Privacy Policy',
                                 style: GoogleFonts.poppins(
@@ -173,7 +222,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   CustomButton(
                     text: 'Sign Up',
                     onPressed: _handleSignUp,
@@ -182,7 +231,7 @@ class _SignUpState extends State<SignUp> {
                       horizontal: 70,
                     ),
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -193,17 +242,19 @@ class _SignUpState extends State<SignUp> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => SignIn()),
+                            MaterialPageRoute(
+                              builder: (context) => const SignIn(),
+                            ),
                           );
                         },
                         child: Text("Sign In", style: AppTextStyles.link),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
-                  SocialButton(),
+                  const SizedBox(height: 20),
+                  const SocialButton(),
                 ],
               ),
             ),

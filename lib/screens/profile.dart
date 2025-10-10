@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/data/interest_data.dart';
@@ -31,6 +32,10 @@ class _ProfileState extends State<Profile> {
   bool isNotificationEnabled = false;
   UserProfile? userProfile;
 
+  String? displayUsername;
+  String? displayEmail;
+  String? avatarPath; // optional fallback jika provider belum punya gambar
+
   @override
   void initState() {
     super.initState();
@@ -39,27 +44,48 @@ class _ProfileState extends State<Profile> {
 
   Future<void> _loadUserProfile() async {
     final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString('user_profile');
 
+    final spUsername = prefs.getString('user_username');
+    final spEmail = prefs.getString('user_email');
+    final spAvatar = prefs.getString('user_avatar_path');
+
+    final data = prefs.getString('user_profile');
     if (data != null) {
       final json = jsonDecode(data);
-      setState(() {
-        userProfile = UserProfile(
-          username: json['username'],
-          fullName: json['fullName'],
-          dob: json['dob'],
-          gender: json['gender'],
-          phoneNumber: json['phoneNumber'],
-          country: json['country'],
-        );
-      });
+      userProfile = UserProfile(
+        username: json['username'],
+        fullName: json['fullName'],
+        dob: json['dob'],
+        gender: json['gender'],
+        phoneNumber: json['phoneNumber'],
+        country: json['country'],
+      );
     }
+
+    setState(() {
+      displayUsername =
+          spUsername ?? userProfile?.username ?? userProfile?.fullName;
+      displayEmail = spEmail;
+      avatarPath = spAvatar; // dipakai sebagai fallback avatar
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     final isDarkMode = themeNotifier.isDarkMode;
+
+    final providerImage = context.watch<ProfileImageProvider>().image;
+
+    ImageProvider avatarProvider;
+    if (providerImage != null) {
+      avatarProvider = FileImage(providerImage);
+    } else if ((avatarPath ?? '').isNotEmpty &&
+        File(avatarPath!).existsSync()) {
+      avatarProvider = FileImage(File(avatarPath!));
+    } else {
+      avatarProvider = const AssetImage("assets/images/default_profile.png");
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -95,7 +121,7 @@ class _ProfileState extends State<Profile> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CartPage()),
+                  MaterialPageRoute(builder: (context) => const CartPage()),
                 );
               },
             ),
@@ -112,21 +138,7 @@ class _ProfileState extends State<Profile> {
                 Center(
                   child: Column(
                     children: [
-                      Consumer<ProfileImageProvider>(
-                        builder: (context, profileImageProvider, _) {
-                          final imageFile = profileImageProvider.image;
-                          return CircleAvatar(
-                            radius: 70,
-                            backgroundImage:
-                                imageFile != null
-                                    ? FileImage(imageFile)
-                                    : const AssetImage(
-                                          "assets/images/default_profile.png",
-                                        )
-                                        as ImageProvider,
-                          );
-                        },
-                      ),
+                      CircleAvatar(radius: 70, backgroundImage: avatarProvider),
                       const SizedBox(height: 13),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -150,7 +162,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       const SizedBox(height: 18),
                       Text(
-                        userProfile?.fullName ?? "Your Name",
+                        displayUsername ?? "Your Name",
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -162,7 +174,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "Student",
+                        displayEmail ?? "Student",
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Colors.grey,
@@ -174,13 +186,14 @@ class _ProfileState extends State<Profile> {
                 ),
                 const SizedBox(height: 22),
 
+                // EDIT PROFILE
                 MenuItem(
                   icon: Icons.person_outline,
                   iconColor: const Color(0XFF696969),
                   title: "Edit Profile",
-                  onTap: () {
+                  onTap: () async {
                     if (userProfile != null) {
-                      Navigator.push(
+                      final updated = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder:
@@ -188,9 +201,34 @@ class _ProfileState extends State<Profile> {
                                   EditProfileScreen(userProfile: userProfile!),
                         ),
                       );
+                      if (updated == true) {
+                        await _loadUserProfile(); // refresh SP → UI
+                      }
+                    } else {
+                      // fallback: kalau belum ada user_profile JSON, tetap boleh buka
+                      final updated = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => EditProfileScreen(
+                                userProfile: UserProfile(
+                                  username: displayUsername ?? '',
+                                  fullName: displayUsername ?? '',
+                                  dob: '',
+                                  gender: '',
+                                  phoneNumber: '',
+                                  country: '',
+                                ),
+                              ),
+                        ),
+                      );
+                      if (updated == true) {
+                        await _loadUserProfile();
+                      }
                     }
                   },
                 ),
+
                 MenuItem(
                   icon: Icons.payment_outlined,
                   iconColor: const Color(0XFF696969),
@@ -222,7 +260,6 @@ class _ProfileState extends State<Profile> {
                     });
                   },
                 ),
-
                 MenuItem(
                   icon: Icons.shield_outlined,
                   iconColor: const Color(0XFF696969),
@@ -273,13 +310,13 @@ class _ProfileState extends State<Profile> {
             case 1:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => MyCoursePage()),
+                MaterialPageRoute(builder: (_) => const MyCoursePage()),
               );
               break;
             case 2:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => NotificationPage()),
+                MaterialPageRoute(builder: (_) => const NotificationPage()),
               );
               break;
             case 3:
