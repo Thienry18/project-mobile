@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projek_mobile/screens/explore_page.dart';
-import 'package:projek_mobile/screens/onboarding.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/password_provider.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
@@ -13,6 +11,7 @@ import 'package:projek_mobile/database/database_service.dart';
 import 'package:projek_mobile/providers/history_provider.dart';
 import 'package:projek_mobile/providers/explore_provider.dart';
 import 'package:projek_mobile/data/explore_data.dart' show trendingCourses;
+import 'package:projek_mobile/data/auth_gate.dart';
 
 // Note: Auth flow is handled by `lib/data/auth_gate.dart` when used.
 
@@ -40,6 +39,10 @@ Future<void> main() async {
   final repo = ExploreRepository();
   await repo.seedIfEmpty(trendingCourses);
 
+  // Prepare theme notifier and load saved pref before runApp
+  final themeNotifier = ThemeNotifier();
+  await themeNotifier.loadTheme();
+
   runApp(
     MultiProvider(
       providers: [
@@ -49,7 +52,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ProfileImageProvider()),
         ChangeNotifierProvider(create: (_) => SetPinProvider()),
         ChangeNotifierProvider(create: (_) => PasswordProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+        // Provide the pre-loaded ThemeNotifier instance so startup theme is correct
+        ChangeNotifierProvider<ThemeNotifier>.value(value: themeNotifier),
         ChangeNotifierProvider(create: (_) => ExploreProvider(repo)),
       ],
       child: const MyApp(),
@@ -81,9 +85,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
-      home: ExplorePage(
-        selectedCategory: "all",
-      ), // <<<<<< inilah pengganti FavScreen
+      home: const AuthGate(),
     );
   }
 }

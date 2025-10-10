@@ -1,15 +1,8 @@
-import 'dart:async';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_user.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as p;
 
 class AuthRepository {
-  static const _dbName = 'projek_mobile.db';
-  static const _dbVersion =
-      2; // versi > 1 agar onUpgrade jalan untuk kolom baru
-  static const _table = 'users';
-
-  Database? _db;
-
   // ================== PUBLIC HELPERS (VALIDATION) ==================
   bool isValidGmail(String email) {
     final re = RegExp(r'^[a-zA-Z0-9._%+\-]+@gmail\.com$');
@@ -27,136 +20,103 @@ class AuthRepository {
     return hasUpper && hasLower && hasSymbol;
   }
 
-  // ================== DB INIT ==================
-  Future<Database> get _database async {
-    if (_db != null) return _db!;
-    final dir = await getDatabasesPath(); // dari sqflite (tanpa path_provider)
-    final fullPath = p.join(dir, _dbName);
-    _db = await openDatabase(
-      fullPath,
-      version: _dbVersion,
-      onCreate: (db, version) async {
-        await db.execute('''
-        CREATE TABLE $_table(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          email TEXT UNIQUE NOT NULL,
-          password TEXT NOT NULL,
-          username TEXT,
-          avatar_path TEXT,
-          created_at TEXT
-        );
-        ''');
-      },
-      onUpgrade: (db, oldVersion, newVersion) async {
-        // tambahkan kolom jika db lama belum punya
-        if (oldVersion < 2) {
-          try {
-            await db.execute('ALTER TABLE $_table ADD COLUMN username TEXT;');
-          } catch (_) {}
-          try {
-            await db.execute(
-              'ALTER TABLE $_table ADD COLUMN avatar_path TEXT;',
-            );
-          } catch (_) {}
-        }
-      },
-    );
-    return _db!;
-  }
+  // ================== AUTH CORE (using DatabaseService + DatabaseUser) ==================
+  Future<Database> get _db async => await DatabaseService.instance.database;
 
-  // ================== AUTH CORE ==================
   Future<void> register(String email, String password) async {
-    final db = await _database;
+    final db = await _db;
+    final exists = await DatabaseUser.getUserByEmail(
+      db,
+      email.trim().toLowerCase(),
+    );
+    if (exists != null) throw Exception('Email already registered.');
 
-    // Pastikan unik
-    final exists = await emailExists(email);
-    if (exists) {
-      throw Exception('Email already registered.');
-    }
-
-    await db.insert(_table, {
+    await DatabaseUser.insertUser(db, {
       'email': email.trim().toLowerCase(),
-      'password': password, // NOTE: demo plain-text; idealnya hashed
-      'created_at': DateTime.now().toIso8601String(),
-    }, conflictAlgorithm: ConflictAlgorithm.abort);
+      'password': password,
+      'username': '',
+      'fullname': '',
+      'day_of_birth': '',
+      'gender': '',
+      'phone_number': '',
+      'country': '',
+      'avatar_path': '',
+      'pin': null,
+    });
   }
 
   Future<bool> verifyCredentials(String email, String password) async {
-    final db = await _database;
-    final res = await db.query(
-      _table,
-      where: 'email = ? AND password = ?',
-      whereArgs: [email.trim().toLowerCase(), password],
-      limit: 1,
+    final db = await _db;
+    final user = await DatabaseUser.getUserByEmail(
+      db,
+      email.trim().toLowerCase(),
     );
-    return res.isNotEmpty;
+    if (user == null) return false;
+    return (user['password'] as String) == password;
   }
 
   Future<bool> emailExists(String email) async {
-    final db = await _database;
-    final res = await db.query(
-      _table,
-      columns: const ['id'],
-      where: 'email = ?',
-      whereArgs: [email.trim().toLowerCase()],
-      limit: 1,
+    final db = await _db;
+    final user = await DatabaseUser.getUserByEmail(
+      db,
+      email.trim().toLowerCase(),
     );
-    return res.isNotEmpty;
+    return user != null;
   }
 
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
-    final db = await _database;
-    final res = await db.query(
-      _table,
-      where: 'email = ?',
-      whereArgs: [email.trim().toLowerCase()],
-      limit: 1,
-    );
-    if (res.isEmpty) return null;
-    return res.first;
+    final db = await _db;
+    return await DatabaseUser.getUserByEmail(db, email.trim().toLowerCase());
   }
 
-  /// Update sebagian/semua kolom profil berdasarkan email sekarang.
-  /// - Validasi email baru (jika diisi): harus @gmail.com dan unik.
   Future<void> updateProfile({
     required String currentEmail,
     String? newEmail,
     String? username,
     String? avatarPath,
+    String? fullname,
+    String? dob,
+    String? gender,
+    String? phoneNumber,
+    String? country,
+    String? pin,
+    String? interest,
   }) async {
-    final db = await _database;
-    final current = currentEmail.trim().toLowerCase();
+    final db = await _db;
     final updates = <String, Object?>{};
+    final current = currentEmail.trim().toLowerCase();
 
     if (newEmail != null && newEmail.trim().toLowerCase() != current) {
-      if (!isValidGmail(newEmail)) {
+      if (!isValidGmail(newEmail))
         throw Exception('Email must be a valid @gmail.com address.');
-      }
       final taken = await emailExists(newEmail);
       if (taken) throw Exception('Email is already used by another account.');
       updates['email'] = newEmail.trim().toLowerCase();
     }
-
-    if (username != null && username.trim().isNotEmpty) {
-      updates['username'] = username.trim();
-    }
-
-    if (avatarPath != null && avatarPath.trim().isNotEmpty) {
-      updates['avatar_path'] = avatarPath.trim();
-    }
+    if (username != null) updates['username'] = username;
+    if (avatarPath != null) updates['avatar_path'] = avatarPath;
+    if (fullname != null) updates['fullname'] = fullname;
+    if (dob != null) updates['day_of_birth'] = dob;
+    if (gender != null) updates['gender'] = gender;
+    if (phoneNumber != null) updates['phone_number'] = phoneNumber;
+    if (country != null) updates['country'] = country;
+    if (pin != null) updates['pin'] = pin;
+    if (interest != null) updates['interest'] = interest;
 
     if (updates.isEmpty) return;
+    final count = await DatabaseUser.updateUserByEmail(db, current, updates);
+    if (count == 0) throw Exception('User not found.');
+  }
 
-    final count = await db.update(
-      _table,
-      updates,
-      where: 'email = ?',
-      whereArgs: [current],
-      conflictAlgorithm: ConflictAlgorithm.abort,
+  Future<void> changePassword(String email, String newPassword) async {
+    final db = await _db;
+    final user = await DatabaseUser.getUserByEmail(
+      db,
+      email.trim().toLowerCase(),
     );
-
-    if (count == 0) {
-      throw Exception('User not found.');
-    }
+    if (user == null) throw Exception('User not found');
+    await DatabaseUser.updateUserByEmail(db, email.trim().toLowerCase(), {
+      'password': newPassword,
+    });
   }
 }
