@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
-import 'package:projek_mobile/screens/sign_in.dart';
-import 'package:projek_mobile/screens/build_profile.dart';
+import 'package:projek_mobile/screens/auth/sign_in.dart';
+import 'package:projek_mobile/screens/auth/build_profile.dart';
 import 'package:projek_mobile/widgets/login_tab_bar.dart';
 import 'package:projek_mobile/widgets/social_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
