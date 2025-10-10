@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
-import 'package:projek_mobile/data/cart_data.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_cart.dart';
+import 'package:projek_mobile/database/database_user.dart';
+import 'package:projek_mobile/database/database_course.dart';
+import 'package:projek_mobile/database/database_history.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
@@ -25,11 +29,55 @@ class _CartPageState extends State<CartPage> {
   Set<int> selectedIndexes = {};
   String? selectedPromo;
   double promoDiscount = 0.0;
+  int? _userId;
+  List<Course> _dbCartCourses = [];
 
   @override
   void initState() {
     super.initState();
-    _selectAllVisibleItems();
+    _loadCartFromDb();
+  }
+
+  Future<void> _loadCartFromDb() async {
+    try {
+      final uid = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      _userId = uid;
+      final db = await DatabaseService.instance.database;
+      final rows = await DatabaseCart.getUserCart(db, uid);
+      final List<Course> loaded = [];
+      for (final r in rows) {
+        final courseId = (r['course_id'] as num?)?.toInt() ?? 0;
+        final courseFromDb = await DatabaseCourse.getCourseById(db, courseId);
+        if (courseFromDb != null) {
+          loaded.add(courseFromDb);
+        } else {
+          loaded.add(
+            Course(
+              images:
+                  (r['image'] as String?) ??
+                  'assets/images/card_image/udemy_course.jpg',
+              title: (r['title'] as String?) ?? 'Course',
+              duration: (r['added_at'] != null) ? 'Purchased' : '',
+              rating: (r['price'] as String?) ?? '0',
+              price: (r['price'] as String?) ?? '0',
+              isBestseller: false,
+              index: courseId,
+              category: '',
+              instructor: (r['instructor'] as String?) ?? '',
+              language: '',
+              subtitle: '',
+            ),
+          );
+        }
+      }
+      setState(() {
+        _dbCartCourses = loaded;
+      });
+      _selectAllVisibleItems();
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error loading cart from DB: $e');
+    }
   }
 
   void _showDeleteConfirmation() {
@@ -50,42 +98,97 @@ class _CartPageState extends State<CartPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: const Text('Delete'),
-                onPressed: () {
-                  final deletedItems = <Course>[];
-                  final deletedIndexes = selectedIndexes.toList()..sort();
-
-                  for (final index in deletedIndexes.reversed) {
-                    final course = cartCourses.firstWhere(
-                      (c) => c.index == index,
-                    );
-                    deletedItems.add(course);
-                    cartCourses.remove(course);
-                  }
-
-                  setState(() {
-                    selectedIndexes.clear();
-                    _selectAllVisibleItems();
-                  });
-
+                onPressed: () async {
                   Navigator.of(context, rootNavigator: true).pop();
+                  // Ensure we have a user id
+                  try {
+                    final uid =
+                        _userId ??
+                        await DatabaseUser.getOrCreateDemoUserIdForApp();
+                    _userId = uid;
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text("Items deleted from cart"),
-                      duration: const Duration(seconds: 4),
-                      action: SnackBarAction(
-                        label: 'UNDO',
-                        onPressed: () {
-                          setState(() {
-                            for (int i = 0; i < deletedItems.length; i++) {
-                              cartCourses.insert(0, deletedItems[i]);
+                    final deletedItems = <Course>[];
+                    final toDelete = selectedIndexes.toList();
+
+                    // Remove each selected course from DB
+                    for (final courseIdx in toDelete) {
+                      final course = _dbCartCourses.firstWhere(
+                        (c) => c.index == courseIdx,
+                        orElse:
+                            () => Course(
+                              images:
+                                  'assets/images/card_image/udemy_course.jpg',
+                              title: 'Course',
+                              duration: '',
+                              rating: '0',
+                              price: '0',
+                              isBestseller: false,
+                              index: courseIdx,
+                              category: '',
+                              instructor: '',
+                              language: '',
+                              subtitle: '',
+                            ),
+                      );
+                      deletedItems.add(course);
+                      await DatabaseCart.removeByUserCourseForUser(
+                        uid,
+                        courseIdx,
+                      );
+                      // record history for deletion from cart
+                      try {
+                        final db = await DatabaseService.instance.database;
+                        await DatabaseHistory.addHistory(db, {
+                          'user_id': uid,
+                          'course_id': course.index,
+                          'title': course.title,
+                          'image': course.images,
+                          'price': course.price,
+                          'status': 'deleted',
+                          'source': 'cart_delete',
+                          'occurred_at': DateTime.now().millisecondsSinceEpoch,
+                        });
+                      } catch (e) {
+                        // ignore: avoid_print
+                        print('Could not insert history for cart deletion: $e');
+                      }
+                    }
+
+                    // Refresh local list from DB
+                    await _loadCartFromDb();
+
+                    setState(() {
+                      selectedIndexes.clear();
+                      _selectAllVisibleItems();
+                    });
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text("Items deleted from cart"),
+                        duration: const Duration(seconds: 4),
+                        action: SnackBarAction(
+                          label: 'UNDO',
+                          onPressed: () async {
+                            // Re-insert deleted items
+                            if (deletedItems.isEmpty) return;
+                            for (final c in deletedItems) {
+                              await DatabaseCart.upsertCourseForUser(uid, c);
                             }
-                            _selectAllVisibleItems();
-                          });
-                        },
+                            await _loadCartFromDb();
+                            setState(() {
+                              _selectAllVisibleItems();
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } catch (e) {
+                    // ignore: avoid_print
+                    print('Failed to delete items from DB: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to delete items')),
+                    );
+                  }
                 },
               ),
             ],
@@ -100,9 +203,9 @@ class _CartPageState extends State<CartPage> {
   }
 
   List<Course> _getFilteredCartItems() {
-    if (selectedCategoryIndex == 0) return cartCourses;
+    if (selectedCategoryIndex == 0) return _dbCartCourses;
     final category = categoryList[selectedCategoryIndex - 1];
-    return cartCourses.where((e) => e.category == category).toList();
+    return _dbCartCourses.where((e) => e.category == category).toList();
   }
 
   void _showPromoBottomSheet() {
@@ -155,7 +258,7 @@ class _CartPageState extends State<CartPage> {
   void _handleCheckout() {
     final historyTitles = myCourses.map((e) => e.title).toSet();
     final selectedItems =
-        cartCourses.where((item) {
+        _dbCartCourses.where((item) {
           return selectedIndexes.contains(item.index) &&
               !historyTitles.contains(item.title);
         }).toList();
