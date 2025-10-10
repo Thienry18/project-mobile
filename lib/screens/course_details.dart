@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
+import 'package:projek_mobile/database/database_cart.dart';
+import 'package:projek_mobile/database/database_user.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
@@ -344,7 +346,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             height: 42,
             width: 50,
             child: OutlinedButton(
-              onPressed: () {
+              onPressed: () async {
                 final course = Course(
                   title: widget.title,
                   images: widget.imageUrl,
@@ -359,21 +361,34 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   subtitle: 'Indonesian',
                 );
 
-                if (!cartCourses.any((c) => c.title == course.title)) {
-                  cartCourses.add(course);
+                try {
+                  final userId =
+                      await DatabaseUser.getOrCreateDemoUserIdForApp();
+                  await DatabaseCart.upsertCourseForUser(userId, course);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Added to cart'),
                       duration: Duration(seconds: 2),
                     ),
                   );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Already in cart'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
+                } catch (e) {
+                  // fallback to in-memory and notify
+                  if (!cartCourses.any((c) => c.title == course.title)) {
+                    cartCourses.add(course);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Added to cart (offline)'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Already in cart'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
                 }
               },
               style: OutlinedButton.styleFrom(

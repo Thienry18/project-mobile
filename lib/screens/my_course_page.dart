@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
@@ -20,7 +19,9 @@ import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_mycourse.dart';
+import 'package:projek_mobile/database/database_user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyCoursePage extends StatefulWidget {
@@ -42,32 +43,37 @@ class _MyCoursePageState extends State<MyCoursePage> {
   }
 
   Future<void> _loadStoredCourses() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString('my_courses');
-    if (data != null) {
-      final decoded = jsonDecode(data);
+    try {
+      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final db = await DatabaseService.instance.database;
+      final rows = await DatabaseMyCourse.getMyCourses(db, userId);
       setState(() {
         myCourses.clear();
         myCourses.addAll(
-          List<Course>.from(
-            decoded.map(
-              (e) => Course(
-                index: e['index'],
-                title: e['title'],
-                price: e['price'],
-                images: e['images'],
-                category: e['category'],
-                rating: e['rating'],
-                duration: e['duration'],
-                isBestseller: e['isBestseller'],
-                instructor: e['instructor'],
-                language: e['language'],
-                subtitle: e['subtitle'],
-              ),
-            ),
-          ),
+          rows
+              .map(
+                (e) => Course(
+                  index: (e['course_id'] as num?)?.toInt() ?? (e['id'] as int),
+                  title: e['title'] as String? ?? 'Course',
+                  price: e['price'] as String? ?? '0',
+                  images:
+                      e['image'] as String? ??
+                      'assets/images/card_image/udemy_course.jpg',
+                  category: '',
+                  rating: e['rating'] as String? ?? '0',
+                  duration: '',
+                  isBestseller: false,
+                  instructor: e['instructor'] as String? ?? '',
+                  language: '',
+                  subtitle: '',
+                ),
+              )
+              .toList(),
         );
       });
+    } catch (e) {
+      // ignore: avoid_print
+      print('Failed to load mycourse from DB: $e');
     }
   }
 
