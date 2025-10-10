@@ -1,8 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_mycourse.dart';
+import 'package:projek_mobile/database/database_history.dart';
+import 'package:projek_mobile/database/database_user.dart';
+import 'package:projek_mobile/providers/history_provider.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -21,15 +24,88 @@ class _HistoryScreenState extends State<HistoryScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadHistory();
+    // Attach a listener to HistoryNotifier to refresh when DB changes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        final notifier = Provider.of<HistoryNotifier>(context, listen: false);
+        notifier.addListener(() async {
+          await _loadHistory();
+        });
+      } catch (_) {
+        // provider not registered; ignore
+      }
+    });
   }
 
   Future<void> _loadHistory() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString('purchase_history');
-    if (data != null) {
+    try {
+      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final db = await DatabaseService.instance.database;
+      // Load both mycourse (purchased snapshot) and history (additional records)
+      final mycourseRows = await DatabaseMyCourse.getMyCourses(db, userId);
+      final historyRows = await DatabaseHistory.getHistory(db, userId);
+
+      // Normalize rows into a common shape and combine
+      final combined = <Map<String, dynamic>>[];
+
+      for (final r in mycourseRows) {
+        // normalize price to double for consistent UI rendering
+        double price = 0.0;
+        final rawPrice = r['price'];
+        if (rawPrice is num) {
+          price = rawPrice.toDouble();
+        } else if (rawPrice is String) {
+          price =
+              double.tryParse(rawPrice.replaceAll(RegExp(r'[^0-9\.]'), '')) ??
+              0.0;
+        }
+
+        combined.add({
+          'id': r['id'],
+          'title': r['title'],
+          'image': r['image'],
+          'rating': r['rating'] ?? '0',
+          'price': price,
+          'status': r['status'] ?? 'completed',
+          'isBestseller': false,
+          'timestamp': r['purchased_at'] ?? 0,
+        });
+      }
+
+      for (final r in historyRows) {
+        double price = 0.0;
+        final rawPrice = r['price'];
+        if (rawPrice is num) {
+          price = rawPrice.toDouble();
+        } else if (rawPrice is String) {
+          price =
+              double.tryParse(rawPrice.replaceAll(RegExp(r'[^0-9\.]'), '')) ??
+              0.0;
+        }
+
+        combined.add({
+          'id': r['id'],
+          'title': r['title'],
+          'image': r['image'],
+          'rating': r['rating'] ?? '0',
+          'price': price,
+          'status': r['status'] ?? 'completed',
+          'isBestseller': false,
+          'timestamp': r['occurred_at'] ?? 0,
+        });
+      }
+
+      // Sort by timestamp desc
+      combined.sort(
+        (a, b) => (b['timestamp'] as int).compareTo(a['timestamp'] as int),
+      );
+
       setState(() {
-        historyData = List<Map<String, dynamic>>.from(jsonDecode(data));
+        historyData = combined;
       });
+    } catch (e) {
+      // ignore: avoid_print
+      print('Failed to load purchase history from DB: $e');
     }
   }
 
@@ -50,11 +126,24 @@ class _HistoryScreenState extends State<HistoryScreen>
               TextButton(
                 child: const Text("Clear", style: TextStyle(color: Colors.red)),
                 onPressed: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  await prefs.remove('purchase_history');
-                  setState(() {
-                    historyData.clear();
-                  });
+                  try {
+                    final userId =
+                        await DatabaseUser.getOrCreateDemoUserIdForApp();
+                    final db = await DatabaseService.instance.database;
+                    // Clear both mycourse and history entries for the user
+                    await db.delete(
+                      'mycourse',
+                      where: 'user_id = ?',
+                      whereArgs: [userId],
+                    );
+                    await DatabaseHistory.clearHistoryForUser(db, userId);
+                    setState(() {
+                      historyData.clear();
+                    });
+                  } catch (e) {
+                    // ignore: avoid_print
+                    print('Failed to clear purchase history: $e');
+                  }
                   Navigator.of(ctx).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("History cleared.")),

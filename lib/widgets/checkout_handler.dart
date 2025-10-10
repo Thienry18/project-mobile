@@ -1,8 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_mycourse.dart';
+import 'package:projek_mobile/database/database_user.dart';
+import 'package:projek_mobile/database/database_notification.dart';
+import 'package:projek_mobile/database/database_history.dart';
+import 'package:projek_mobile/database/database_cart.dart';
+import 'package:provider/provider.dart';
+import 'package:projek_mobile/providers/history_provider.dart';
 
 class CheckoutHandler {
   static Future<void> handleCheckout(
@@ -11,79 +17,88 @@ class CheckoutHandler {
     double promoDiscount,
   ) async {
     cartCourses.removeWhere((item) => selectedItems.contains(item));
+    // Persist purchase info into DB tables. We intentionally no longer use
+    // SharedPreferences for purchase history or notifications.
 
-    final prefs = await SharedPreferences.getInstance();
-
-    final data = prefs.getString('purchase_history');
-    List<Map<String, dynamic>> history =
-        data != null ? List<Map<String, dynamic>>.from(jsonDecode(data)) : [];
-
-    for (final course in selectedItems) {
-      history.add({
-        'image': course.images,
-        'title': course.title,
-        'rating': course.rating,
-        'price':
-            double.tryParse(course.price.replaceAll(RegExp(r'[^\d.]'), '')) ??
-            0.0,
-        'isBestseller': course.isBestseller,
-        'duration': course.duration,
-        'category': course.category,
-        'status': 'completed',
+    // Also insert a notification row into app_database.notifications for the demo user
+    try {
+      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final db = await DatabaseService.instance.database;
+      await DatabaseNotification.insertNotification(db, {
+        'user_id': userId,
+        'course_id':
+            selectedItems.isNotEmpty ? selectedItems.first.index : null,
+        'title': 'Order Completed!',
+        'message':
+            'Thanks for your purchase! Your course is now available in My Course.',
+        'course_title':
+            selectedItems.isNotEmpty ? selectedItems.first.title : null,
+        'course_image':
+            selectedItems.isNotEmpty ? selectedItems.first.images : null,
+        'course_price':
+            selectedItems.isNotEmpty ? selectedItems.first.price : null,
+        'is_read': 0,
+        'created_at': DateTime.now().millisecondsSinceEpoch,
       });
+    } catch (e) {
+      // ignore: avoid_print
+      print('Could not insert notification into DB: $e');
     }
-    await prefs.setString('purchase_history', jsonEncode(history));
 
-    final notifData = prefs.getString('notifications');
-    List<Map<String, dynamic>> currentNotifs =
-        notifData != null
-            ? List<Map<String, dynamic>>.from(jsonDecode(notifData))
-            : [];
-
-    final newNotif = {
-      'title': 'Order Completed!',
-      'message':
-          'Thanks for your purchase! Your course is now available in My Course.',
-      'image': selectedItems.first.images,
-      'date': _getCurrentFormattedDateTime(),
-      'unread': true,
-      'isNetworkImage': true,
-    };
-    currentNotifs.insert(0, newNotif);
-    await prefs.setString('notifications', jsonEncode(currentNotifs));
-
-    final existingCourseData = prefs.getString('my_courses');
-    List<Map<String, dynamic>> currentCourses =
-        existingCourseData != null
-            ? List<Map<String, dynamic>>.from(jsonDecode(existingCourseData))
-            : [];
-
-    for (final course in selectedItems) {
-      if (!currentCourses.any((c) => c['title'] == course.title)) {
-        currentCourses.add({
-          'index': course.index,
+    // No in-prefs my_courses; DB 'mycourse' table is the source of truth.
+    // Also insert purchased courses into app_database.mycourse for the current/demo user
+    try {
+      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final db = await DatabaseService.instance.database;
+      for (final course in selectedItems) {
+        await DatabaseMyCourse.addMyCourse(db, {
+          'user_id': userId,
+          'course_id': course.index,
           'title': course.title,
-          'price': course.price,
-          'images': course.images,
-          'category': course.category,
-          'rating': course.rating,
-          'duration': course.duration,
-          'isBestseller': course.isBestseller,
           'instructor': course.instructor,
-          'language': course.language,
-          'subtitle': course.subtitle,
+          'image': course.images,
+          'price': course.price,
+          'purchased_at': DateTime.now().millisecondsSinceEpoch,
+          'progress': 0.0,
         });
+        // Also write an entry to the history table indicating a successful purchase
+        try {
+          await DatabaseHistory.addHistory(db, {
+            'user_id': userId,
+            'course_id': course.index,
+            'title': course.title,
+            'image': course.images,
+            'price': course.price,
+            'status': 'completed',
+            'source': 'purchase',
+            'occurred_at': DateTime.now().millisecondsSinceEpoch,
+          });
+          // notify listeners so HistoryScreen updates if open
+          try {
+            Provider.of<HistoryNotifier>(
+              context,
+              listen: false,
+            ).notifyUpdated();
+          } catch (_) {
+            // ignore if provider not available in this context
+          }
+        } catch (e) {
+          // ignore: avoid_print
+          print('Could not insert history row for purchase: $e');
+        }
+        // Remove purchased course from cart (if present) for this user
+        try {
+          await DatabaseCart.removeByUserCourseForUser(userId, course.index);
+        } catch (e) {
+          // ignore: avoid_print
+          print('Could not remove purchased course from cart: $e');
+        }
       }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Could not insert into mycourse table: $e');
     }
-
-    await prefs.setString('my_courses', jsonEncode(currentCourses));
   }
 
-  static String _getCurrentFormattedDateTime() {
-    final now = DateTime.now();
-    final hour = now.hour > 12 ? now.hour - 12 : now.hour;
-    final amPm = now.hour >= 12 ? 'P.M.' : 'A.M.';
-    return '${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}-${now.year} '
-        '$hour:${now.minute.toString().padLeft(2, '0')} $amPm';
-  }
+  // no-op: notifications and mycourse persisted in DB; legacy prefs removed
 }

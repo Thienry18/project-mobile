@@ -59,7 +59,6 @@ class _BuildProfile extends State<BuildProfile> {
         'phoneNumber': user.phoneNumber,
         'country': user.country,
       }),
-      6,
     );
 
     Navigator.pushReplacement(

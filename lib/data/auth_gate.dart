@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_user.dart';
 
 // Onboarding step-1 kamu bernama FavScreen (bukan "Onboarding")
 import 'package:projek_mobile/screens/onboarding.dart' show FavScreen;
@@ -26,12 +27,20 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _check() async {
-    final prefs = await SharedPreferences.getInstance();
-    final flag = prefs.getBool('is_logged_in') ?? false;
-    setState(() {
-      _loading = false;
-      _loggedIn = flag;
-    });
+    try {
+      final db = await DatabaseService.instance.database;
+      final exists = await DatabaseUser.hasAnyUser(db);
+      setState(() {
+        _loading = false;
+        _loggedIn = exists;
+      });
+    } catch (e) {
+      // fail safe: consider not logged in
+      setState(() {
+        _loading = false;
+        _loggedIn = false;
+      });
+    }
   }
 
   @override
