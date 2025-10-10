@@ -145,7 +145,11 @@ class DatabaseCart {
       'added_at': DateTime.now().millisecondsSinceEpoch,
     };
     // Use upsert to avoid creating duplicate cart rows for the same user+course
-    return upsertCartItem(db, data);
+    final res = await upsertCartItem(db, data);
+    try {
+      await DatabaseService.instance.emitCarts();
+    } catch (_) {}
+    return res;
   }
 
   static Future<int> upsertCourseForUser(int userId, Course course) async {
@@ -159,7 +163,11 @@ class DatabaseCart {
       'image': course.images,
       'added_at': DateTime.now().millisecondsSinceEpoch,
     };
-    return upsertCartItem(db, data);
+    final res = await upsertCartItem(db, data);
+    try {
+      await DatabaseService.instance.emitCarts();
+    } catch (_) {}
+    return res;
   }
 
   static Future<List<Map<String, dynamic>>> getUserCartMapsForUser(
@@ -169,14 +177,29 @@ class DatabaseCart {
     return getUserCart(db, userId);
   }
 
+  /// Reactive stream that emits cart rows for a given userId
+  static Stream<List<Map<String, dynamic>>> watchUserCartForUser(int userId) {
+    return DatabaseService.instance.cartStream.map((rows) {
+      return rows.where((r) => (r['user_id'] as int?) == userId).toList();
+    });
+  }
+
   static Future<int> removeFromCartById(int id) async {
     final db = await DatabaseService.instance.database;
-    return removeFromCart(db, id);
+    final res = await removeFromCart(db, id);
+    try {
+      await DatabaseService.instance.emitCarts();
+    } catch (_) {}
+    return res;
   }
 
   static Future<void> clearUserCartForUser(int userId) async {
     final db = await DatabaseService.instance.database;
-    return clearUserCart(db, userId);
+    final res = await clearUserCart(db, userId);
+    try {
+      await DatabaseService.instance.emitCarts();
+    } catch (_) {}
+    return res;
   }
 
   static Future<int> countUserCartForUser(int userId) async {
@@ -196,6 +219,10 @@ class DatabaseCart {
 
   static Future<int> removeByUserCourseForUser(int userId, int courseId) async {
     final db = await DatabaseService.instance.database;
-    return removeByUserCourse(db, userId, courseId);
+    final res = await removeByUserCourse(db, userId, courseId);
+    try {
+      await DatabaseService.instance.emitCarts();
+    } catch (_) {}
+    return res;
   }
 }

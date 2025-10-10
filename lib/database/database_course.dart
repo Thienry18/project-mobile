@@ -77,6 +77,10 @@ class DatabaseCourse {
     }
 
     print('✅ ${courses.length} trending courses inserted successfully.');
+    // Emit updated course list
+    try {
+      await DatabaseService.instance.emitCourses();
+    } catch (_) {}
   }
 
   static Future<void> insertAll(Database db, List<Course> list) async {
@@ -174,5 +178,15 @@ class DatabaseCourse {
 
   static Future<int> deleteCourse(Database db, int id) async {
     return await db.delete(table, where: 'idx = ?', whereArgs: [id]);
+  }
+
+  // Convenience wrapper for app usage which emits after delete
+  static Future<int> deleteCourseForApp(int id) async {
+    final db = await DatabaseService.instance.database;
+    final res = await deleteCourse(db, id);
+    try {
+      await DatabaseService.instance.emitCourses();
+    } catch (_) {}
+    return res;
   }
 }

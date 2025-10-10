@@ -43,6 +43,10 @@ class AuthRepository {
       'avatar_path': '',
       'pin': null,
     });
+    // Notify listeners that users changed
+    try {
+      await DatabaseService.instance.emitUsers();
+    } catch (_) {}
   }
 
   Future<bool> verifyCredentials(String email, String password) async {
@@ -106,6 +110,10 @@ class AuthRepository {
     if (updates.isEmpty) return;
     final count = await DatabaseUser.updateUserByEmail(db, current, updates);
     if (count == 0) throw Exception('User not found.');
+    // Emit users snapshot for listeners (profile changed)
+    try {
+      await DatabaseService.instance.emitUsers();
+    } catch (_) {}
   }
 
   Future<void> changePassword(String email, String newPassword) async {
@@ -117,6 +125,26 @@ class AuthRepository {
     if (user == null) throw Exception('User not found');
     await DatabaseUser.updateUserByEmail(db, email.trim().toLowerCase(), {
       'password': newPassword,
+    });
+    // Emit users snapshot so any UI depending on user list/profile updates
+    try {
+      await DatabaseService.instance.emitUsers();
+    } catch (_) {}
+  }
+
+  /// Return a stream of the user row for the given email (updates when DB emits)
+  Stream<Map<String, dynamic>?> watchUserByEmail(String email) {
+    final normalized = email.trim().toLowerCase();
+    return DatabaseService.instance.usersStream.map((users) {
+      try {
+        final found = users.firstWhere(
+          (u) => (u['email'] as String?) == normalized,
+          orElse: () => {},
+        );
+        return found.isNotEmpty ? found : null;
+      } catch (_) {
+        return null;
+      }
     });
   }
 }
