@@ -1,9 +1,11 @@
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:projek_mobile/database/database_service.dart';
 
 class DatabaseCourse {
   static const table = 'courses';
 
+  // ===================== CREATE TABLE =====================
   static Future<void> createTable(Database db) async {
     await db.execute('''
       CREATE TABLE $table (
@@ -21,7 +23,16 @@ class DatabaseCourse {
         subtitle TEXT NOT NULL
       );
     ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_bestseller ON $table(is_bestseller, rating_number DESC);',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_category_title ON $table(category, title);',
+    );
   }
+
+  // ===================== INSERTIONS =====================
 
   static Future<int> insertCourse(
     Database db,
@@ -34,19 +45,11 @@ class DatabaseCourse {
     );
   }
 
-  static Future<List<Map<String, dynamic>>> getAllCourses(Database db) async {
-    return await db.query(table, orderBy: 'title ASC');
-  }
-
-  static Future<int> deleteCourse(Database db, int id) async {
-    return await db.delete(table, where: 'idx = ?', whereArgs: [id]);
-  }
-
   static Future<void> insertTrendingCourses(
     Database db,
     List<Course> courses,
   ) async {
-    // Cek apakah tabel sudah ada data biar tidak duplikat
+    // Cegah duplikasi data jika sudah ada
     final existing = await db.query(table);
     if (existing.isNotEmpty) {
       print('✅ Course data already exists, skipping insert.');
@@ -74,5 +77,102 @@ class DatabaseCourse {
     }
 
     print('✅ ${courses.length} trending courses inserted successfully.');
+  }
+
+  static Future<void> insertAll(Database db, List<Course> list) async {
+    await db.transaction((txn) async {
+      final batch = txn.batch();
+      for (final c in list) {
+        batch.insert(
+          table,
+          c.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+      await batch.commit(noResult: true);
+    });
+  }
+
+  // ===================== QUERIES =====================
+
+  static Future<List<Map<String, dynamic>>> getAllCourses(Database db) async {
+    return await db.query(table, orderBy: 'title ASC');
+  }
+
+  static Future<List<Course>> getAll(
+    Database db, {
+    int? limit,
+    int? offset,
+  }) async {
+    final rows = await db.query(
+      table,
+      orderBy: 'title ASC',
+      limit: limit,
+      offset: offset,
+    );
+    return rows.map(Course.fromMap).toList();
+  }
+
+  static Future<List<Course>> getTrendingTop5(Database db) async {
+    final rows = await db.query(
+      table,
+      where: 'is_bestseller = ?',
+      whereArgs: [1],
+      orderBy: 'rating_number DESC, title ASC',
+      limit: 5,
+    );
+    return rows.map(Course.fromMap).toList();
+  }
+
+  static Future<List<Course>> getRecommendedForYou(
+    Database db,
+    String category,
+  ) async {
+    final key = category.toLowerCase();
+    final rows = await db.query(
+      table,
+      where: 'LOWER(title) LIKE ? OR LOWER(category) LIKE ?',
+      whereArgs: ['%$key%', '%$key%'],
+      limit: 5,
+    );
+    return rows.map(Course.fromMap).toList();
+  }
+
+  static Future<Course?> getCourseById(Database db, int idx) async {
+    final rows = await db.query(
+      table,
+      where: 'idx = ?',
+      whereArgs: [idx],
+      limit: 1,
+    );
+    if (rows.isEmpty) return null;
+    return Course.fromMap(rows.first);
+  }
+
+  // Convenience wrappers using DatabaseService
+  static Future<Course?> getCourseByIdForApp(int idx) async {
+    final db = await DatabaseService.instance.database;
+    return getCourseById(db, idx);
+  }
+
+  static Future<List<Course>> getRecommendedForYouForApp(
+    String category,
+  ) async {
+    final db = await DatabaseService.instance.database;
+    return getRecommendedForYou(db, category);
+  }
+
+  static Future<int> count(Database db) async {
+    final res = await db.rawQuery('SELECT COUNT(*) as n FROM $table');
+    final n = res.first['n'];
+    if (n is int) return n;
+    if (n is num) return n.toInt();
+    return 0;
+  }
+
+  // ===================== DELETIONS =====================
+
+  static Future<int> deleteCourse(Database db, int id) async {
+    return await db.delete(table, where: 'idx = ?', whereArgs: [id]);
   }
 }
