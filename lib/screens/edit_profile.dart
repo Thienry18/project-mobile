@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -137,6 +138,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         currentEmail: _currentEmail!,
         newEmail: newEmail.isNotEmpty ? newEmail : null,
         username: newUsername.isNotEmpty ? newUsername : null,
+        fullname:
+            _fullnameController.text.trim().isNotEmpty
+                ? _fullnameController.text.trim()
+                : null,
         avatarPath: (avatarPath ?? '').isNotEmpty ? avatarPath : null,
       );
 
@@ -144,6 +149,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (newUsername.isNotEmpty) {
         await prefs.setString('user_username', newUsername);
       }
+      // Persist updated profile JSON so screens that read `user_profile` get latest data
+      final profileJson = {
+        'username':
+            newUsername.isNotEmpty ? newUsername : _usernameController.text,
+        'fullName': _fullnameController.text.trim(),
+        'dob': _dobController.text,
+        'gender': _genderController.text,
+        'phoneNumber': _phoneController.text,
+        'country': _countryController.text,
+      };
+      await prefs.setString('user_profile', jsonEncode(profileJson));
       if (newEmail.isNotEmpty && newEmail != _currentEmail) {
         await prefs.setString('user_email', newEmail);
       }
