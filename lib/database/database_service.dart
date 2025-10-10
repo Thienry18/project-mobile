@@ -12,7 +12,7 @@ import '../data/explore_data.dart' show trendingCourses;
 
 class DatabaseService {
   static const _dbName = 'app_database.db';
-  static const _dbVersion = 1;
+  static const _dbVersion = 2; // bumped to add user avatar/pin columns
 
   static Database? _database;
   static final DatabaseService instance = DatabaseService._();
@@ -33,7 +33,27 @@ class DatabaseService {
       path,
       version: _dbVersion,
       onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
+      onUpgrade: (db, oldV, newV) async {
+        // If we upgrade from v1 -> v2, ensure new columns exist in users table
+        if (oldV < 2) {
+          try {
+            await db.execute(
+              'ALTER TABLE ${DatabaseUser.table} ADD COLUMN avatar_path TEXT;',
+            );
+          } catch (_) {}
+          try {
+            await db.execute(
+              'ALTER TABLE ${DatabaseUser.table} ADD COLUMN pin TEXT;',
+            );
+          } catch (_) {}
+          try {
+            await db.execute(
+              'ALTER TABLE ${DatabaseUser.table} ADD COLUMN interest TEXT;',
+            );
+          } catch (_) {}
+        }
+        await _onUpgrade(db, oldV, newV);
+      },
     );
   }
 

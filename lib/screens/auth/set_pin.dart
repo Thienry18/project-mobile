@@ -3,15 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
+import 'package:projek_mobile/screens/auth/success.dart';
+import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:projek_mobile/screens/explore_page.dart';
 
-class InputPin extends StatelessWidget {
-  const InputPin({super.key});
+class SetPinScreen extends StatelessWidget {
+  const SetPinScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,14 @@ class InputPin extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Row(mainAxisAlignment: MainAxisAlignment.start),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            BuildStepCircle(isActive: true),
+            BuildStepCircle(isActive: true),
+            BuildStepCircle(isActive: true),
+          ],
+        ),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -36,13 +44,13 @@ class InputPin extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              Text('Input Your PIN', style: AppTextStyles.heading),
-              const SizedBox(height: 10),
+              Text('Set Your PIN', style: AppTextStyles.heading),
+              const SizedBox(height: 8),
               Text(
-                'Enter your PIN to verify your identity and securely access your account.',
+                'Set a secure PIN to protect your account and ensure only you can access it.',
                 style: GoogleFonts.poppins(color: const Color(0xff324EAF)),
               ),
-              const SizedBox(height: 80),
+              const SizedBox(height: 30),
               Center(
                 child: Column(
                   children: [
@@ -58,7 +66,7 @@ class InputPin extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(4, (index) {
@@ -107,39 +115,33 @@ class InputPin extends StatelessWidget {
                       text: "Continue",
                       padding: const EdgeInsets.symmetric(
                         horizontal: 80,
-                        vertical: 5,
+                        vertical: 15,
                       ),
                       onPressed:
                           provider.isPinComplete()
                               ? () async {
-                                final entered = provider.getPin();
+                                final pin = provider.getPin();
                                 final prefs =
                                     await SharedPreferences.getInstance();
                                 final email = prefs.getString('user_email');
                                 final auth = AuthRepository();
                                 if (email != null && email.isNotEmpty) {
-                                  final user = await auth.getUserByEmail(email);
-                                  final storedPin =
-                                      (user ?? {})['pin'] as String? ?? '';
-                                  if (storedPin.isNotEmpty &&
-                                      storedPin == entered) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => const ExplorePage(
-                                              selectedCategory: 'all',
-                                            ),
-                                      ),
+                                  try {
+                                    await auth.updateProfile(
+                                      currentEmail: email,
+                                      pin: pin,
                                     );
-                                    provider.pinControllers.forEach(
-                                      (controller) => controller.clear(),
-                                    );
-                                    return;
+                                    await prefs.setBool('is_logged_in', true);
+                                  } catch (_) {
+                                    // ignore errors for now
                                   }
                                 }
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Invalid PIN.')),
+
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const Success(),
+                                  ),
                                 );
                               }
                               : () {},

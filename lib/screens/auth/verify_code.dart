@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/providers/verify_code_provider.dart';
-import 'package:projek_mobile/screens/reset_password.dart';
+import 'package:projek_mobile/screens/auth/reset_password.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';

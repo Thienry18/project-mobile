@@ -15,7 +15,10 @@ class DatabaseUser {
         phone_number TEXT NOT NULL,
         country TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        avatar_path TEXT,
+        pin TEXT,
+        interest TEXT
       );
     ''');
   }
@@ -44,6 +47,18 @@ class DatabaseUser {
       limit: 1,
     );
     return res.isNotEmpty ? res.first : null;
+  }
+
+  // Convenience: update user by email (find id then update)
+  static Future<int> updateUserByEmail(
+    Database db,
+    String email,
+    Map<String, dynamic> data,
+  ) async {
+    final user = await getUserByEmail(db, email);
+    if (user == null) return 0;
+    final id = user['id'] as int;
+    return updateUser(db, id, data);
   }
 
   static Future<int> updateUser(
