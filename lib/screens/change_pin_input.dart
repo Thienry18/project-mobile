@@ -4,10 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/screens/pin_updated.dart';
-import 'package:projek_mobile/screens/success.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
 
 class ChangePinInput extends StatelessWidget {
   const ChangePinInput({super.key});
@@ -110,16 +111,52 @@ class ChangePinInput extends StatelessWidget {
                       ),
                       onPressed:
                           provider.isPinComplete()
-                              ? () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const PinUpdated(),
-                                  ),
-                                );
-                                provider.pinControllers.forEach(
-                                  (controller) => controller.clear(),
-                                );
+                              ? () async {
+                                final newPin = provider.getPin();
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                final email = prefs.getString('user_email');
+                                final auth = AuthRepository();
+
+                                if (email == null || email.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('No logged-in user found.'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                try {
+                                  // Update the user's PIN in the database
+                                  await auth.updateProfile(
+                                    currentEmail: email,
+                                    pin: newPin,
+                                  );
+
+                                  // Clear controllers after successful update
+                                  provider.pinControllers.forEach(
+                                    (controller) => controller.clear(),
+                                  );
+
+                                  // Navigate to confirmation
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const PinUpdated(),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Failed to update PIN: ${e.toString()}',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
                               }
                               : () {},
                     ),
