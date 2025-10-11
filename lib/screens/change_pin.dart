@@ -4,6 +4,8 @@ import 'package:projek_mobile/screens/email_notification_pin.dart';
 import 'package:projek_mobile/widgets/custom_shape_clipper.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
 
 class ChangePin extends StatelessWidget {
   ChangePin({super.key});
@@ -72,13 +74,74 @@ class ChangePin extends StatelessWidget {
                           width: 275,
                           child: CustomButton(
                             text: 'Send Code',
-                            onPressed: () {
+                            onPressed: () async {
+                              final emailInput = _emailController.text.trim();
+                              final auth = AuthRepository();
+
+                              // Validate Gmail format
+                              if (!auth.isValidGmail(emailInput)) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Please use a @gmail.com email',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              // Compare with currently logged-in user if present
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              final currentEmail =
+                                  prefs
+                                      .getString('user_email')
+                                      ?.trim()
+                                      .toLowerCase();
+                              if (currentEmail != null &&
+                                  currentEmail.isNotEmpty) {
+                                if (emailInput.toLowerCase() != currentEmail) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Entered email does not match your account',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+                              } else {
+                                // Fallback: ensure the email exists in DB
+                                final exists = await auth.emailExists(
+                                  emailInput,
+                                );
+                                if (!exists) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Email is not registered'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+                              }
+
+                              // Save the target email so downstream screens can
+                              // update the correct user's PIN even if the user
+                              // is not currently logged in.
+                              await prefs.setString(
+                                'user_email',
+                                emailInput.toLowerCase(),
+                              );
+
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder:
                                       (context) => EmailNotificationPin(
-                                        email: _emailController.text,
+                                        email: emailInput,
                                       ),
                                 ),
                               );
