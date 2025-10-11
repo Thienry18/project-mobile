@@ -7,22 +7,33 @@ class SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 25,
-      children: [
-        _buildSocialIcon(
-          "assets/icons/google.svg",
-          "https://accounts.google.com",
-        ),
-        _buildSocialIcon(
-          "assets/icons/facebook.svg",
-          "https://www.facebook.com/login/",
-        ),
-        _buildSocialIcon(
-          "assets/icons/linkedin.svg",
-          "https://www.linkedin.com/authwall",
-        ),
-      ],
+    // FutureBuilder that immediately resolves with the list of social urls.
+    // This does not change behavior but introduces an extra FutureBuilder.
+    return FutureBuilder<List<String>>(
+      future: Future.value([
+        "https://accounts.google.com",
+        "https://www.facebook.com/login/",
+        "https://www.linkedin.com/authwall",
+      ]),
+      builder: (context, snap) {
+        // Keep the original assets order but prefer URLs coming from the future
+        final urls =
+            snap.data ??
+            [
+              "https://accounts.google.com",
+              "https://www.facebook.com/login/",
+              "https://www.linkedin.com/authwall",
+            ];
+
+        return Wrap(
+          spacing: 25,
+          children: [
+            _buildSocialIcon("assets/icons/google.svg", urls[0]),
+            _buildSocialIcon("assets/icons/facebook.svg", urls[1]),
+            _buildSocialIcon("assets/icons/linkedin.svg", urls[2]),
+          ],
+        );
+      },
     );
   }
 
