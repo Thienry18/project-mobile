@@ -4,6 +4,8 @@ import 'package:projek_mobile/screens/email_notification.dart';
 import 'package:projek_mobile/widgets/custom_shape_clipper.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
 
 class ChangePassword extends StatelessWidget {
   ChangePassword({super.key});
@@ -73,14 +75,68 @@ class ChangePassword extends StatelessWidget {
                           width: 275,
                           child: CustomButton(
                             text: 'Send Code',
-                            onPressed: () {
+                            onPressed: () async {
+                              final emailInput = _emailController.text.trim();
+                              final auth = AuthRepository();
+
+                              if (!auth.isValidGmail(emailInput)) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Please use a @gmail.com email',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              final currentEmail =
+                                  prefs
+                                      .getString('user_email')
+                                      ?.trim()
+                                      .toLowerCase();
+                              if (currentEmail != null &&
+                                  currentEmail.isNotEmpty) {
+                                if (emailInput.toLowerCase() != currentEmail) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Entered email does not match your account',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+                              } else {
+                                final exists = await auth.emailExists(
+                                  emailInput,
+                                );
+                                if (!exists) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Email is not registered'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+                              }
+
+                              await prefs.setString(
+                                'user_email',
+                                emailInput.toLowerCase(),
+                              );
+
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder:
-                                      (context) => EmailNotification(
-                                        email: _emailController.text,
-                                      ),
+                                      (context) =>
+                                          EmailNotification(email: emailInput),
                                 ),
                               );
                             },
