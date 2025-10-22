@@ -89,13 +89,14 @@ class _SignUpState extends State<SignUp> {
       await prefs.setString('user_email', email.toLowerCase());
 
       _showOk("Registration successful. Continue to build your profile.");
-      if (!mounted) return;
+      // if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const BuildProfile()),
       );
     } catch (e) {
-      _showError(e.toString().replaceFirst('Exception: ', ''));
+      print("fuck");
+      _showError(e.toString());
     }
   }
 
