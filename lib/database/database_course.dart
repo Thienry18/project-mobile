@@ -45,10 +45,7 @@ class DatabaseCourse {
     );
   }
 
-  static Future<void> insertTrendingCourses(
-    Database db,
-    List<Course> courses,
-  ) async {
+  Future<void> insertTrendingCourses(Database db, List<Course> courses) async {
     // Cegah duplikasi data jika sudah ada
     final existing = await db.query(table);
     if (existing.isNotEmpty) {
