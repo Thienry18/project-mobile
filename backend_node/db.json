@@ -1,0 +1,33 @@
+{
+  "users": [],
+  "courses": [
+    {
+      "id": 1,
+      "title": "Flutter Development Bootcamp",
+      "description": "Learn Flutter & Dart from scratch",
+      "instructor": "Jane Cooper",
+      "price": "49.99",
+      "duration": "24h 30m",
+      "category": "Mobile Development",
+      "rating": 4.8,
+      "isBestseller": true,
+      "thumbnail": "assets/courses/flutter_bootcamp.jpg"
+    },
+    {
+      "id": 2,
+      "title": "Advanced Flutter Animations",
+      "description": "Master complex animations in Flutter",
+      "instructor": "John Smith", 
+      "price": "59.99",
+      "duration": "12h 45m",
+      "category": "Mobile Development",
+      "rating": 4.9,
+      "isBestseller": true,
+      "thumbnail": "assets/courses/flutter_animations.jpg"
+    }
+  ],
+  "carts": [],
+  "mycourses": [],
+  "notifications": [],
+  "activities": []
+}
