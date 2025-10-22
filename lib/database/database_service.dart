@@ -9,7 +9,6 @@ import 'database_mycourse.dart';
 import 'database_notification.dart';
 import 'database_history.dart';
 // Seed data
-import '../data/explore_data.dart' show trendingCourses;
 
 class DatabaseService {
   static const _dbName = 'app_database.db';
@@ -18,6 +17,7 @@ class DatabaseService {
   static Database? _database;
   static final DatabaseService instance = DatabaseService._();
   DatabaseService._();
+  bool _initialEmitsDone = false;
   // Streams for reactive UI
   // Broadcast so multiple listeners can subscribe
   final _usersController =
@@ -43,7 +43,53 @@ class DatabaseService {
 
   // Getter utama
   Future<Database> get database async {
+    // Debug: log when database getter is invoked
+    // ignore: avoid_print
+    print(
+      'DatabaseService: database getter called; cached=${_database != null}',
+    );
+
+    // If we have a cached Database but it's closed, clear it so we reopen.
+    if (_database != null) {
+      try {
+        if (!_database!.isOpen) {
+          // ignore: avoid_print
+          print('DatabaseService: cached database is closed; reopening');
+          _database = null;
+        }
+      } catch (_) {
+        // If checking isOpen throws, reset and reopen.
+        // ignore: avoid_print
+        print('DatabaseService: error checking isOpen, clearing cache');
+        _database = null;
+      }
+    }
+
+    final wasNull = _database == null;
+    // debug
+    // ignore: avoid_print
+    print('DatabaseService: opening database...');
     _database ??= await _initDatabase();
+    // ignore: avoid_print
+    print('DatabaseService: database opened');
+
+    // After the DB is opened for the first time, emit initial snapshots once.
+    if (wasNull && !_initialEmitsDone) {
+      _initialEmitsDone = true;
+      try {
+        await emitUsers();
+      } catch (_) {}
+      try {
+        await emitCourses();
+      } catch (_) {}
+      try {
+        await emitCarts();
+      } catch (_) {}
+      try {
+        await emitNotifications();
+      } catch (_) {}
+    }
+
     return _database!;
   }
 
@@ -51,6 +97,10 @@ class DatabaseService {
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = p.join(dbPath, _dbName);
+
+    // debug: show path about to be opened
+    // ignore: avoid_print
+    print('DatabaseService: _initDatabase path=$path');
 
     return await openDatabase(
       path,
@@ -82,6 +132,9 @@ class DatabaseService {
 
   // ====================== ON CREATE ======================
   Future<void> _onCreate(Database db, int version) async {
+    // debug
+    // ignore: avoid_print
+    print('DatabaseService: _onCreate start (version=$version)');
     // Create tables using the provided `db` instance. The helper
     // createTable methods expect a `Database` (or DatabaseExecutor),
     // so call them with `db` here instead of a Transaction.
@@ -91,29 +144,18 @@ class DatabaseService {
     await DatabaseMyCourse.createTable(db);
     await DatabaseNotification.createTable(db);
     await DatabaseHistory.createTable(db);
-    // Try to seed courses table with trending data (idempotent inside helper)
-    try {
-      await DatabaseCourse.insertTrendingCourses(db, trendingCourses);
-      print('✅ Seeded courses into app_database.db');
-    } catch (e) {
-      // ignore: avoid_print
-      print('⚠️ Could not seed courses into app_database.db: $e');
-    }
+    // Note: course seeding is performed by the app startup code
+    // (ExploreRepository.seedIfEmpty) which runs before user interaction.
+    // Avoid re-seeding here to prevent long DB operations during runtime.
+    // debug
+    // ignore: avoid_print
     print('✅ All tables created successfully.');
-
-    // Emit initial snapshots for any listeners
-    try {
-      await emitUsers();
-    } catch (_) {}
-    try {
-      await emitCourses();
-    } catch (_) {}
-    try {
-      await emitCarts();
-    } catch (_) {}
-    try {
-      await emitNotifications();
-    } catch (_) {}
+    // debug
+    // ignore: avoid_print
+    print('DatabaseService: _onCreate end');
+    // Note: initial emits are performed by the database getter after the
+    // database is opened to avoid calling the getter recursively during
+    // onCreate (which may cause nested openDatabase calls).
   }
 
   // ====================== ON UPGRADE ======================
@@ -127,8 +169,14 @@ class DatabaseService {
   Future<void> close() async {
     final db = _database;
     if (db != null && db.isOpen) {
-      await db.close();
-      print('🧹 Database closed successfully.');
+      try {
+        await db.close();
+        // ignore: avoid_print
+        print('🧹 Database closed successfully.');
+      } catch (e) {
+        // ignore: avoid_print
+        print('DatabaseService.close: error closing DB: $e');
+      }
     }
   }
 
@@ -136,9 +184,34 @@ class DatabaseService {
   Future<void> resetDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = p.join(dbPath, _dbName);
-    await deleteDatabase(path);
-    _database = null;
-    print('🗑️ Database reset completed.');
+    // Close existing DB if open, then delete file.
+    try {
+      if (_database != null) {
+        try {
+          if (_database!.isOpen) {
+            // ignore: avoid_print
+            print(
+              'DatabaseService.resetDatabase: closing open DB before delete',
+            );
+            await _database!.close();
+          }
+        } catch (e) {
+          // ignore: avoid_print
+          print('DatabaseService.resetDatabase: error closing DB: $e');
+        }
+        _database = null;
+      }
+    } catch (_) {}
+
+    try {
+      await deleteDatabase(path);
+      // ignore: avoid_print
+      print('🗑️ Database reset completed.');
+    } catch (e) {
+      // ignore: avoid_print
+      print('DatabaseService.resetDatabase: deleteDatabase failed: $e');
+      rethrow;
+    }
   }
 
   // Emit current users list to the usersStream

@@ -17,6 +17,8 @@ import 'package:projek_mobile/data/auth_gate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Note: do not reset the database on every startup. Use the
+  // RESET_DB_ONCE dart-define to trigger a one-time reset when needed.
 
   // One-time developer flag: run with
   // flutter run --dart-define=RESET_DB_ONCE=true
@@ -38,6 +40,18 @@ Future<void> main() async {
 
   final repo = ExploreRepository();
   await repo.seedIfEmpty(trendingCourses);
+
+  // Ensure the app database is opened and tables are created before the
+  // UI starts. This reduces the chance of long DB operations happening
+  // concurrently with user interactions (like Sign Up).
+  try {
+    await DatabaseService.instance.database;
+    // ignore: avoid_print
+    print('DatabaseService: database opened at startup');
+  } catch (e) {
+    // ignore: avoid_print
+    print('DatabaseService: failed to open database at startup: $e');
+  }
 
   // Prepare theme notifier and load saved pref before runApp
   final themeNotifier = ThemeNotifier();
