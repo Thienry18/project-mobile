@@ -17,6 +17,7 @@ import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
+import 'package:projek_mobile/services/course_service.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
@@ -37,6 +38,12 @@ class _ExplorePageState extends State<ExplorePage> {
   Set<int> favoriteCourses = {};
   Set<int> selectedIndexes = {0};
 
+  // Local state
+  bool isLoading = false;
+  List<Course> trending = [];
+  List<Course> recommended = [];
+  List<Course> all = [];
+
   @override
   void initState() {
     super.initState();
@@ -47,32 +54,49 @@ class _ExplorePageState extends State<ExplorePage> {
     });
   }
 
-  // Local state (using DatabaseCourse from app_database.db)
-  bool isLoading = false;
-  List<Course> trending = [];
-  List<Course> recommended = [];
-  List<Course> all = [];
-
   Future<void> _loadByCategory(String category) async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      final db = await DatabaseService.instance.database;
-      // DatabaseCourse helper returns List<Course>
-      all = await DatabaseCourse.getAll(db);
-      trending = await DatabaseCourse.getTrendingTop5(db);
-      recommended = await DatabaseCourse.getRecommendedForYou(db, category);
+      // Try API first
+      final courseService = CourseService();
+      final results = await Future.wait([
+        courseService.getAllCourses(),
+        courseService.getTrendingCourses(),
+        courseService.getRecommendedCourses(category),
+      ]);
+      
+      all = results[0];
+      trending = results[1];
+      recommended = results[2];
+    } catch (e) {
+      print('Error fetching from API: $e');
+      print('Falling back to local database');
+      
+      try {
+        // If API fails, try DatabaseService
+        final db = await DatabaseService.instance.database;
+        all = await DatabaseCourse.getAll(db);
+        trending = await DatabaseCourse.getTrendingTop5(db);
+        recommended = await DatabaseCourse.getRecommendedForYou(db, category);
 
-      // Fallback: if app_database.db is empty (e.g. not seeded), read seeded data
-      // from the legacy explore_courses.db (DbHelper).
-      if (all.isEmpty) {
-        final legacyDb = DbHelper.instance;
-        all = await legacyDb.getAll();
-        trending = await legacyDb.getTrendingTop5();
-        recommended = await legacyDb.getRecommendedForYou(category);
+        // If DatabaseService is empty, try legacy DbHelper
+        if (all.isEmpty) {
+          final legacyDb = DbHelper.instance;
+          all = await legacyDb.getAll();
+          trending = await legacyDb.getTrendingTop5();
+          recommended = await legacyDb.getRecommendedForYou(category);
+        }
+      } catch (dbError) {
+        print('Error fetching from database: $dbError');
+        // Keep empty lists as last resort
+        all = [];
+        trending = [];
+        recommended = [];
       }
+    }
     } catch (e) {
       // keep UI responsive; in real app, log or show error
       trending = [];

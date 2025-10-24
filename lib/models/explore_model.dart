@@ -32,14 +32,13 @@ class Course {
 
   Map<String, dynamic> toMap() {
     return {
-      'idx': index,
+      'index': index,
       'images': images,
       'title': title,
       'duration': duration,
-      'rating_text': rating,
-      'rating_number': ratingNumber,
+      'rating': rating,
       'price': price,
-      'is_bestseller': isBestseller ? 1 : 0,
+      'isBestseller': isBestseller,
       'category': category,
       'instructor': instructor,
       'language': language,
@@ -52,12 +51,10 @@ class Course {
       images: map['images'] as String,
       title: map['title'] as String,
       duration: map['duration'] as String,
-      rating:
-          (map['rating_text'] as String?) ??
-          (map['rating_number'] != null ? '${map['rating_number']}' : '0.0'),
+      rating: map['rating'] as String,
       price: map['price'] as String,
-      isBestseller: (map['is_bestseller'] as int) == 1,
-      index: map['idx'] as int,
+      isBestseller: map['isBestseller'] as bool,
+      index: map['index'] as int,
       category: map['category'] as String,
       instructor: map['instructor'] as String,
       language: map['language'] as String,
