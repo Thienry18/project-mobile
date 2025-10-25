@@ -4,7 +4,10 @@ import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/services/course_service.dart';
 
 class ExploreProvider extends ChangeNotifier {
+  final ExploreRepository repository;
   final CourseService courseService = CourseService();
+
+  ExploreProvider(this.repository);
 
   List<Course> trending = [];
   List<Course> recommended = [];
@@ -34,10 +37,10 @@ class ExploreProvider extends ChangeNotifier {
       print('Error loading courses: $e');
       // Keep empty lists on error and try loading from local repository
       try {
-        final repository = ExploreRepository();
-        all = await repository.getAll();
-        trending = await repository.getTrendingTop5();
-        recommended = await repository.getRecommendedForYou(category);
+        final repo = repository;
+        all = await repo.getAll();
+        trending = await repo.getTrendingTop5();
+        recommended = await repo.getRecommendedForYou(category);
       } catch (e) {
         print('Error loading from local repository: $e');
         all = [];
