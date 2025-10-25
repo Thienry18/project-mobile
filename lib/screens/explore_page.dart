@@ -62,19 +62,22 @@ class _ExplorePageState extends State<ExplorePage> {
     try {
       // Try API first
       final courseService = CourseService();
-      final results = await Future.wait([
-        courseService.getAllCourses(),
-        courseService.getTrendingCourses(),
-        courseService.getRecommendedCourses(category),
-      ]);
-      
-      all = results[0];
-      trending = results[1];
-      recommended = results[2];
+
+      // Fetch data (CourseService computes trending/recommended if backend doesn't)
+      final allCourses = await courseService.getAllCourses();
+      final trendingCourses = await courseService.getTrendingCourses();
+      final recommendedCourses = await courseService.getRecommendedCourses(
+        category,
+      );
+
+      all = allCourses;
+      trending = trendingCourses;
+      recommended = recommendedCourses;
     } catch (e) {
+      // API failed -> fallback to local DB
       print('Error fetching from API: $e');
       print('Falling back to local database');
-      
+
       try {
         // If API fails, try DatabaseService
         final db = await DatabaseService.instance.database;
@@ -96,14 +99,6 @@ class _ExplorePageState extends State<ExplorePage> {
         trending = [];
         recommended = [];
       }
-    }
-    } catch (e) {
-      // keep UI responsive; in real app, log or show error
-      trending = [];
-      recommended = [];
-      all = [];
-      // ignore: avoid_print
-      print('Error loading courses from DatabaseCourse: $e');
     } finally {
       setState(() {
         isLoading = false;

@@ -48,6 +48,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       // Normalize rows into a common shape and combine
       final combined = <Map<String, dynamic>>[];
 
+      final myCourseIds = <int>{};
       for (final r in mycourseRows) {
         // normalize price to double for consistent UI rendering
         double price = 0.0;
@@ -60,8 +61,18 @@ class _HistoryScreenState extends State<HistoryScreen>
               0.0;
         }
 
+        final courseId =
+            (r['course_id'] is num)
+                ? (r['course_id'] as num).toInt()
+                : (r['course_id'] is String)
+                ? int.tryParse(r['course_id']) ?? 0
+                : 0;
+
+        myCourseIds.add(courseId);
+
         combined.add({
           'id': r['id'],
+          'course_id': courseId,
           'title': r['title'],
           'image': r['image'],
           'rating': r['rating'] ?? '0',
@@ -83,8 +94,25 @@ class _HistoryScreenState extends State<HistoryScreen>
               0.0;
         }
 
+        final histCourseId =
+            (r['course_id'] is num)
+                ? (r['course_id'] as num).toInt()
+                : (r['course_id'] is String)
+                ? int.tryParse(r['course_id']) ?? 0
+                : 0;
+
+        // If we already have this course in mycourse (snapshot of purchase),
+        // skip adding a duplicate history entry for completed purchases so the
+        // user sees a single record.
+        if (histCourseId != 0 &&
+            myCourseIds.contains(histCourseId) &&
+            (r['status'] ?? 'completed') == 'completed') {
+          continue;
+        }
+
         combined.add({
           'id': r['id'],
+          'course_id': histCourseId,
           'title': r['title'],
           'image': r['image'],
           'rating': r['rating'] ?? '0',
@@ -213,13 +241,37 @@ class _HistoryScreenState extends State<HistoryScreen>
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        item['image'],
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.cover,
-                        errorBuilder:
-                            (context, error, stackTrace) => Container(
+                      child: Builder(
+                        builder: (context) {
+                          final img = (item['image'] ?? '').toString();
+                          if (img.startsWith('http')) {
+                            return Image.network(
+                              img,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (context, error, stackTrace) => Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: Colors.grey,
+                                    alignment: Alignment.center,
+                                    child: const Icon(
+                                      Icons.broken_image,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                            );
+                          } else if (img.isNotEmpty) {
+                            // treat as local asset path
+                            return Image.asset(
+                              img,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            );
+                          } else {
+                            return Container(
                               width: 60,
                               height: 60,
                               color: Colors.grey,
@@ -228,7 +280,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 Icons.broken_image,
                                 color: Colors.white,
                               ),
-                            ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     const SizedBox(width: 12),
