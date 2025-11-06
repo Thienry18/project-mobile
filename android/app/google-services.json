@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "537536136246",
+    "project_id": "codelab-c4f43",
+    "storage_bucket": "codelab-c4f43.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537536136246:android:5bb88a326e828a485a8497",
+        "android_client_info": {
+          "package_name": "com.example.projek_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzt5ECaevyKRZrv-wKYLZCx0-B7FXSggc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
