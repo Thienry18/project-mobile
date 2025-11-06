@@ -12,11 +12,13 @@ import 'package:projek_mobile/providers/history_provider.dart';
 import 'package:projek_mobile/providers/explore_provider.dart';
 import 'package:projek_mobile/data/explore_data.dart' show trendingCourses;
 import 'package:projek_mobile/data/auth_gate.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // Note: Auth flow is handled by `lib/data/auth_gate.dart` when used.
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   // Note: do not reset the database on every startup. Use the
   // RESET_DB_ONCE dart-define to trigger a one-time reset when needed.
 
