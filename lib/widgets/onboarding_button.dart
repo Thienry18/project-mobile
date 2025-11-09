@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 
 class FavButton extends StatelessWidget {
   const FavButton({
@@ -13,7 +14,16 @@ class FavButton extends StatelessWidget {
   final Widget next;
   final Widget back;
 
-  void _navigateWithFade(BuildContext context, Widget destination) {
+  void _navigateWithFade(BuildContext context, Widget destination) async {
+    await FirebaseAnalyticsService().trackButtonClick(
+      step > 1 ? 'onboarding_back' : 'onboarding_next',
+      extras: {
+        'screen': 'onboarding',
+        'step': step.toString(),
+        'destination': destination.runtimeType.toString(),
+      },
+    );
+
     Navigator.push(
       context,
       PageRouteBuilder(

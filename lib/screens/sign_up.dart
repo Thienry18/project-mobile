@@ -10,6 +10,8 @@ import 'package:projek_mobile/widgets/custom_shape_clipper.dart' as clipper;
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // <-- tambah ini
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -80,13 +82,39 @@ class _SignUpState extends State<SignUp> {
       return;
     }
 
+    bool ok = false;
     try {
-      await _auth.register(email, password);
+      // Try to create user with Firebase Auth first
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      ok = true;
+    } on FirebaseAuthException catch (e) {
+      // Firebase failed, we'll fallback to local registration below
+      // ignore: avoid_print
+      print('Firebase signUp error: ${e.code} ${e.message}');
+    } catch (e) {
+      // ignore: avoid_print
+      print('Firebase signUp error: $e');
+    }
+
+    try {
+      if (!ok) {
+        // Fallback to local registration
+        await _auth.register(email, password);
+      }
 
       // Save username and email into SharedPreferences for later steps
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_username', username);
       await prefs.setString('user_email', email.toLowerCase());
+      await prefs.setBool('is_logged_in', true);
+
+      await FirebaseAnalyticsService().logSignUp(
+        method: 'email',
+        success: true,
+      );
 
       _showOk("Registration successful. Continue to build your profile.");
       // if (!mounted) return;
@@ -95,7 +123,11 @@ class _SignUpState extends State<SignUp> {
         MaterialPageRoute(builder: (_) => const BuildProfile()),
       );
     } catch (e) {
-      print("fuck");
+      await FirebaseAnalyticsService().logSignUp(
+        method: 'email',
+        success: false,
+        errorMessage: e.toString(),
+      );
       _showError(e.toString());
     }
   }
@@ -244,7 +276,11 @@ class _SignUpState extends State<SignUp> {
                         style: AppTextStyles.body,
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
+                          await FirebaseAnalyticsService().trackButtonClick(
+                            'go_to_sign_in',
+                            extras: {'screen': 'sign_up'},
+                          );
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

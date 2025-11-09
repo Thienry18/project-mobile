@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/database/database_cart.dart';
@@ -39,12 +40,34 @@ class CourseDetailScreen extends StatefulWidget {
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
   bool isFavorite = false;
 
-  void showShareOptions(BuildContext context, String courseTitle) {
+  @override
+  void initState() {
+    super.initState();
+    _logCourseView();
+  }
+
+  Future<void> _logCourseView() async {
+    await FirebaseAnalyticsService().logCartOperation(
+      operation: 'view',
+      courseId: widget.title.hashCode.toString(),
+      title: widget.title,
+      price: double.tryParse(widget.price.replaceAll('\$', '')) ?? 0.0,
+    );
+  }
+
+  void showShareOptions(BuildContext context, String courseTitle) async {
     final random = Random();
     final code = String.fromCharCodes(
       List.generate(6, (index) => random.nextInt(26) + 97),
     );
     final fakeUrl = 'https://courses.com/$code';
+
+    await FirebaseAnalyticsService().logCartOperation(
+      operation: 'share',
+      courseId: widget.title.hashCode.toString(),
+      title: courseTitle,
+      price: double.tryParse(widget.price.replaceAll('\$', '')) ?? 0.0,
+    );
 
     Share.share(
       'Check out this course: $courseTitle\n$fakeUrl',
@@ -65,7 +88,15 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                 isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: isFavorite ? Colors.red : null,
               ),
-              onPressed: () {
+              onPressed: () async {
+                final action = isFavorite ? 'remove_favorite' : 'add_favorite';
+                await FirebaseAnalyticsService().logCartOperation(
+                  operation: action,
+                  courseId: widget.title.hashCode.toString(),
+                  title: widget.title,
+                  price:
+                      double.tryParse(widget.price.replaceAll('\$', '')) ?? 0.0,
+                );
                 setState(() {
                   isFavorite = !isFavorite;
                 });
