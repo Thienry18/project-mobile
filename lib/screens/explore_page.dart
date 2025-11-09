@@ -13,6 +13,7 @@ import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/contact.dart';
 import 'package:projek_mobile/screens/course_details.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
@@ -610,6 +611,13 @@ class _ExplorePageState extends State<ExplorePage> {
 
     return GestureDetector(
       onTap: () async {
+        // Log that the course card was opened from Explore
+        await FirebaseAnalyticsService().trackCourseAction(
+          'open',
+          index.toString(),
+          price: double.tryParse(price.replaceAll('\$', '')),
+        );
+
         // Load full course data from app database before navigating
         final courseFromDb = await DatabaseCourse.getCourseByIdForApp(index);
         if (courseFromDb != null) {

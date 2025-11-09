@@ -3,6 +3,7 @@ import 'package:projek_mobile/screens/certificate.dart';
 import 'package:video_player/video_player.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 
 class AssetVideoScreen extends StatefulWidget {
   final String videoPath;
@@ -39,15 +40,31 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
     });
   }
 
-  void _skipForward() {
+  void _skipForward() async {
     final newPosition =
         _controller.value.position + const Duration(seconds: 10);
+    await FirebaseAnalyticsService().trackButtonClick(
+      'video_skip_forward',
+      extras: {
+        'screen': 'video_player',
+        'skip_duration': '10',
+        'video_position': _controller.value.position.inSeconds.toString(),
+      },
+    );
     _controller.seekTo(newPosition);
   }
 
-  void _skipBackward() {
+  void _skipBackward() async {
     final newPosition =
         _controller.value.position - const Duration(seconds: 10);
+    await FirebaseAnalyticsService().trackButtonClick(
+      'video_skip_backward',
+      extras: {
+        'screen': 'video_player',
+        'skip_duration': '10',
+        'video_position': _controller.value.position.inSeconds.toString(),
+      },
+    );
     _controller.seekTo(
       newPosition >= Duration.zero ? newPosition : Duration.zero,
     );
@@ -106,7 +123,11 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 'View Certificate',
                 style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
               ),
-              onTap: () {
+              onTap: () async {
+                await FirebaseAnalyticsService().trackButtonClick(
+                  'view_certificate',
+                  extras: {'screen': 'video_player', 'from': 'more_options'},
+                );
                 Navigator.pop(context);
                 Navigator.push(
                   context,
