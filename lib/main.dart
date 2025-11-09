@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/password_provider.dart';
@@ -19,6 +20,9 @@ import 'package:firebase_core/firebase_core.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final analytics = FirebaseAnalytics.instance;
+  await analytics.logAppOpen();
+
   // Note: do not reset the database on every startup. Use the
   // RESET_DB_ONCE dart-define to trigger a one-time reset when needed.
 

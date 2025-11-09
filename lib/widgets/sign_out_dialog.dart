@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projek_mobile/screens/sign_in.dart';
 
 Future<void> signOutDialog(BuildContext context) async {
@@ -16,6 +17,13 @@ Future<void> signOutDialog(BuildContext context) async {
             ),
             ElevatedButton(
               onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.signOut();
+                } catch (e) {
+                  // ignore sign out errors from firebase; proceed to clear prefs
+                  // ignore: avoid_print
+                  print('Firebase signOut error: $e');
+                }
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.remove('is_logged_in');
                 await prefs.remove('user_email');
