@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:projek_mobile/database/database_service.dart';
 import 'package:projek_mobile/database/database_cart.dart';
 import 'package:projek_mobile/database/database_user.dart';
@@ -255,7 +256,7 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  void _handleCheckout() {
+  void _handleCheckout() async {
     final historyTitles = myCourses.map((e) => e.title).toSet();
     final selectedItems =
         _dbCartCourses.where((item) {
@@ -264,6 +265,12 @@ class _CartPageState extends State<CartPage> {
         }).toList();
 
     if (selectedItems.isEmpty) {
+      await FirebaseAnalyticsService().trackCartAction(
+        'checkout_failed',
+        courseId: null,
+        price: null,
+      );
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("No new courses to purchase."),
@@ -271,6 +278,15 @@ class _CartPageState extends State<CartPage> {
         ),
       );
       return;
+    }
+
+    // Track successful checkout initiation
+    for (final item in selectedItems) {
+      await FirebaseAnalyticsService().trackCartAction(
+        'checkout_initiated',
+        courseId: item.index.toString(),
+        price: double.tryParse(item.price.replaceAll('\$', '')),
+      );
     }
 
     Navigator.pushReplacement(

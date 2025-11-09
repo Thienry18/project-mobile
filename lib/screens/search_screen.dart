@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/course_details.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 
 class SearchScreen extends StatefulWidget {
   final List<Course> courseList;
@@ -83,7 +84,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         color: const Color(0xFF324EAF),
                       ),
                     ),
-                    onTap: () {
+                    onTap: () async {
+                      await FirebaseAnalyticsService().trackCourseAction(
+                        'open',
+                        course.index.toString(),
+                        price: double.tryParse(
+                          course.price.replaceAll('\$', ''),
+                        ),
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(

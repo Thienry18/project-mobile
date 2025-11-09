@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:projek_mobile/screens/payment_success_screen.dart';
 import 'package:projek_mobile/widgets/checkout_handler.dart';
 import 'package:provider/provider.dart';
@@ -196,6 +197,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 onPressed:
                     selectedIndex != null
                         ? () async {
+                          // Log pay now click
+                          await FirebaseAnalyticsService().trackButtonClick(
+                            'pay_now',
+                            extras: {
+                              'screen': 'payment',
+                              'amount': totalPrice.toStringAsFixed(2),
+                            },
+                          );
+
                           await CheckoutHandler.handleCheckout(
                             context,
                             widget.selectedItems,
