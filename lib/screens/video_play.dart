@@ -25,6 +25,13 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
+        // Log initial play start
+        FirebaseAnalyticsService().logVideoInteraction(
+          courseId: widget.videoPath,
+          videoTitle: widget.videoPath,
+          action: 'play',
+          timePosition: 0,
+        );
       });
   }
 
@@ -147,6 +154,10 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
               ),
               onTap: () {
+                FirebaseAnalyticsService().trackButtonClick(
+                  'video_set_reminder',
+                  extras: {'screen': 'video_player'},
+                );
                 Navigator.pop(context);
                 _pickScheduleDateTime();
               },
@@ -158,6 +169,10 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
               ),
               onTap: () {
+                FirebaseAnalyticsService().trackButtonClick(
+                  'video_share_course',
+                  extras: {'screen': 'video_player'},
+                );
                 Navigator.pop(context);
                 showShareOptions(context, 'Certificate of Achievement');
               },
@@ -254,6 +269,10 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                             ),
                             tooltip: 'Subtitles',
                             onPressed: () {
+                              FirebaseAnalyticsService().trackButtonClick(
+                                'video_subtitles',
+                                extras: {'screen': 'video_player'},
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
@@ -341,6 +360,14 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                             color: Colors.white,
                             iconSize: 32,
                             onPressed: () {
+                              FirebaseAnalyticsService().trackButtonClick(
+                                'video_previous',
+                                extras: {
+                                  'screen': 'video_player',
+                                  'video_position':
+                                      _controller.value.position.inSeconds,
+                                },
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
@@ -369,9 +396,33 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                             iconSize: 48,
                             onPressed: () {
                               setState(() {
-                                _controller.value.isPlaying
-                                    ? _controller.pause()
-                                    : _controller.play();
+                                if (_controller.value.isPlaying) {
+                                  _controller.pause();
+                                  FirebaseAnalyticsService()
+                                      .logVideoInteraction(
+                                        courseId: widget.videoPath,
+                                        videoTitle: widget.videoPath,
+                                        action: 'pause',
+                                        timePosition:
+                                            _controller
+                                                .value
+                                                .position
+                                                .inSeconds,
+                                      );
+                                } else {
+                                  _controller.play();
+                                  FirebaseAnalyticsService()
+                                      .logVideoInteraction(
+                                        courseId: widget.videoPath,
+                                        videoTitle: widget.videoPath,
+                                        action: 'play',
+                                        timePosition:
+                                            _controller
+                                                .value
+                                                .position
+                                                .inSeconds,
+                                      );
+                                }
                               });
                             },
                           ),
@@ -388,6 +439,14 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                             color: Colors.white,
                             iconSize: 32,
                             onPressed: () {
+                              FirebaseAnalyticsService().trackButtonClick(
+                                'video_next',
+                                extras: {
+                                  'screen': 'video_player',
+                                  'video_position':
+                                      _controller.value.position.inSeconds,
+                                },
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(

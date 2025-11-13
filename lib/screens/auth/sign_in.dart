@@ -10,6 +10,7 @@ import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:projek_mobile/widgets/custom_shape_clipper.dart' as clipper;
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
@@ -47,9 +48,19 @@ class _SignInState extends State<SignIn> {
       return;
     }
 
+    // Track the button click
+    await FirebaseAnalyticsService().trackButtonClick(
+      'sign_in_button',
+      extras: {'screen': 'auth_sign_in', 'email_entered': email.isNotEmpty},
+    );
+
     final ok = await _auth.verifyCredentials(email, password);
     if (!ok) {
       _showError('Invalid email or password.');
+      await FirebaseAnalyticsService().logLogin(
+        method: 'email',
+        success: false,
+      );
       return;
     }
 
@@ -59,6 +70,7 @@ class _SignInState extends State<SignIn> {
 
     // Lanjut flow kamu ke InputPin (seperti sebelumnya)
     if (!mounted) return;
+    await FirebaseAnalyticsService().logLogin(method: 'email', success: true);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const InputPin()),
@@ -150,6 +162,13 @@ class _SignInState extends State<SignIn> {
                                 setState(() {
                                   _agreeToTerms = value ?? false;
                                 });
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'remember_me_toggled',
+                                  extras: {
+                                    'screen': 'auth_sign_in',
+                                    'value': _agreeToTerms,
+                                  },
+                                );
                               },
                               fillColor: WidgetStateProperty.resolveWith<Color>(
                                 (states) {
@@ -178,6 +197,10 @@ class _SignInState extends State<SignIn> {
                             ),
                             InkWell(
                               onTap: () {
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'forgot_password',
+                                  extras: {'screen': 'auth_sign_in'},
+                                );
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -214,6 +237,10 @@ class _SignInState extends State<SignIn> {
                             ),
                             InkWell(
                               onTap: () {
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'go_to_sign_up',
+                                  extras: {'screen': 'auth_sign_in'},
+                                );
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -226,7 +253,7 @@ class _SignInState extends State<SignIn> {
                           ],
                         ),
                         const SizedBox(height: 34),
-                        const SocialButton(),
+                        const SocialButton(screen: 'auth_sign_in'),
                       ],
                     ),
                   ),
