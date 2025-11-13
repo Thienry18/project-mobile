@@ -10,6 +10,7 @@ import 'package:projek_mobile/widgets/custom_shape_clipper.dart' as clipper;
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // <-- tambah ini
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -81,6 +82,10 @@ class _SignUpState extends State<SignUp> {
     }
 
     try {
+      await FirebaseAnalyticsService().trackButtonClick(
+        'sign_up_button',
+        extras: {'screen': 'auth_sign_up', 'email_entered': email.isNotEmpty},
+      );
       await _auth.register(email, password);
 
       // Save username and email into SharedPreferences for later steps
@@ -89,12 +94,21 @@ class _SignUpState extends State<SignUp> {
       await prefs.setString('user_email', email.toLowerCase());
 
       _showOk("Registration successful. Continue to build your profile.");
+      await FirebaseAnalyticsService().logSignUp(
+        method: 'email',
+        success: true,
+      );
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const BuildProfile()),
       );
     } catch (e) {
+      await FirebaseAnalyticsService().logSignUp(
+        method: 'email',
+        success: false,
+        errorMessage: e.toString(),
+      );
       _showError(e.toString().replaceFirst('Exception: ', ''));
     }
   }
@@ -173,6 +187,13 @@ class _SignUpState extends State<SignUp> {
                           setState(() {
                             _agreeToTerms = value ?? false;
                           });
+                          FirebaseAnalyticsService().trackButtonClick(
+                            'agree_terms_toggled',
+                            extras: {
+                              'screen': 'auth_sign_up',
+                              'value': _agreeToTerms,
+                            },
+                          );
                         },
                         fillColor: WidgetStateProperty.resolveWith<Color>((
                           states,
@@ -244,6 +265,10 @@ class _SignUpState extends State<SignUp> {
                       ),
                       InkWell(
                         onTap: () {
+                          FirebaseAnalyticsService().trackButtonClick(
+                            'go_to_sign_in',
+                            extras: {'screen': 'auth_sign_up'},
+                          );
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -256,7 +281,7 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const SocialButton(),
+                  const SocialButton(screen: 'auth_sign_up'),
                 ],
               ),
             ),

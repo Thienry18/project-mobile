@@ -65,12 +65,9 @@ class InputPin extends StatelessWidget {
                         return SizedBox(
                           width: 80,
                           height: 80,
-                          child: StatefulBuilder(
-                            builder: (context, setState) {
-                              provider.pinFocusNodes[index].addListener(() {
-                                setState(() {});
-                              });
-
+                          child: AnimatedBuilder(
+                            animation: provider.pinFocusNodes[index],
+                            builder: (context, _) {
                               return CustomTextField(
                                 controller: provider.pinControllers[index],
                                 focusNode: provider.pinFocusNodes[index],
@@ -94,7 +91,6 @@ class InputPin extends StatelessWidget {
                                 ],
                                 onChanged: (value) {
                                   provider.onPinChanged(value, index, context);
-                                  (context as Element).markNeedsBuild();
                                 },
                               );
                             },

@@ -7,7 +7,20 @@ class FirebaseAnalyticsService {
   static final FirebaseAnalyticsService _instance =
       FirebaseAnalyticsService._internal();
   factory FirebaseAnalyticsService() => _instance;
-  FirebaseAnalyticsService._internal();
+  FirebaseAnalyticsService._internal() {
+    _ensureEnabled();
+  }
+
+  // Ensure analytics collection is enabled. Non-blocking call.
+  // We don't await here because constructors can't be async; this simply
+  // triggers the underlying platform implementation to enable collection.
+  // If the app needs to toggle collection later, call
+  // FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false/true).
+  void _ensureEnabled() {
+    try {
+      FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+    } catch (_) {}
+  }
 
   // --- Compatibility wrappers (older helper names used across the app) ---
   Future<void> trackButtonClick(
@@ -15,15 +28,11 @@ class FirebaseAnalyticsService {
     Map<String, dynamic>? extras,
   }) async {
     try {
-      final Map<String, Object> params = {
+      final Map<String, Object> params = _normalizeParams({
         'button_name': buttonName,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (extras != null) {
-        extras.forEach((k, v) {
-          if (v != null) params[k] = v as Object;
-        });
-      }
+        ...?extras,
+      });
       await _analytics.logEvent(name: 'button_click', parameters: params);
     } catch (e) {
       // ignore errors from analytics
@@ -37,12 +46,12 @@ class FirebaseAnalyticsService {
     double? price,
   }) async {
     try {
-      final Map<String, Object> params = {
+      final Map<String, Object> params = _normalizeParams({
         'action': action,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (courseId != null) params['course_id'] = courseId;
-      if (price != null) params['price'] = price.toString();
+        if (courseId != null) 'course_id': courseId,
+        if (price != null) 'price': price,
+      });
       await _analytics.logEvent(name: 'cart_action', parameters: params);
     } catch (e) {
       print('Analytics Error (trackCartAction): $e');
@@ -55,16 +64,36 @@ class FirebaseAnalyticsService {
     double? price,
   }) async {
     try {
-      final Map<String, Object> params = {
+      final Map<String, Object> params = _normalizeParams({
         'action': action,
         'course_id': courseId,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (price != null) params['price'] = price.toString();
+        if (price != null) 'price': price,
+      });
       await _analytics.logEvent(name: 'course_action', parameters: params);
     } catch (e) {
       print('Analytics Error (trackCourseAction): $e');
     }
+  }
+
+  // Normalize parameters: Firebase Analytics requires parameter values to be String or num.
+  // Convert bool -> 1/0, keep num and String, otherwise call toString().
+  Map<String, Object> _normalizeParams(Map<String, dynamic>? raw) {
+    final out = <String, Object>{};
+    if (raw == null) return out;
+    raw.forEach((k, v) {
+      if (v == null) return;
+      if (v is String) {
+        out[k] = v;
+      } else if (v is num) {
+        out[k] = v;
+      } else if (v is bool) {
+        out[k] = v ? 1 : 0;
+      } else {
+        out[k] = v.toString();
+      }
+    });
+    return out;
   }
 
   // Auth Related Analytics
@@ -74,14 +103,12 @@ class FirebaseAnalyticsService {
     String? errorMessage,
   }) async {
     try {
-      final params = {
+      final params = _normalizeParams({
         'login_method': method,
         'success': success,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (errorMessage != null) {
-        params['error_message'] = errorMessage;
-      }
+        if (errorMessage != null) 'error_message': errorMessage,
+      });
       await _analytics.logEvent(name: 'user_login', parameters: params);
     } catch (e) {
       print('Analytics Error: $e');
@@ -94,14 +121,12 @@ class FirebaseAnalyticsService {
     String? errorMessage,
   }) async {
     try {
-      final params = {
+      final params = _normalizeParams({
         'signup_method': method,
         'success': success,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (errorMessage != null) {
-        params['error_message'] = errorMessage;
-      }
+        if (errorMessage != null) 'error_message': errorMessage,
+      });
       await _analytics.logEvent(name: 'user_signup', parameters: params);
     } catch (e) {
       print('Analytics Error: $e');
@@ -118,13 +143,13 @@ class FirebaseAnalyticsService {
     try {
       await _analytics.logEvent(
         name: 'course_view',
-        parameters: {
+        parameters: _normalizeParams({
           'course_id': courseId,
           'title': title,
           'instructor': instructor,
-          'price': price.toString(),
+          'price': price,
           'timestamp': DateTime.now().toIso8601String(),
-        },
+        }),
       );
     } catch (e) {
       print('Analytics Error: $e');
@@ -139,16 +164,14 @@ class FirebaseAnalyticsService {
     String? paymentMethod,
   }) async {
     try {
-      final params = {
+      final params = _normalizeParams({
         'course_id': courseId,
         'title': title,
-        'price': price.toString(),
+        'price': price,
         'success': success,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (paymentMethod != null) {
-        params['payment_method'] = paymentMethod;
-      }
+        if (paymentMethod != null) 'payment_method': paymentMethod,
+      });
       await _analytics.logEvent(name: 'course_purchase', parameters: params);
     } catch (e) {
       print('Analytics Error: $e');
@@ -165,13 +188,13 @@ class FirebaseAnalyticsService {
     try {
       await _analytics.logEvent(
         name: 'cart_operation',
-        parameters: {
+        parameters: _normalizeParams({
           'operation': operation, // add, remove, checkout
           'course_id': courseId,
           'title': title,
-          'price': price.toString(),
+          'price': price,
           'timestamp': DateTime.now().toIso8601String(),
-        },
+        }),
       );
     } catch (e) {
       print('Analytics Error: $e');
@@ -187,16 +210,14 @@ class FirebaseAnalyticsService {
     String? quality,
   }) async {
     try {
-      final params = {
+      final params = _normalizeParams({
         'course_id': courseId,
         'video_title': videoTitle,
         'action': action, // play, pause, seek, complete
-        'position': timePosition.toString(),
+        'position': timePosition,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (quality != null) {
-        params['quality'] = quality;
-      }
+        if (quality != null) 'quality': quality,
+      });
       await _analytics.logEvent(name: 'video_interaction', parameters: params);
     } catch (e) {
       print('Analytics Error: $e');
@@ -212,10 +233,10 @@ class FirebaseAnalyticsService {
       await _analytics.logScreenView(
         screenName: screenName,
         screenClass: screenName,
-        parameters: {
+        parameters: _normalizeParams({
           ...?parameters,
           'timestamp': DateTime.now().toIso8601String(),
-        },
+        }),
       );
     } catch (e) {
       print('Analytics Error: $e');
@@ -229,14 +250,12 @@ class FirebaseAnalyticsService {
     String? category,
   }) async {
     try {
-      final params = {
+      final params = _normalizeParams({
         'search_term': searchTerm,
         'result_count': resultCount,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (category != null) {
-        params['category'] = category;
-      }
+        if (category != null) 'category': category,
+      });
       await _analytics.logEvent(name: 'search', parameters: params);
     } catch (e) {
       print('Analytics Error: $e');
@@ -251,17 +270,13 @@ class FirebaseAnalyticsService {
     String? screen,
   }) async {
     try {
-      final params = {
+      final params = _normalizeParams({
         'error_type': errorType,
         'message': message,
         'timestamp': DateTime.now().toIso8601String(),
-      };
-      if (stackTrace != null) {
-        params['stack_trace'] = stackTrace;
-      }
-      if (screen != null) {
-        params['screen'] = screen;
-      }
+        if (stackTrace != null) 'stack_trace': stackTrace,
+        if (screen != null) 'screen': screen,
+      });
       await _analytics.logEvent(name: 'app_error', parameters: params);
     } catch (e) {
       print('Analytics Error: $e');
