@@ -183,6 +183,13 @@ class _SignInState extends State<SignIn> {
                                 setState(() {
                                   _agreeToTerms = value ?? false;
                                 });
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'remember_me_toggled',
+                                  extras: {
+                                    'screen': 'sign_in',
+                                    'value': _agreeToTerms,
+                                  },
+                                );
                               },
                               fillColor: WidgetStateProperty.resolveWith<Color>(
                                 (states) {
@@ -211,6 +218,10 @@ class _SignInState extends State<SignIn> {
                             ),
                             InkWell(
                               onTap: () {
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'forgot_password',
+                                  extras: {'screen': 'sign_in'},
+                                );
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -247,6 +258,10 @@ class _SignInState extends State<SignIn> {
                             ),
                             InkWell(
                               onTap: () {
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'go_to_sign_up',
+                                  extras: {'screen': 'sign_in'},
+                                );
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -259,7 +274,7 @@ class _SignInState extends State<SignIn> {
                           ],
                         ),
                         const SizedBox(height: 34),
-                        const SocialButton(),
+                        const SocialButton(screen: 'sign_in'),
                       ],
                     ),
                   ),

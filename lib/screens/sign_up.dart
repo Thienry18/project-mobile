@@ -82,6 +82,12 @@ class _SignUpState extends State<SignUp> {
       return;
     }
 
+    // Track the button click
+    await FirebaseAnalyticsService().trackButtonClick(
+      'sign_up_button',
+      extras: {'screen': 'sign_up', 'email_entered': email.isNotEmpty},
+    );
+
     bool ok = false;
     try {
       // Try to create user with Firebase Auth first
@@ -91,7 +97,17 @@ class _SignUpState extends State<SignUp> {
       );
       ok = true;
     } on FirebaseAuthException catch (e) {
-      // Firebase failed, we'll fallback to local registration below
+      // If email already in use on Firebase, inform user and abort
+      if (e.code == 'email-already-in-use') {
+        _showError('This email is already registered (Firebase).');
+        await FirebaseAnalyticsService().logSignUp(
+          method: 'email',
+          success: false,
+          errorMessage: 'email-already-in-use',
+        );
+        return;
+      }
+      // Otherwise, log and allow fallback to local DB
       // ignore: avoid_print
       print('Firebase signUp error: ${e.code} ${e.message}');
     } catch (e) {
@@ -100,8 +116,20 @@ class _SignUpState extends State<SignUp> {
     }
 
     try {
-      if (!ok) {
-        // Fallback to local registration
+      if (ok) {
+        // Ensure local DB also contains this user so app flows that read local DB work
+        try {
+          await _auth.register(email, password);
+        } catch (e) {
+          // If local DB already had the user, ignore; otherwise rethrow
+          if (e.toString().contains('Email already registered')) {
+            // ignore
+          } else {
+            rethrow;
+          }
+        }
+      } else {
+        // Fallback to local registration when Firebase wasn't used/successful
         await _auth.register(email, password);
       }
 
@@ -206,6 +234,13 @@ class _SignUpState extends State<SignUp> {
                           setState(() {
                             _agreeToTerms = value ?? false;
                           });
+                          FirebaseAnalyticsService().trackButtonClick(
+                            'agree_terms_toggled',
+                            extras: {
+                              'screen': 'sign_up',
+                              'value': _agreeToTerms,
+                            },
+                          );
                         },
                         fillColor: WidgetStateProperty.resolveWith<Color>((
                           states,
@@ -293,7 +328,7 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const SocialButton(),
+                  const SocialButton(screen: 'sign_up'),
                 ],
               ),
             ),
