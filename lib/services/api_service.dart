@@ -45,12 +45,26 @@ class ApiService {
   Future<List<CourseModel>> getCourses({
     String? category,
     String? search,
+    String? lang,
   }) async {
     final queryParams = <String, String>{};
     if (category != null) queryParams['category'] = category;
     if (search != null) queryParams['search'] = search;
+    if (lang != null) queryParams['lang'] = lang;
 
-    final response = await get('/courses', token: null);
+    // Build path with query params if present
+    var path = '/courses';
+    if (queryParams.isNotEmpty) {
+      final qs = queryParams.entries
+          .map(
+            (e) =>
+                '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}',
+          )
+          .join('&');
+      path = '$path?$qs';
+    }
+
+    final response = await get(path, token: null);
     final List<dynamic> data = response['body'];
     return data.map((json) => CourseModel.fromJson(json)).toList();
   }

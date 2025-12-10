@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ComingSoon extends StatelessWidget {
   const ComingSoon({super.key});
@@ -14,7 +15,7 @@ class ComingSoon extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Color(0xFF7A8EDA)),
         ),
       ),
-      body: Center(child: Text("Coming Soon")),
+      body: Center(child: Text(AppLocalizations.of(context).comingSoon)),
     );
   }
 }

@@ -13,12 +13,15 @@ import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/contact.dart';
 import 'package:projek_mobile/screens/course_details.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/services/course_service.dart';
+import 'package:projek_mobile/providers/locale_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
@@ -63,9 +66,10 @@ class _ExplorePageState extends State<ExplorePage> {
     try {
       // Try API first
       final courseService = CourseService();
+      final lang = context.read<LocaleProvider>().locale.languageCode;
 
       // Fetch data (CourseService computes trending/recommended if backend doesn't)
-      final allCourses = await courseService.getAllCourses();
+      final allCourses = await courseService.getAllCourses(lang: lang);
       final trendingCourses = await courseService.getTrendingCourses();
       final recommendedCourses = await courseService.getRecommendedCourses(
         category,
@@ -489,9 +493,13 @@ class _ExplorePageState extends State<ExplorePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) => const Scaffold(
+                                        (context) => Scaffold(
                                           body: Center(
-                                            child: Text("Coming Soon"),
+                                            child: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              ).comingSoon,
+                                            ),
                                           ),
                                         ),
                                   ),
