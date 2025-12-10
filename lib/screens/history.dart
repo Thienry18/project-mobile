@@ -6,6 +6,7 @@ import 'package:projek_mobile/database/database_mycourse.dart';
 import 'package:projek_mobile/database/database_history.dart';
 import 'package:projek_mobile/database/database_user.dart';
 import 'package:projek_mobile/providers/history_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -140,46 +141,53 @@ class _HistoryScreenState extends State<HistoryScreen>
   void _confirmDeleteHistory(BuildContext context) {
     showDialog(
       context: context,
-      builder:
-          (ctx) => AlertDialog(
-            title: const Text("Clear Purchase History"),
-            content: const Text(
-              "Are you sure you want to clear your history? This action cannot be undone.",
-            ),
-            actions: [
-              TextButton(
-                child: const Text("Cancel"),
-                onPressed: () => Navigator.of(ctx).pop(),
-              ),
-              TextButton(
-                child: const Text("Clear", style: TextStyle(color: Colors.red)),
-                onPressed: () async {
-                  try {
-                    final userId =
-                        await DatabaseUser.getOrCreateDemoUserIdForApp();
-                    final db = await DatabaseService.instance.database;
-                    // Clear both mycourse and history entries for the user
-                    await db.delete(
-                      'mycourse',
-                      where: 'user_id = ?',
-                      whereArgs: [userId],
-                    );
-                    await DatabaseHistory.clearHistoryForUser(db, userId);
-                    setState(() {
-                      historyData.clear();
-                    });
-                  } catch (e) {
-                    // ignore: avoid_print
-                    print('Failed to clear purchase history: $e');
-                  }
-                  Navigator.of(ctx).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("History cleared.")),
-                  );
-                },
-              ),
-            ],
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return AlertDialog(
+          title: Text(l10n.clearPurchaseHistory),
+          content: const Text(
+            "Are you sure you want to clear your history? This action cannot be undone.",
           ),
+          actions: [
+            TextButton(
+              child: Text(l10n.cancel),
+              onPressed: () => Navigator.of(ctx).pop(),
+            ),
+            TextButton(
+              child: Text(
+                AppLocalizations.of(ctx)!.delete,
+                style: const TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                try {
+                  final userId =
+                      await DatabaseUser.getOrCreateDemoUserIdForApp();
+                  final db = await DatabaseService.instance.database;
+                  // Clear both mycourse and history entries for the user
+                  await db.delete(
+                    'mycourse',
+                    where: 'user_id = ?',
+                    whereArgs: [userId],
+                  );
+                  await DatabaseHistory.clearHistoryForUser(db, userId);
+                  setState(() {
+                    historyData.clear();
+                  });
+                } catch (e) {
+                  // ignore: avoid_print
+                  print('Failed to clear purchase history: $e');
+                }
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.historyCleared),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

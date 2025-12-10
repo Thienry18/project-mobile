@@ -3,6 +3,13 @@ export const initialCourses = [
         id: 1,
         title: "100 Days of Code: The Complete Python Pro Bootcamp",
         description: "Master Python with 100 projects in 100 days",
+        translations: {
+            zh: { title: "100 天编码：完整 Python 专业训练营", description: "通过 100 个项目在 100 天内掌握 Python" },
+            id: { title: "100 Hari Kode: Bootcamp Python Pro Lengkap", description: "Kuasi Python dengan 100 proyek dalam 100 hari" },
+            ko: { title: "100일의 코드: 완전한 파이썬 프로 부트캠프", description: "100일간 100개의 프로젝트로 파이썬 마스터하기" },
+            ja: { title: "100日間のコーディング：完全なPythonプロブートキャンプ", description: "100日で100のプロジェクトでPythonを習得する" },
+            de: { title: "100 Tage Code: Das komplette Python Pro Bootcamp", description: "Meistere Python mit 100 Projekten in 100 Tagen" }
+        },
         instructor: "Angela Yu",
         price: "$38.69",
         duration: "55h 21m",
@@ -15,6 +22,13 @@ export const initialCourses = [
         id: 2,
         title: "Machine Learning A-Z: AI, Python & R + ChatGPT Prize [2025]",
         description: "Learn Machine Learning using Python & R",
+        translations: {
+            zh: { title: "机器学习 A-Z：AI、Python 与 R + ChatGPT 奖 [2025]", description: "使用 Python 与 R 学习机器学习" },
+            id: { title: "Machine Learning A-Z: AI, Python & R + Hadiah ChatGPT [2025]", description: "Pelajari Machine Learning menggunakan Python & R" },
+            ko: { title: "머신러닝 A-Z: AI, 파이썬 & R + ChatGPT상 [2025]", description: "파이썬과 R을 사용하여 머신러닝 배우기" },
+            ja: { title: "機械学習 A-Z：AI、Python & R + ChatGPT 賞 [2025]", description: "Python と R を使って機械学習を学ぶ" },
+            de: { title: "Machine Learning A-Z: KI, Python & R + ChatGPT Preis [2025]", description: "Lerne Machine Learning mit Python & R" }
+        },
         instructor: "Kirill Eremenko",
         price: "$36.29",
         duration: "42h 44m",
@@ -27,6 +41,13 @@ export const initialCourses = [
         id: 3,
         title: "The Complete JavaScript Course 2025: From Zero to Expert!",
         description: "Master modern JavaScript from the beginning",
+        translations: {
+            zh: { title: "完整的 JavaScript 课程 2025：从零到专家！", description: "从零开始掌握现代 JavaScript" },
+            id: { title: "Kursus JavaScript Lengkap 2025: Dari Nol ke Ahli!", description: "Kuasi JavaScript modern dari awal" },
+            ko: { title: "완전한 자바스크립트 코스 2025: 제로에서 전문가로!", description: "처음부터 현대 JavaScript 마스터하기" },
+            ja: { title: "完全なJavaScriptコース2025：ゼロからエキスパートへ！", description: "最初からモダンなJavaScriptを習得する" },
+            de: { title: "Der komplette JavaScript-Kurs 2025: Von Null zum Experten!", description: "Beherrsche modernes JavaScript von Anfang an" }
+        },
         instructor: "Jonas Schmedtmann",
         price: "$42.99",
         duration: "68h 15m",
