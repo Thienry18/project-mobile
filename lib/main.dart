@@ -1,6 +1,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:projek_mobile/providers/locale_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:projek_mobile/providers/password_provider.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
@@ -62,6 +64,8 @@ Future<void> main() async {
   // Prepare theme notifier and load saved pref before runApp
   final themeNotifier = ThemeNotifier();
   await themeNotifier.loadTheme();
+  final localeProvider = LocaleProvider();
+  await localeProvider.load();
 
   runApp(
     MultiProvider(
@@ -74,6 +78,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => PasswordProvider()),
         // Provide the pre-loaded ThemeNotifier instance so startup theme is correct
         ChangeNotifierProvider<ThemeNotifier>.value(value: themeNotifier),
+        ChangeNotifierProvider<LocaleProvider>.value(value: localeProvider),
         ChangeNotifierProvider(create: (_) => ExploreProvider(repo)),
       ],
       child: const MyApp(),
@@ -87,9 +92,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final localeProvider = Provider.of<LocaleProvider>(context);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      locale: localeProvider.locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeResolutionCallback: (locale, supportedLocales) {
+        if (locale == null) return supportedLocales.first;
+        for (var s in supportedLocales) {
+          if (s.languageCode == locale.languageCode) return s;
+        }
+        return supportedLocales.first;
+      },
       theme: ThemeData.light().copyWith(
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Colors.black,

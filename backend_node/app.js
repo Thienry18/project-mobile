@@ -47,8 +47,33 @@ app.use(bodyParser.json());
 app.get("/api/courses", async (req, res) => {
     try {
         await db.read();
-        console.log(`Sending ${db.data.courses.length} courses`);
-        res.json(db.data.courses);
+        const lang = req.query.lang;
+        let courses = db.data.courses || [];
+
+        // If lang requested, try to replace title/description from translations
+        if (lang) {
+            courses = courses.map(c => {
+                // if translations exist, prefer them
+                if (c.translations && c.translations[lang]) {
+                    const t = c.translations[lang];
+                    // clone and replace
+                    return { ...c, title: t.title || c.title, description: t.description || c.description };
+                }
+                return c;
+            });
+
+            // Optionally persist localized title/description back to db.json
+            try {
+                db.data.courses = courses;
+                await db.write();
+                console.log(`Persisted localized titles for lang=${lang}`);
+            } catch (e) {
+                console.warn('Failed to persist localized titles:', e);
+            }
+        }
+
+        console.log(`Sending ${courses.length} courses (lang=${lang || 'none'})`);
+        res.json(courses);
     } catch (error) {
         console.error('Error fetching courses:', error);
         res.status(500).json({ error: 'Internal server error' });

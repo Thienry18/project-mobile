@@ -10,6 +10,7 @@ import 'package:projek_mobile/screens/profile.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/database/database_service.dart';
@@ -182,7 +183,9 @@ class _NotificationPageState extends State<NotificationPage>
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text("Notifications deleted"),
+                          content: Text(
+                            AppLocalizations.of(context).notificationsDeleted,
+                          ),
                           duration: const Duration(seconds: 4),
                           action: SnackBarAction(
                             label: 'UNDO',
@@ -243,7 +246,7 @@ class _NotificationPageState extends State<NotificationPage>
         elevation: 0,
         backgroundColor: isDarkMode ? Colors.black : const Color(0xff324eaf),
         title: Text(
-          "Notification",
+          AppLocalizations.of(context).notification,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.bold,
