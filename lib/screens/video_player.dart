@@ -4,6 +4,7 @@ import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/video_play.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VideoPlayer extends StatelessWidget {
   final Course course;
@@ -18,7 +19,7 @@ class VideoPlayer extends StatelessWidget {
       appBar: AppBar(
         leading: const BackButton(),
         title: Text(
-          "Course Videos",
+          AppLocalizations.of(context).courseVideosTitle,
           style: GoogleFonts.poppins(
             color: isDarkMode ? Colors.white : Color(0xFF324EAF),
             fontWeight: FontWeight.w600,
@@ -56,9 +57,11 @@ class VideoPlayer extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: List.generate(9, (index) {
+                    final l10n = AppLocalizations.of(context);
+
                     return ExpansionTile(
                       title: Text(
-                        'Module ${index + 1} - Introduction',
+                        l10n.moduleTitle(index + 1),
                         style: GoogleFonts.poppins(
                           color: isDarkMode ? Colors.white : Color(0xFF324EAF),
                           fontSize: 16,
@@ -66,7 +69,11 @@ class VideoPlayer extends StatelessWidget {
                         ),
                       ),
                       children: [
-                        _buildComingSoonTile(context, "Coming Soon", index + 1),
+                        _buildComingSoonTile(
+                          context,
+                          l10n.comingSoon,
+                          index + 1,
+                        ),
                       ],
                     );
                   }),
@@ -115,7 +122,7 @@ class VideoPlayer extends StatelessWidget {
                   );
                 },
                 icon: const Icon(Icons.ondemand_video, size: 18),
-                label: const Text("Video"),
+                label: Text(AppLocalizations.of(context).video),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.shade200,
                   foregroundColor: Colors.black,
@@ -125,7 +132,7 @@ class VideoPlayer extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.file_copy, size: 18),
-                label: const Text("Resource"),
+                label: Text(AppLocalizations.of(context).resource),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.shade200,
                   foregroundColor: Colors.black,

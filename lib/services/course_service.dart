@@ -20,9 +20,13 @@ class CourseService {
   }
 
   // Get all courses
-  Future<List<Course>> getAllCourses() async {
+  Future<List<Course>> getAllCourses({String? lang}) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/courses'));
+      var url = '$baseUrl/courses';
+      if (lang != null && lang.isNotEmpty) {
+        url = '$url?lang=${Uri.encodeQueryComponent(lang)}';
+      }
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data
