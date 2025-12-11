@@ -32,7 +32,12 @@ class DatabaseCourse {
     );
   }
 
+<<<<<<< HEAD
   // ===================== INSERT SINGLE COURSE =====================
+=======
+  // ===================== INSERTIONS =====================
+
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<int> insertCourse(
     Database db,
     Map<String, dynamic> data,
@@ -44,12 +49,17 @@ class DatabaseCourse {
     );
   }
 
+<<<<<<< HEAD
   // ===================== INSERT TRENDING COURSES =====================
   static Future<void> insertTrendingCourses(
     Database db,
     List<Course> courses,
   ) async {
     // Cegah duplikasi jika tabel sudah memiliki data
+=======
+  Future<void> insertTrendingCourses(Database db, List<Course> courses) async {
+    // Cegah duplikasi data jika sudah ada
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
     final existing = await db.query(table);
     if (existing.isNotEmpty) {
       print('✅ Course data already exists, skipping insert.');
@@ -77,14 +87,21 @@ class DatabaseCourse {
     }
 
     print('✅ ${courses.length} trending courses inserted successfully.');
+<<<<<<< HEAD
 
     // Emit data untuk listener Stream
+=======
+    // Emit updated course list
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
     try {
       await DatabaseService.instance.emitCourses();
     } catch (_) {}
   }
 
+<<<<<<< HEAD
   // ===================== INSERT ALL WITH BATCH =====================
+=======
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<void> insertAll(Database db, List<Course> list) async {
     await db.transaction((txn) async {
       final batch = txn.batch();
@@ -155,7 +172,11 @@ class DatabaseCourse {
     return Course.fromMap(rows.first);
   }
 
+<<<<<<< HEAD
   // Convenience wrapper using DatabaseService
+=======
+  // Convenience wrappers using DatabaseService
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<Course?> getCourseByIdForApp(int idx) async {
     final db = await DatabaseService.instance.database;
     return getCourseById(db, idx);
@@ -176,12 +197,17 @@ class DatabaseCourse {
     return 0;
   }
 
+<<<<<<< HEAD
   // ===================== DELETE =====================
+=======
+  // ===================== DELETIONS =====================
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 
   static Future<int> deleteCourse(Database db, int id) async {
     return await db.delete(table, where: 'idx = ?', whereArgs: [id]);
   }
 
+<<<<<<< HEAD
   static Future<int> deleteCourseForApp(int id) async {
     final db = await DatabaseService.instance.database;
     final res = await deleteCourse(db, id);
@@ -190,6 +216,15 @@ class DatabaseCourse {
       await DatabaseService.instance.emitCourses();
     } catch (_) {}
 
+=======
+  // Convenience wrapper for app usage which emits after delete
+  static Future<int> deleteCourseForApp(int id) async {
+    final db = await DatabaseService.instance.database;
+    final res = await deleteCourse(db, id);
+    try {
+      await DatabaseService.instance.emitCourses();
+    } catch (_) {}
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
     return res;
   }
 }

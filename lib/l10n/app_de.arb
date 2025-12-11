@@ -18,8 +18,11 @@
   "premium": "Premium",
   "cart": "Einkaufswagen",
   "basic": "Basis",
+<<<<<<< HEAD
   "buildYourProfile": "Erstellen Sie Ihr Profil",
   "descBuildProfile": "Nehmen Sie sich Zeit, um Ihr Profil auszufüllen, damit wir eine persönlichere und nahtlosere Erfahrung für Sie schaffen können.",
+=======
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "comingSoon": "Demnächst verfügbar",
   "signIn": "Anmelden",
   "signUp": "Registrieren",
@@ -45,6 +48,7 @@
   "courseVideosTitle": "Kursvideos",
   "moduleTitle": "Modul {number} - Einführung",
   "video": "Video",
+<<<<<<< HEAD
   "resource": "Ressource",
   "username": "Benutzername",
   "fullName": "Vollständiger Name",
@@ -189,4 +193,7 @@
   "previousClicked": "Zurück angeklickt",
   "nextClicked": "Weiter angeklickt",
   "back": "Zurück"
+=======
+  "resource": "Ressource"
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 }

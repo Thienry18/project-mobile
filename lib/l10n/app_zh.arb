@@ -17,9 +17,14 @@
   "german": "German (Deutsch)",
   "premium": "高级",
   "cart": "购物车",
+<<<<<<< HEAD
   "basic": "基本",
   "buildYourProfile": "建立您的档案",
   "descBuildProfile": "花些时间填写您的档案，以便我们为您创建更个性化和无缝的体验。",
+=======
+  "basic": "基本"
+  ,
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "comingSoon": "即将推出",
   "signIn": "登录",
   "signUp": "注册",
@@ -45,6 +50,7 @@
   "courseVideosTitle": "课程视频",
   "moduleTitle": "第 {number} 单元 - 介绍",
   "video": "视频",
+<<<<<<< HEAD
   "resource": "资源",
   "username": "用户名",
   "fullName": "全名",
@@ -190,4 +196,7 @@
   "previousClicked": "上一个已点击",
   "nextClicked": "下一个已点击",
   "back": "返回"
+=======
+  "resource": "资源"
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 }

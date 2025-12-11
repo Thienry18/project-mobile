@@ -23,8 +23,12 @@ class DatabaseUser {
     ''');
   }
 
+<<<<<<< HEAD
   // ===================== BASIC CRUD =====================
 
+=======
+  // CRUD
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<int> insertUser(Database db, Map<String, dynamic> data) async {
     return await db.insert(
       table,
@@ -50,6 +54,21 @@ class DatabaseUser {
     return res.isNotEmpty ? res.first : null;
   }
 
+<<<<<<< HEAD
+=======
+  // Convenience: update user by email (find id then update)
+  static Future<int> updateUserByEmail(
+    Database db,
+    String email,
+    Map<String, dynamic> data,
+  ) async {
+    final user = await getUserByEmail(db, email);
+    if (user == null) return 0;
+    final id = user['id'] as int;
+    return updateUser(db, id, data);
+  }
+
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<int> updateUser(
     Database db,
     int id,
@@ -62,6 +81,7 @@ class DatabaseUser {
     return await db.delete(table, where: 'id = ?', whereArgs: [id]);
   }
 
+<<<<<<< HEAD
   // ===================== CONVENIENCE HELPERS =====================
 
   static Future<int> updateUserByEmail(
@@ -77,6 +97,11 @@ class DatabaseUser {
   }
 
   // Get first user or create demo user
+=======
+  // ===================== Convenience helpers =====================
+
+  // Return the id of the first user, or create a demo user and return its id.
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<int> getOrCreateDemoUserId(Database db) async {
     final rows = await getAllUsers(db);
     if (rows.isNotEmpty) return rows.first['id'] as int;
@@ -91,15 +116,25 @@ class DatabaseUser {
       'email': 'demo@example.com',
       'password': 'demo',
     };
+<<<<<<< HEAD
 
+=======
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
     return await insertUser(db, demo);
   }
 
   static Future<int> getOrCreateDemoUserIdForApp() async {
     final db = await DatabaseService.instance.database;
+<<<<<<< HEAD
     return await getOrCreateDemoUserId(db);
   }
 
+=======
+    return getOrCreateDemoUserId(db);
+  }
+
+  // Returns true if there is at least one non-demo user.
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<bool> hasAnyUser(Database db) async {
     final rows = await getAllUsers(db);
     return rows.isNotEmpty;

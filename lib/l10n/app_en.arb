@@ -17,7 +17,12 @@
   "german": "German (Deutsch)",
   "premium": "Premium",
   "cart": "Cart",
+<<<<<<< HEAD
   "basic": "Basic",
+=======
+  "basic": "Basic"
+  ,
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "comingSoon": "Coming Soon",
   "signIn": "Sign In",
   "signUp": "Sign Up",
@@ -25,8 +30,11 @@
   "insertPin": "Insert PIN",
   "forgotPin": "Forgot PIN",
   "buildProfile": "Build Profile",
+<<<<<<< HEAD
   "buildYourProfile": "Build Your Profile",
   "descBuildProfile": "Take a moment to fill in your profile so we can create a more personalized and seamless journey for you.",
+=======
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "history": "History",
   "notificationsDeleted": "Notifications deleted",
   "itemsDeletedFromCart": "Items deleted from cart",
@@ -35,7 +43,10 @@
   "cancel": "Cancel",
   "confirmDeleteTitle": "Confirm Delete",
   "confirmDeleteCartContent": "Are you sure you want to delete selected items from cart?",
+<<<<<<< HEAD
   "confirmDeleteNotifications": "Are you sure you want to delete selected notifications?",
+=======
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "delete": "Delete",
   "selectVoucher": "Select a Voucher",
   "discount20": "DISCOUNT20 - Save $16.3",
@@ -46,6 +57,7 @@
   "courseVideosTitle": "Course Videos",
   "moduleTitle": "Module {number} - Introduction",
   "video": "Video",
+<<<<<<< HEAD
   "resource": "Resource",
   "username": "Username",
   "fullName": "Full name",
@@ -192,3 +204,7 @@
   "back": "Back"
 }
 
+=======
+  "resource": "Resource"
+}
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57

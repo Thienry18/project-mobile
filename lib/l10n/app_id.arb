@@ -17,6 +17,7 @@
   "german": "German (Deutsch)",
   "premium": "Premium",
   "cart": "Keranjang",
+<<<<<<< HEAD
   "basic": "Dasar",
   "comingSoon": "Segera Hadir",
   "signIn": "Masuk",
@@ -190,4 +191,34 @@
   "previousClicked": "Sebelumnya diklik",
   "nextClicked": "Selanjutnya diklik",
   "back": "Kembali"
+=======
+  "basic": "Dasar"
+    ,
+    "comingSoon": "Segera Hadir",
+    "signIn": "Masuk",
+    "signUp": "Daftar",
+    "forgotPassword": "Lupa Kata Sandi",
+    "insertPin": "Masukkan PIN",
+    "forgotPin": "Lupa PIN",
+    "buildProfile": "Buat Profil",
+    "history": "Riwayat",
+    "notificationsDeleted": "Notifikasi dihapus",
+    "itemsDeletedFromCart": "Item dihapus dari keranjang",
+    "clearPurchaseHistory": "Hapus Riwayat Pembelian",
+    "cancel": "Batal",
+    "undo": "Urungkan",
+    "confirmDeleteTitle": "Konfirmasi Hapus",
+    "confirmDeleteCartContent": "Apakah Anda yakin ingin menghapus item yang dipilih dari keranjang?",
+    "delete": "Hapus",
+    "selectVoucher": "Pilih Voucher",
+    "discount20": "DISCOUNT20 - Hemat $16.3",
+    "freeship": "FREESHIP - Gratis Ongkir",
+    "historyCleared": "Riwayat telah dihapus.",
+    "failedToDeleteItems": "Gagal menghapus item",
+    "noNewCoursesToPurchase": "Tidak ada kursus baru untuk dibeli.",
+    "courseVideosTitle": "Video Kursus",
+    "moduleTitle": "Modul {number} - Pengantar",
+    "video": "Video",
+    "resource": "Sumber"
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 }

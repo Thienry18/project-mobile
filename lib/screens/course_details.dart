@@ -408,9 +408,15 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       await DatabaseUser.getOrCreateDemoUserIdForApp();
                   await DatabaseCart.upsertCourseForUser(userId, course);
                   ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
                     SnackBar(
                       content: Text(AppLocalizations.of(context).addedToCart),
                       duration: const Duration(seconds: 2),
+=======
+                    const SnackBar(
+                      content: Text('Added to cart'),
+                      duration: Duration(seconds: 2),
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
                     ),
                   );
                 } catch (e) {
@@ -418,20 +424,32 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   if (!cartCourses.any((c) => c.title == course.title)) {
                     cartCourses.add(course);
                     ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
                       SnackBar(
                         content: Text(
                           AppLocalizations.of(context).addedToCartOffline,
                         ),
                         duration: const Duration(seconds: 2),
+=======
+                      const SnackBar(
+                        content: Text('Added to cart (offline)'),
+                        duration: Duration(seconds: 2),
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
                       ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
                       SnackBar(
                         content: Text(
                           AppLocalizations.of(context).alreadyInCart,
                         ),
                         duration: const Duration(seconds: 2),
+=======
+                      const SnackBar(
+                        content: Text('Already in cart'),
+                        duration: Duration(seconds: 2),
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
                       ),
                     );
                   }

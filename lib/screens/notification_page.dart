@@ -188,7 +188,11 @@ class _NotificationPageState extends State<NotificationPage>
                           ),
                           duration: const Duration(seconds: 4),
                           action: SnackBarAction(
+<<<<<<< HEAD
                             label: AppLocalizations.of(context).undo,
+=======
+                            label: 'UNDO',
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
                             onPressed: () async {
                               // Re-insert deleted items back into DB
                               try {
