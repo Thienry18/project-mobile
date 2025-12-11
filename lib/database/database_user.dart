@@ -1,8 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-<<<<<<< HEAD
-=======
 import 'package:projek_mobile/database/database_service.dart';
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 
 class DatabaseUser {
   static const table = 'users';
@@ -18,19 +15,16 @@ class DatabaseUser {
         phone_number TEXT NOT NULL,
         country TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
-<<<<<<< HEAD
-        password TEXT NOT NULL
-=======
         password TEXT NOT NULL,
         avatar_path TEXT,
         pin TEXT,
         interest TEXT
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
       );
     ''');
   }
 
-  // CRUD
+  // ===================== BASIC CRUD =====================
+
   static Future<int> insertUser(Database db, Map<String, dynamic> data) async {
     return await db.insert(
       table,
@@ -56,21 +50,6 @@ class DatabaseUser {
     return res.isNotEmpty ? res.first : null;
   }
 
-<<<<<<< HEAD
-=======
-  // Convenience: update user by email (find id then update)
-  static Future<int> updateUserByEmail(
-    Database db,
-    String email,
-    Map<String, dynamic> data,
-  ) async {
-    final user = await getUserByEmail(db, email);
-    if (user == null) return 0;
-    final id = user['id'] as int;
-    return updateUser(db, id, data);
-  }
-
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<int> updateUser(
     Database db,
     int id,
@@ -82,12 +61,22 @@ class DatabaseUser {
   static Future<int> deleteUser(Database db, int id) async {
     return await db.delete(table, where: 'id = ?', whereArgs: [id]);
   }
-<<<<<<< HEAD
-=======
 
-  // ===================== Convenience helpers =====================
+  // ===================== CONVENIENCE HELPERS =====================
 
-  // Return the id of the first user, or create a demo user and return its id.
+  static Future<int> updateUserByEmail(
+    Database db,
+    String email,
+    Map<String, dynamic> data,
+  ) async {
+    final user = await getUserByEmail(db, email);
+    if (user == null) return 0;
+
+    final id = user['id'] as int;
+    return updateUser(db, id, data);
+  }
+
+  // Get first user or create demo user
   static Future<int> getOrCreateDemoUserId(Database db) async {
     final rows = await getAllUsers(db);
     if (rows.isNotEmpty) return rows.first['id'] as int;
@@ -102,18 +91,17 @@ class DatabaseUser {
       'email': 'demo@example.com',
       'password': 'demo',
     };
+
     return await insertUser(db, demo);
   }
 
   static Future<int> getOrCreateDemoUserIdForApp() async {
     final db = await DatabaseService.instance.database;
-    return getOrCreateDemoUserId(db);
+    return await getOrCreateDemoUserId(db);
   }
 
-  // Returns true if there is at least one non-demo user.
   static Future<bool> hasAnyUser(Database db) async {
     final rows = await getAllUsers(db);
     return rows.isNotEmpty;
   }
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 }

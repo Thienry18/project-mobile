@@ -1,10 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:projek_mobile/data/auth_gate.dart';
 import 'package:projek_mobile/screens/database_test_screen.dart';
-=======
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/locale_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -126,11 +123,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
-<<<<<<< HEAD
-      home: DatabaseTestScreen(), // <<<<<< inilah pengganti FavScreen
-=======
       home: const AuthGate(),
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
     );
   }
 }
