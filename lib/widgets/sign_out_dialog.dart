@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projek_mobile/screens/sign_in.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> signOutDialog(BuildContext context) async {
   showDialog(
     context: context,
     builder:
         (_) => AlertDialog(
-          title: const Text('Sign Out'),
-          content: const Text('Are you sure you want to sign out?'),
+          title: Text(AppLocalizations.of(context).signOut),
+          content: Text(AppLocalizations.of(context).areYouSureSignOut),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context).cancel),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -36,7 +37,7 @@ Future<void> signOutDialog(BuildContext context) async {
                   );
                 }
               },
-              child: const Text('Sign Out'),
+              child: Text(AppLocalizations.of(context).signOut),
             ),
           ],
         ),

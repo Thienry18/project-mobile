@@ -322,7 +322,7 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         backgroundColor: isDarkMode ? Colors.black : const Color(0xFF324EAF),
         foregroundColor: Colors.white,
-        title: const Text('My Cart'),
+        title: Text(AppLocalizations.of(context).cart),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -367,7 +367,10 @@ class _CartPageState extends State<CartPage> {
           Padding(
             padding: const EdgeInsets.only(left: 16),
             child: CategoryChips(
-              categoryList: ['All', ...categoryList],
+              categoryList: [
+                AppLocalizations.of(context).allCategories,
+                ...categoryList,
+              ],
               selectedIndexes: {selectedCategoryIndex},
               onCategoryToggle: (index) {
                 setState(() {
@@ -386,7 +389,7 @@ class _CartPageState extends State<CartPage> {
               children: [
                 if (selectedIndexes.isNotEmpty)
                   Text(
-                    "${selectedIndexes.length} Items",
+                    "${selectedIndexes.length} ${AppLocalizations.of(context).itemsLabel}",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -397,7 +400,7 @@ class _CartPageState extends State<CartPage> {
                   TextButton(
                     onPressed: _showDeleteConfirmation,
                     child: Text(
-                      "Delete (${selectedIndexes.length})",
+                      "${AppLocalizations.of(context).delete} (${selectedIndexes.length})",
                       style: const TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.w600,
@@ -472,12 +475,15 @@ class _CartPageState extends State<CartPage> {
                 ),
           ),
           const SizedBox(height: 30),
-          Text("No Items Yet", style: AppTextStyles.heading),
+          Text(
+            AppLocalizations.of(context).emptyCart,
+            style: AppTextStyles.heading,
+          ),
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40.0),
             child: Text(
-              "Add courses you're interested in to your wishlist and check out whenever you're ready to start learning.",
+              AppLocalizations.of(context).emptyCartDescription,
               textAlign: TextAlign.center,
               style: AppTextStyles.body,
             ),

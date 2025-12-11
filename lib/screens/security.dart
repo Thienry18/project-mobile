@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/screens/change_password.dart';
 import 'package:projek_mobile/screens/change_pin.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SecurityScreen extends StatelessWidget {
   const SecurityScreen({super.key});
@@ -15,7 +16,7 @@ class SecurityScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color(0xFF324EAF),
         title: Text(
-          'Security',
+          AppLocalizations.of(context).passwordSecurityTitle,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -28,7 +29,7 @@ class SecurityScreen extends StatelessWidget {
         children: [
           _buildSecurityItem(
             icon: Icons.pin_outlined,
-            title: 'Change PIN',
+            title: AppLocalizations.of(context).changePIN,
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -39,7 +40,7 @@ class SecurityScreen extends StatelessWidget {
           ),
           _buildSecurityItem(
             icon: Icons.key_outlined,
-            title: 'Change Password',
+            title: AppLocalizations.of(context).changePassword,
             onTap: () {
               Navigator.pushReplacement(
                 context,

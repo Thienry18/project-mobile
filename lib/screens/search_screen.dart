@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/course_details.dart';
@@ -39,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
           controller: _controller,
           onChanged: _filter,
           decoration: InputDecoration(
-            hintText: 'Search for a course',
+            hintText: AppLocalizations.of(context).searchForACourse,
             hintStyle: AppTextStyles.body.copyWith(
               color: Colors.grey,
               fontSize: 16.0,
@@ -48,7 +49,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
         leading: Tooltip(
-          message: 'Back',
+          message: AppLocalizations.of(context).back,
           child: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.grey),
             onPressed: () {

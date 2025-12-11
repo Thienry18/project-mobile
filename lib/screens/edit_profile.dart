@@ -8,6 +8,7 @@ import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserProfile userProfile;
@@ -123,7 +124,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     if ((_currentEmail ?? '').isEmpty) {
-      _showSnack('No active session. Please sign in again.', error: true);
+      _showSnack(AppLocalizations.of(context).noActiveSession, error: true);
       return;
     }
 
@@ -167,7 +168,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await prefs.setString('user_avatar_path', avatarPath!);
       }
 
-      _showSnack('Profile updated successfully.');
+      _showSnack(AppLocalizations.of(context).profileUpdatedSuccessfully);
       if (!mounted) return;
       Navigator.pop(
         context,
@@ -205,7 +206,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         backgroundColor: blueColor,
         title: Text(
-          'Edit Profile',
+          AppLocalizations.of(context).editProfile,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -223,7 +224,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                     : Text(
-                      'Save',
+                      AppLocalizations.of(context).save,
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -247,7 +248,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     GestureDetector(
                       onTap: _pickImage,
                       child: Text(
-                        'Upload/Change Photo',
+                        AppLocalizations.of(context).uploadChangePhoto,
                         style: GoogleFonts.poppins(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,

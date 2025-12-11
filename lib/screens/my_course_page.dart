@@ -23,6 +23,7 @@ import 'package:projek_mobile/database/database_service.dart';
 import 'package:projek_mobile/database/database_mycourse.dart';
 import 'package:projek_mobile/database/database_user.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
@@ -32,7 +33,7 @@ class MyCoursePage extends StatefulWidget {
 }
 
 class _MyCoursePageState extends State<MyCoursePage> {
-  final List<String> alllist = ['All', ...categoryList];
+  late List<String> alllist;
   Set<int> selectedIndexes = {0};
   DateTime? _scheduledDateTime;
 
@@ -40,6 +41,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
   void initState() {
     super.initState();
     _loadStoredCourses();
+    // Will be set in build once context is available
   }
 
   Future<void> _loadStoredCourses() async {
@@ -117,13 +119,14 @@ class _MyCoursePageState extends State<MyCoursePage> {
       _scheduledDateTime = scheduled;
     });
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Reminder has been set!')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context).reminderSet)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    alllist = [AppLocalizations.of(context).allCategories, ...categoryList];
     final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
 
     final filteredCourses =
@@ -142,7 +145,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
         elevation: 0,
         backgroundColor: isDarkMode ? Colors.black : const Color(0xFF324EAF),
         title: Text(
-          "My Course",
+          AppLocalizations.of(context).myCourses,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -150,7 +153,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
         ),
         actions: [
           Tooltip(
-            message: 'Search',
+            message: AppLocalizations.of(context).search,
             child: IconButton(
               icon: const Icon(Icons.search, color: Colors.white),
               onPressed: () {
@@ -164,7 +167,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
             ),
           ),
           Tooltip(
-            message: 'Cart',
+            message: AppLocalizations.of(context).cart,
             child: IconButton(
               icon: const Icon(
                 Icons.shopping_cart_outlined,
@@ -193,7 +196,12 @@ class _MyCoursePageState extends State<MyCoursePage> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Reminder set on: ${_scheduledDateTime!.toLocal().toString().substring(0, 16)}',
+                      AppLocalizations.of(context).reminderSetOn(
+                        _scheduledDateTime!.toLocal().toString().substring(
+                          0,
+                          16,
+                        ),
+                      ),
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: Colors.green[900],
@@ -304,7 +312,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
                     ),
                   ),
                   trailing: Tooltip(
-                    message: 'More options',
+                    message: AppLocalizations.of(context).moreOptions,
                     child: IconButton(
                       icon: const Icon(Icons.more_vert),
                       onPressed: () {
@@ -348,7 +356,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Continue",
+                        AppLocalizations.of(context).continueButton,
                         style: GoogleFonts.poppins(color: Colors.white),
                       ),
                       const SizedBox(width: 6),
@@ -376,7 +384,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
         children: [
           _buildBottomSheetTile(
             icon: Icons.start,
-            label: "Start/Continue Course",
+            label: AppLocalizations.of(context).startContinueCourse,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -388,7 +396,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
           _buildDivider(),
           _buildBottomSheetTile(
             icon: Icons.workspace_premium,
-            label: "View Certificate",
+            label: AppLocalizations.of(context).viewCertificate,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -405,7 +413,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
           _buildDivider(),
           _buildBottomSheetTile(
             icon: Icons.schedule,
-            label: "Set Reminder/Schedule",
+            label: AppLocalizations.of(context).setReminder,
             onTap: () {
               Navigator.pop(context);
               _pickScheduleDateTime();
@@ -414,7 +422,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
           _buildDivider(),
           _buildBottomSheetTile(
             icon: Icons.share,
-            label: "Share Course",
+            label: AppLocalizations.of(context).shareCourse,
             onTap: () {
               Navigator.pop(context);
               showShareOptions(context, course.title);
@@ -423,7 +431,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
           _buildDivider(),
           _buildBottomSheetTile(
             icon: Icons.grid_view,
-            label: "View Course Details",
+            label: AppLocalizations.of(context).viewCourseDetails,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -484,7 +492,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
         const SizedBox(height: 24),
         Center(
           child: Text(
-            "Find Your Course",
+            AppLocalizations.of(context).findYourCourse,
             style: AppTextStyles.heading.copyWith(
               color: isDarkMode ? Colors.white : const Color(0xff324eaf),
             ),
@@ -493,7 +501,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
         const SizedBox(height: 12),
         Center(
           child: Text(
-            "Discover courses you're actually into and start learning in a way that feels easy and fun.",
+            AppLocalizations.of(context).discoverCourses,
             textAlign: TextAlign.center,
             style: AppTextStyles.subheading.copyWith(
               color: isDarkMode ? Colors.white : const Color(0xff324eaf),
@@ -516,14 +524,17 @@ class _MyCoursePageState extends State<MyCoursePage> {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Explore", style: TextStyle(color: Colors.white)),
-                SizedBox(width: 6),
-                Icon(Icons.arrow_right_alt, color: Colors.white),
+                Text(
+                  AppLocalizations.of(context).explore,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(width: 6),
+                const Icon(Icons.arrow_right_alt, color: Colors.white),
               ],
             ),
           ),

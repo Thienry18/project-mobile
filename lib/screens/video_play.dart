@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projek_mobile/screens/certificate.dart';
 import 'package:video_player/video_player.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 
@@ -174,13 +175,16 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                   extras: {'screen': 'video_player'},
                 );
                 Navigator.pop(context);
-                showShareOptions(context, 'Certificate of Achievement');
+                showShareOptions(
+                  context,
+                  AppLocalizations.of(context).certificateOfAchievement,
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.grid_view, color: Colors.grey),
               title: Text(
-                'View Course Details',
+                AppLocalizations.of(context).viewCourseDetails,
                 style: GoogleFonts.poppins(color: Color(0xFF324EAF)),
               ),
               onTap: () {
@@ -188,7 +192,7 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      "View Course clicked",
+                      AppLocalizations.of(context).viewCourseClicked,
                       style: GoogleFonts.poppins(),
                     ),
                   ),
@@ -215,7 +219,10 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: Text("Video Player", style: GoogleFonts.poppins()),
+        title: Text(
+          AppLocalizations.of(context).videoPlayer,
+          style: GoogleFonts.poppins(),
+        ),
       ),
       body: Column(
         children: [
@@ -276,7 +283,9 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    "Subtitle clicked",
+                                    AppLocalizations.of(
+                                      context,
+                                    ).subtitleClicked,
                                     style: GoogleFonts.poppins(),
                                   ),
                                 ),
@@ -371,7 +380,9 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    "Previous clicked",
+                                    AppLocalizations.of(
+                                      context,
+                                    ).previousClicked,
                                     style: GoogleFonts.poppins(),
                                   ),
                                 ),
@@ -450,7 +461,7 @@ class _AssetVideoScreenState extends State<AssetVideoScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    "Next clicked",
+                                    AppLocalizations.of(context).nextClicked,
                                     style: GoogleFonts.poppins(),
                                   ),
                                 ),

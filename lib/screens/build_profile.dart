@@ -11,6 +11,7 @@ import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BuildProfile extends StatefulWidget {
   const BuildProfile({super.key});
@@ -28,15 +29,16 @@ class _BuildProfile extends State<BuildProfile> {
   String country = '';
 
   void _handleContinue() async {
+    final l10n = AppLocalizations.of(context);
     if (username.isEmpty ||
         fullName.isEmpty ||
         dob.isEmpty ||
         gender.isEmpty ||
         phoneNumber.isEmpty ||
         country.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please complete all fields.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.pleaseCompleteFields)));
       return;
     }
 
@@ -87,6 +89,7 @@ class _BuildProfile extends State<BuildProfile> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -115,26 +118,23 @@ class _BuildProfile extends State<BuildProfile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Build Your Profile', style: AppTextStyles.heading),
+                  Text(l10n.buildYourProfile, style: AppTextStyles.heading),
                   const SizedBox(height: 10),
-                  Text(
-                    'Take a moment to fill in your profile so we can create a more personalized and seamless journey for you.',
-                    style: AppTextStyles.subheading,
-                  ),
+                  Text(l10n.descBuildProfile, style: AppTextStyles.subheading),
                   const SizedBox(height: 20),
                   const Center(child: ProfileImage()),
                   const SizedBox(height: 25),
 
                   CustomTextField(
                     prefixIcon: const Icon(Icons.person, color: Colors.white),
-                    hintText: 'Username',
+                    hintText: l10n.username,
                     onChanged: (val) => setState(() => username = val),
                   ),
                   const SizedBox(height: 15),
 
                   CustomTextField(
                     prefixIcon: const Icon(Icons.badge, color: Colors.white),
-                    hintText: 'Full name',
+                    hintText: l10n.fullName,
                     onChanged: (val) => setState(() => fullName = val),
                   ),
                   const SizedBox(height: 15),
@@ -144,7 +144,7 @@ class _BuildProfile extends State<BuildProfile> {
                       Icons.calendar_today,
                       color: Colors.white,
                     ),
-                    hintText: dob.isEmpty ? 'Date of birth' : dob,
+                    hintText: dob.isEmpty ? l10n.dateOfBirth : dob,
                     readOnly: true,
                     suffixIcon: const Icon(
                       Icons.keyboard_arrow_down,
@@ -174,7 +174,7 @@ class _BuildProfile extends State<BuildProfile> {
 
                   CustomTextField(
                     prefixIcon: const Icon(Icons.phone, color: Colors.white),
-                    hintText: 'Phone number',
+                    hintText: l10n.phoneNumber,
                     onChanged: (val) => setState(() => phoneNumber = val),
                     keyboardType: TextInputType.phone,
                   ),
@@ -182,7 +182,7 @@ class _BuildProfile extends State<BuildProfile> {
 
                   CustomTextField(
                     prefixIcon: const Icon(Icons.public, color: Colors.white),
-                    hintText: country.isEmpty ? 'Country' : country,
+                    hintText: country.isEmpty ? l10n.country : country,
                     readOnly: true,
                     onTap: () {
                       showCountryPicker(
@@ -197,7 +197,7 @@ class _BuildProfile extends State<BuildProfile> {
 
                   Center(
                     child: CustomButton(
-                      text: 'Continue',
+                      text: l10n?.continueButton ?? 'Continue',
                       onPressed: _handleContinue,
                       padding: EdgeInsets.symmetric(
                         vertical: 10,

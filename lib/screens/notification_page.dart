@@ -144,19 +144,19 @@ class _NotificationPageState extends State<NotificationPage>
       context: context,
       builder:
           (_) => AlertDialog(
-            title: const Text('Confirm Delete'),
-            content: const Text(
-              'Are you sure you want to delete selected notifications?',
+            title: Text(AppLocalizations.of(context).confirmDeleteTitle),
+            content: Text(
+              AppLocalizations.of(context).confirmDeleteNotifications,
             ),
             actions: [
               TextButton(
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context).cancel),
                 onPressed:
                     () => Navigator.of(context, rootNavigator: true).pop(),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Delete'),
+                child: Text(AppLocalizations.of(context).delete),
                 onPressed: () {
                   final deletedItems = <Map<String, dynamic>>[];
                   final deletedIndexes = selectedIndexes.toList()..sort();
@@ -188,7 +188,7 @@ class _NotificationPageState extends State<NotificationPage>
                           ),
                           duration: const Duration(seconds: 4),
                           action: SnackBarAction(
-                            label: 'UNDO',
+                            label: AppLocalizations.of(context).undo,
                             onPressed: () async {
                               // Re-insert deleted items back into DB
                               try {
@@ -274,9 +274,15 @@ class _NotificationPageState extends State<NotificationPage>
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.grey,
-          tabs: const [
-            Tab(icon: Icon(Icons.mail_outline), text: 'All'),
-            Tab(icon: Icon(Icons.mark_email_unread_outlined), text: 'Unread'),
+          tabs: [
+            Tab(
+              icon: const Icon(Icons.mail_outline),
+              text: AppLocalizations.of(context).allNotifications,
+            ),
+            Tab(
+              icon: const Icon(Icons.mark_email_unread_outlined),
+              text: AppLocalizations.of(context).unread,
+            ),
           ],
         ),
       ),
@@ -357,14 +363,14 @@ class _NotificationPageState extends State<NotificationPage>
               Image.asset('assets/images/notification.png', height: 200),
               const SizedBox(height: 24),
               Text(
-                "No Notification Yet",
+                AppLocalizations.of(context).noNotification,
                 style: AppTextStyles.heading.copyWith(
                   color: isDarkMode ? Colors.white : const Color(0xff324eaf),
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                "Fresh start! We’ll let you know when there’s something worth your attention.",
+                AppLocalizations.of(context).noNotificationDescription,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.subheading.copyWith(
                   color: isDarkMode ? Colors.white70 : const Color(0xff324eaf),
@@ -493,8 +499,8 @@ class _NotificationPageState extends State<NotificationPage>
                               value: 'toggle',
                               child: Text(
                                 notif['unread']
-                                    ? 'Mark as Read'
-                                    : 'Mark as Unread',
+                                    ? AppLocalizations.of(context).markAsRead
+                                    : AppLocalizations.of(context).markAsUnread,
                               ),
                             ),
                           ],

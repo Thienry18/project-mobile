@@ -28,7 +28,6 @@ import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
 import 'package:projek_mobile/screens/my_certificate.dart';
-import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key, required this.selectedCategory});
@@ -99,7 +98,6 @@ class _ExplorePageState extends State<ExplorePage> {
         }
       } catch (dbError) {
         print('Error fetching from database: $dbError');
-        // Keep empty lists as last resort
         all = [];
         trending = [];
         recommended = [];
@@ -152,7 +150,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 builder: (context, profileImageProvider, _) {
                   final imageFile = profileImageProvider.image;
                   return Tooltip(
-                    message: 'Profile',
+                    message: AppLocalizations.of(context).profile,
                     child: CircleAvatar(
                       radius: 30,
                       backgroundImage:
@@ -184,7 +182,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   ],
                 ),
                 child: Text(
-                  "Basic",
+                  AppLocalizations.of(context).basic,
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -194,7 +192,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               const SizedBox(height: 50),
               Text(
-                "Account",
+                AppLocalizations.of(context).account,
                 style: GoogleFonts.poppins(
                   color: const Color(0xFF7A8EDA),
                   fontSize: 12,
@@ -210,7 +208,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   size: 16,
                 ),
                 title: Text(
-                  'My Certificate',
+                  AppLocalizations.of(context).myCertificates,
                   style: GoogleFonts.poppins(
                     color: const Color(0XFF324EAF),
                     fontSize: 13,
@@ -226,7 +224,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               const SizedBox(height: 40),
               Text(
-                'Support',
+                AppLocalizations.of(context).support,
                 style: GoogleFonts.poppins(
                   color: const Color(0xFF7A8EDA),
                   fontSize: 12,
@@ -242,7 +240,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   size: 16,
                 ),
                 title: Text(
-                  'Search Course',
+                  AppLocalizations.of(context).searchCourse,
                   style: GoogleFonts.poppins(
                     color: const Color(0xff324eaf),
                     fontSize: 13,
@@ -269,7 +267,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   size: 16,
                 ),
                 title: Text(
-                  'Contact Support',
+                  AppLocalizations.of(context).contactSupport,
                   style: GoogleFonts.poppins(
                     color: const Color(0xff324eaf),
                     fontSize: 13,
@@ -287,7 +285,7 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               const SizedBox(height: 40),
               Text(
-                'More Option',
+                AppLocalizations.of(context).moreOptions,
                 style: GoogleFonts.poppins(
                   color: const Color(0xFF7A8EDA),
                   fontSize: 12,
@@ -299,7 +297,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.logout, color: Colors.red, size: 16),
                 title: Text(
-                  'Sign Out',
+                  AppLocalizations.of(context).signOut,
                   style: GoogleFonts.poppins(
                     color: Colors.red,
                     fontSize: 13,
@@ -320,7 +318,7 @@ class _ExplorePageState extends State<ExplorePage> {
         leading: Builder(
           builder:
               (context) => Tooltip(
-                message: 'Menu',
+                message: AppLocalizations.of(context).menu,
                 child: IconButton(
                   icon: const Icon(Icons.menu, color: Colors.white),
                   onPressed: () => Scaffold.of(context).openDrawer(),
@@ -329,7 +327,7 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
         actions: [
           Tooltip(
-            message: 'Cart',
+            message: AppLocalizations.of(context).cart,
             child: IconButton(
               icon: const Icon(
                 Icons.shopping_cart_outlined,
@@ -348,7 +346,7 @@ class _ExplorePageState extends State<ExplorePage> {
             builder: (context, profileImageProvider, _) {
               final imageFile = profileImageProvider.image;
               return Tooltip(
-                message: 'Profile',
+                message: AppLocalizations.of(context).profile,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: GestureDetector(
@@ -416,7 +414,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     children: [
                       const SizedBox(height: 10),
                       Text(
-                        "What would you want\nto learn today?",
+                        AppLocalizations.of(context).learnPrompt,
                         style: GoogleFonts.poppins(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
@@ -440,14 +438,18 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                       const SizedBox(height: 20),
 
-                      _buildSectionHeader("Trending Now"),
+                      _buildSectionHeader(
+                        AppLocalizations.of(context).trendingNow,
+                      ),
                       const SizedBox(height: 12),
                       autoSlideCourseBanner(courses: trendingLocal),
 
                       const SizedBox(height: 30),
 
                       if (widget.selectedCategory.isNotEmpty) ...[
-                        _buildSectionHeader("Recommended for You"),
+                        _buildSectionHeader(
+                          AppLocalizations.of(context).recommendedForYou,
+                        ),
                         const SizedBox(height: 12),
                         _buildCourseCardList(trendingLocal),
                       ],
@@ -468,7 +470,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: "Popular for ",
+                                    text:
+                                        AppLocalizations.of(
+                                          context,
+                                        ).popularForPrefix,
                                     style: TextStyle(
                                       color:
                                           theme.brightness == Brightness.dark
@@ -506,7 +511,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                 );
                               },
                               child: Text(
-                                "See All",
+                                AppLocalizations.of(context).seeAll,
                                 style: GoogleFonts.poppins(
                                   color: Colors.green,
                                   fontWeight: FontWeight.w600,
@@ -521,7 +526,9 @@ class _ExplorePageState extends State<ExplorePage> {
 
                       const SizedBox(height: 20),
 
-                      _buildSectionHeader("Categories"),
+                      _buildSectionHeader(
+                        AppLocalizations.of(context).categories,
+                      ),
                       const SizedBox(height: 12),
                       CategoryChips(
                         categoryList: categoryList,
@@ -569,7 +576,7 @@ class _ExplorePageState extends State<ExplorePage> {
             );
           },
           child: Text(
-            "See All",
+            AppLocalizations.of(context).seeAll,
             style: GoogleFonts.poppins(
               color: Colors.green,
               fontWeight: FontWeight.w600,
@@ -770,7 +777,10 @@ class _ExplorePageState extends State<ExplorePage> {
                     }
                   },
                   child: Tooltip(
-                    message: isFavorited ? 'Remove' : 'Add',
+                    message:
+                        isFavorited
+                            ? AppLocalizations.of(context).remove
+                            : AppLocalizations.of(context).add,
                     child: Icon(
                       isFavorited
                           ? Icons.shopping_cart
@@ -809,7 +819,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             ),
                           ),
                           child: Text(
-                            'Bestseller',
+                            AppLocalizations.of(context).bestseller,
                             style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddNewCardScreen extends StatefulWidget {
   const AddNewCardScreen({super.key});
@@ -58,9 +59,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
         if (isDuplicate) {
           if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('This card has already been added.'),
-              duration: Duration(seconds: 3),
+            SnackBar(
+              content: Text(AppLocalizations.of(context).cardAlreadyAdded),
+              duration: const Duration(seconds: 3),
             ),
           );
           return;
@@ -87,7 +88,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       appBar: AppBar(
         backgroundColor: blueColor,
         title: Text(
-          'Add New Card',
+          AppLocalizations.of(context).addNewCard,
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
             color: Colors.white,
@@ -137,7 +138,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Card Number',
+                      AppLocalizations.of(context).cardNumber,
                       style: GoogleFonts.poppins(
                         fontSize: 13,
                         color: isDarkMode ? Colors.white : textColor,
@@ -151,7 +152,11 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                             controller: cardNumberController,
                             validator:
                                 (value) =>
-                                    value!.isEmpty ? 'Enter card number' : null,
+                                    value!.isEmpty
+                                        ? AppLocalizations.of(
+                                          context,
+                                        ).enterCardNumber
+                                        : null,
                             style: GoogleFonts.poppins(
                               color: isDarkMode ? Colors.white : blueColor,
                               fontSize: 14,
@@ -178,7 +183,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Expiry Date',
+                                AppLocalizations.of(context).expiryDate,
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: isDarkMode ? Colors.white : textColor,
@@ -190,7 +195,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                 validator:
                                     (value) =>
                                         value!.isEmpty
-                                            ? 'Enter expiry date'
+                                            ? AppLocalizations.of(
+                                              context,
+                                            ).enterExpiryDate
                                             : null,
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
@@ -210,7 +217,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'CVV',
+                                AppLocalizations.of(context).cvvLabel,
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: isDarkMode ? Colors.white : textColor,
@@ -221,7 +228,11 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                 controller: cvvController,
                                 validator:
                                     (value) =>
-                                        value!.isEmpty ? 'Enter CVV' : null,
+                                        value!.isEmpty
+                                            ? AppLocalizations.of(
+                                              context,
+                                            ).enterCVV
+                                            : null,
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
@@ -251,7 +262,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                         ),
                         Expanded(
                           child: Text(
-                            'Save this card and details for faster payments',
+                            AppLocalizations.of(context).saveCardDetails,
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               color: isDarkMode ? Colors.white : blueColor,
@@ -274,7 +285,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                         ),
                         onPressed: _saveCardAndReturn,
                         child: Text(
-                          'Add Card',
+                          AppLocalizations.of(context).addCard,
                           style: GoogleFonts.poppins(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,

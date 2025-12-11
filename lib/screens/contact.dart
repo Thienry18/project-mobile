@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReviewSliderScreen extends StatefulWidget {
   const ReviewSliderScreen({super.key});
@@ -76,7 +77,7 @@ class _ReviewSliderScreenState extends State<ReviewSliderScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF324EAF),
         title: Text(
-          'User Reviews',
+          AppLocalizations.of(context).reviewSlider,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.w600,

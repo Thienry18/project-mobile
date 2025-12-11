@@ -10,6 +10,7 @@ import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final String title;
@@ -145,7 +146,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      'Bestseller',
+                      AppLocalizations.of(context).bestseller,
                       style: AppTextStyles.subheading.copyWith(
                         color: Colors.orange,
                       ),
@@ -173,20 +174,22 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                 const SizedBox(height: 8),
                 _InfoIconText(
                   icon: Icons.language,
-                  text: 'English',
+                  text: AppLocalizations.of(context).languageEnglish,
                   textStyle: AppTextStyles.body,
                 ),
                 const SizedBox(height: 8),
                 _InfoIconText(
                   icon: Icons.subtitles,
-                  text: 'Available Subtitle: Indonesian',
+                  text: AppLocalizations.of(
+                    context,
+                  ).availableSubtitle('Indonesian'),
                   textStyle: AppTextStyles.body,
                 ),
               ],
             ),
             const SizedBox(height: 24),
             Text(
-              'About Course',
+              AppLocalizations.of(context).aboutCourse,
               style: AppTextStyles.heading.copyWith(fontSize: 16),
             ),
             const SizedBox(height: 8),
@@ -196,7 +199,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'What Skill You\'ll gain',
+              AppLocalizations.of(context).whatSkillYouGain,
               style: AppTextStyles.heading.copyWith(fontSize: 16),
             ),
             const SizedBox(height: 8),
@@ -206,21 +209,27 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             bulletText('Integrate machine learning into operations'),
             const SizedBox(height: 24),
             Text(
-              'Syllabus',
+              AppLocalizations.of(context).syllabus,
               style: AppTextStyles.heading.copyWith(fontSize: 16),
             ),
             const SizedBox(height: 8),
             ExpansionTile(
               title: Text(
-                'Module 1 - Introduction',
+                AppLocalizations.of(context).moduleTitle(1),
                 style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w500),
               ),
               children: [
                 ListTile(
-                  title: Text('• Coming Soon', style: AppTextStyles.body),
+                  title: Text(
+                    '• ${AppLocalizations.of(context).comingSoon}',
+                    style: AppTextStyles.body,
+                  ),
                 ),
                 ListTile(
-                  title: Text('• Coming Soon', style: AppTextStyles.body),
+                  title: Text(
+                    '• ${AppLocalizations.of(context).comingSoon}',
+                    style: AppTextStyles.body,
+                  ),
                 ),
               ],
             ),
@@ -230,7 +239,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'You May Like These Courses',
+                    AppLocalizations.of(context).youMayLikeTheseCourses,
                     style: AppTextStyles.heading.copyWith(fontSize: 16),
                   ),
                   const SizedBox(height: 8),
@@ -289,7 +298,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                                           ),
                                         ),
                                         child: Text(
-                                          'Bestseller',
+                                          AppLocalizations.of(
+                                            context,
+                                          ).bestseller,
                                           style: AppTextStyles.subheading
                                               .copyWith(color: Colors.orange),
                                         ),
@@ -358,7 +369,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Price',
+                AppLocalizations.of(context).priceLabel,
                 style: AppTextStyles.subheading.copyWith(fontSize: 12),
               ),
               Text(
@@ -397,9 +408,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       await DatabaseUser.getOrCreateDemoUserIdForApp();
                   await DatabaseCart.upsertCourseForUser(userId, course);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Added to cart'),
-                      duration: Duration(seconds: 2),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context).addedToCart),
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                 } catch (e) {
@@ -407,16 +418,20 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   if (!cartCourses.any((c) => c.title == course.title)) {
                     cartCourses.add(course);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Added to cart (offline)'),
-                        duration: Duration(seconds: 2),
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(context).addedToCartOffline,
+                        ),
+                        duration: const Duration(seconds: 2),
                       ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Already in cart'),
-                        duration: Duration(seconds: 2),
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(context).alreadyInCart,
+                        ),
+                        duration: const Duration(seconds: 2),
                       ),
                     );
                   }
@@ -476,7 +491,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   elevation: 0,
                   foregroundColor: Colors.white,
                 ),
-                child: Text('Buy Course', style: AppTextStyles.button),
+                child: Text(
+                  AppLocalizations.of(context).buyCourse,
+                  style: AppTextStyles.button,
+                ),
               ),
             ),
           ),
