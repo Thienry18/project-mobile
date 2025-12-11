@@ -142,19 +142,12 @@ class _HistoryScreenState extends State<HistoryScreen>
     showDialog(
       context: context,
       builder: (ctx) {
-<<<<<<< HEAD
-        final l10n = AppLocalizations.of(ctx);
-        return AlertDialog(
-          title: Text(l10n.clearPurchaseHistory),
-          content: Text(l10n.clearHistoryConfirm),
-=======
         final l10n = AppLocalizations.of(ctx)!;
         return AlertDialog(
           title: Text(l10n.clearPurchaseHistory),
           content: const Text(
             "Are you sure you want to clear your history? This action cannot be undone.",
           ),
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
           actions: [
             TextButton(
               child: Text(l10n.cancel),
@@ -162,11 +155,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             ),
             TextButton(
               child: Text(
-<<<<<<< HEAD
-                AppLocalizations.of(ctx).delete,
-=======
                 AppLocalizations.of(ctx)!.delete,
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
                 style: const TextStyle(color: Colors.red),
               ),
               onPressed: () async {
@@ -191,11 +180,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                 Navigator.of(ctx).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-<<<<<<< HEAD
                     content: Text(AppLocalizations.of(context).historyCleared),
-=======
-                    content: Text(AppLocalizations.of(context)!.historyCleared),
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
                   ),
                 );
               },
