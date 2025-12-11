@@ -5,6 +5,7 @@ import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
   const PaymentSuccessScreen({super.key});
@@ -41,8 +42,8 @@ class PaymentSuccessScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               Text(
-                'Payment Successful!',
-                style: TextStyle(
+                AppLocalizations.of(context).paymentSuccessful,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,

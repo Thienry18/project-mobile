@@ -7,6 +7,7 @@ import 'package:projek_mobile/screens/certificate.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CertificatePage extends StatefulWidget {
   const CertificatePage({super.key});
@@ -55,7 +56,7 @@ class _CertificatePageState extends State<CertificatePage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'My Certificate',
+          AppLocalizations.of(context).myCertificates,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -158,7 +159,7 @@ class _CertificatePageState extends State<CertificatePage> {
         Image.asset('images/certification.png', height: 300),
         const SizedBox(height: 20),
         Text(
-          'No Certificates Yet',
+          AppLocalizations.of(context).noCertificates,
           style: GoogleFonts.poppins(
             color: const Color(0xFF324EAF),
             fontSize: 18,
@@ -167,8 +168,7 @@ class _CertificatePageState extends State<CertificatePage> {
         ),
         const SizedBox(height: 10),
         Text(
-          'You don’t have any certificates yet! Start exploring courses and\n'
-          'earn your first one to show off your skills and growth.',
+          AppLocalizations.of(context).discoverCourses,
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
             color: const Color(0xFF324EAF),
@@ -196,7 +196,7 @@ class _CertificatePageState extends State<CertificatePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Explore',
+                AppLocalizations.of(context).explore,
                 style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontSize: 14,

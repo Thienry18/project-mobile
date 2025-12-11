@@ -5,6 +5,7 @@ import 'package:projek_mobile/screens/add_new_card.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PaymentMethodsScreen extends StatefulWidget {
   const PaymentMethodsScreen({super.key});
@@ -43,7 +44,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
         backgroundColor: blueColor,
         elevation: 0,
         title: Text(
-          'Payment Methods',
+          AppLocalizations.of(context).paymentMethods,
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
             fontSize: 18,
@@ -77,7 +78,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                       vertical: 12,
                     ),
                     child: Text(
-                      'Your Payment Methods',
+                      AppLocalizations.of(context).yourPaymentMethods,
                       style: GoogleFonts.poppins(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w600,
@@ -133,7 +134,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                           size: 22,
                         ),
                         title: Text(
-                          'Add Card',
+                          AppLocalizations.of(context).addCard,
                           style: GoogleFonts.poppins(
                             color: Colors.blue.shade800,
                             fontWeight: FontWeight.w600,
