@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:provider/provider.dart';
 
 class CartItemTile extends StatelessWidget {
@@ -35,7 +36,14 @@ class CartItemTile extends StatelessWidget {
         children: [
           Checkbox(
             value: isSelected,
-            onChanged: onChanged,
+            onChanged: (bool? value) async {
+              await FirebaseAnalyticsService().trackCartAction(
+                value == true ? 'select_item' : 'deselect_item',
+                courseId: course.index.toString(),
+                price: double.tryParse(course.price.replaceAll('\$', '')),
+              );
+              onChanged(value);
+            },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
             ),

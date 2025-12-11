@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
-import 'package:projek_mobile/data/cart_data.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_cart.dart';
+import 'package:projek_mobile/database/database_user.dart';
+import 'package:projek_mobile/database/database_course.dart';
+import 'package:projek_mobile/database/database_history.dart';
 import 'package:projek_mobile/data/category.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
@@ -11,6 +16,7 @@ import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -25,11 +31,55 @@ class _CartPageState extends State<CartPage> {
   Set<int> selectedIndexes = {};
   String? selectedPromo;
   double promoDiscount = 0.0;
+  int? _userId;
+  List<Course> _dbCartCourses = [];
 
   @override
   void initState() {
     super.initState();
-    _selectAllVisibleItems();
+    _loadCartFromDb();
+  }
+
+  Future<void> _loadCartFromDb() async {
+    try {
+      final uid = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      _userId = uid;
+      final db = await DatabaseService.instance.database;
+      final rows = await DatabaseCart.getUserCart(db, uid);
+      final List<Course> loaded = [];
+      for (final r in rows) {
+        final courseId = (r['course_id'] as num?)?.toInt() ?? 0;
+        final courseFromDb = await DatabaseCourse.getCourseById(db, courseId);
+        if (courseFromDb != null) {
+          loaded.add(courseFromDb);
+        } else {
+          loaded.add(
+            Course(
+              images:
+                  (r['image'] as String?) ??
+                  'assets/images/card_image/udemy_course.jpg',
+              title: (r['title'] as String?) ?? 'Course',
+              duration: (r['added_at'] != null) ? 'Purchased' : '',
+              rating: (r['price'] as String?) ?? '0',
+              price: (r['price'] as String?) ?? '0',
+              isBestseller: false,
+              index: courseId,
+              category: '',
+              instructor: (r['instructor'] as String?) ?? '',
+              language: '',
+              subtitle: '',
+            ),
+          );
+        }
+      }
+      setState(() {
+        _dbCartCourses = loaded;
+      });
+      _selectAllVisibleItems();
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error loading cart from DB: $e');
+    }
   }
 
   void _showDeleteConfirmation() {
@@ -37,55 +87,116 @@ class _CartPageState extends State<CartPage> {
       context: context,
       builder:
           (_) => AlertDialog(
-            title: const Text('Confirm Delete'),
-            content: const Text(
-              'Are you sure you want to delete selected items from cart?',
+            title: Text(AppLocalizations.of(context)!.confirmDeleteTitle),
+            content: Text(
+              AppLocalizations.of(context)!.confirmDeleteCartContent,
             ),
             actions: [
               TextButton(
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context)!.cancel),
                 onPressed:
                     () => Navigator.of(context, rootNavigator: true).pop(),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Delete'),
-                onPressed: () {
-                  final deletedItems = <Course>[];
-                  final deletedIndexes = selectedIndexes.toList()..sort();
-
-                  for (final index in deletedIndexes.reversed) {
-                    final course = cartCourses.firstWhere(
-                      (c) => c.index == index,
-                    );
-                    deletedItems.add(course);
-                    cartCourses.remove(course);
-                  }
-
-                  setState(() {
-                    selectedIndexes.clear();
-                    _selectAllVisibleItems();
-                  });
-
+                child: Text(AppLocalizations.of(context)!.delete),
+                onPressed: () async {
                   Navigator.of(context, rootNavigator: true).pop();
+                  // Ensure we have a user id
+                  try {
+                    final uid =
+                        _userId ??
+                        await DatabaseUser.getOrCreateDemoUserIdForApp();
+                    _userId = uid;
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text("Items deleted from cart"),
-                      duration: const Duration(seconds: 4),
-                      action: SnackBarAction(
-                        label: 'UNDO',
-                        onPressed: () {
-                          setState(() {
-                            for (int i = 0; i < deletedItems.length; i++) {
-                              cartCourses.insert(0, deletedItems[i]);
+                    final deletedItems = <Course>[];
+                    final toDelete = selectedIndexes.toList();
+
+                    // Remove each selected course from DB
+                    for (final courseIdx in toDelete) {
+                      final course = _dbCartCourses.firstWhere(
+                        (c) => c.index == courseIdx,
+                        orElse:
+                            () => Course(
+                              images:
+                                  'assets/images/card_image/udemy_course.jpg',
+                              title: 'Course',
+                              duration: '',
+                              rating: '0',
+                              price: '0',
+                              isBestseller: false,
+                              index: courseIdx,
+                              category: '',
+                              instructor: '',
+                              language: '',
+                              subtitle: '',
+                            ),
+                      );
+                      deletedItems.add(course);
+                      await DatabaseCart.removeByUserCourseForUser(
+                        uid,
+                        courseIdx,
+                      );
+                      // record history for deletion from cart
+                      try {
+                        final db = await DatabaseService.instance.database;
+                        await DatabaseHistory.addHistory(db, {
+                          'user_id': uid,
+                          'course_id': course.index,
+                          'title': course.title,
+                          'image': course.images,
+                          'price': course.price,
+                          'status': 'deleted',
+                          'source': 'cart_delete',
+                          'occurred_at': DateTime.now().millisecondsSinceEpoch,
+                        });
+                      } catch (e) {
+                        // ignore: avoid_print
+                        print('Could not insert history for cart deletion: $e');
+                      }
+                    }
+
+                    // Refresh local list from DB
+                    await _loadCartFromDb();
+
+                    setState(() {
+                      selectedIndexes.clear();
+                      _selectAllVisibleItems();
+                    });
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(context)!.itemsDeletedFromCart,
+                        ),
+                        duration: const Duration(seconds: 4),
+                        action: SnackBarAction(
+                          label: AppLocalizations.of(context)!.undo,
+                          onPressed: () async {
+                            // Re-insert deleted items
+                            if (deletedItems.isEmpty) return;
+                            for (final c in deletedItems) {
+                              await DatabaseCart.upsertCourseForUser(uid, c);
                             }
-                            _selectAllVisibleItems();
-                          });
-                        },
+                            await _loadCartFromDb();
+                            setState(() {
+                              _selectAllVisibleItems();
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } catch (e) {
+                    // ignore: avoid_print
+                    print('Failed to delete items from DB: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(context)!.failedToDeleteItems,
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
             ],
@@ -100,9 +211,9 @@ class _CartPageState extends State<CartPage> {
   }
 
   List<Course> _getFilteredCartItems() {
-    if (selectedCategoryIndex == 0) return cartCourses;
+    if (selectedCategoryIndex == 0) return _dbCartCourses;
     final category = categoryList[selectedCategoryIndex - 1];
-    return cartCourses.where((e) => e.category == category).toList();
+    return _dbCartCourses.where((e) => e.category == category).toList();
   }
 
   void _showPromoBottomSheet() {
@@ -118,14 +229,17 @@ class _CartPageState extends State<CartPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Select a Voucher",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                AppLocalizations.of(context)!.selectVoucher,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
               ListTile(
                 leading: const Icon(Icons.local_offer, color: Colors.green),
-                title: const Text("DISCOUNT20 - Save \$16.3"),
+                title: Text(AppLocalizations.of(context)!.discount20),
                 onTap: () {
                   setState(() {
                     selectedPromo = "DISCOUNT20";
@@ -136,7 +250,7 @@ class _CartPageState extends State<CartPage> {
               ),
               ListTile(
                 leading: const Icon(Icons.card_giftcard, color: Colors.purple),
-                title: const Text("FREESHIP - Free Shipping"),
+                title: Text(AppLocalizations.of(context)!.freeship),
                 onTap: () {
                   setState(() {
                     selectedPromo = "FREESHIP";
@@ -152,22 +266,37 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  void _handleCheckout() {
+  void _handleCheckout() async {
     final historyTitles = myCourses.map((e) => e.title).toSet();
     final selectedItems =
-        cartCourses.where((item) {
+        _dbCartCourses.where((item) {
           return selectedIndexes.contains(item.index) &&
               !historyTitles.contains(item.title);
         }).toList();
 
     if (selectedItems.isEmpty) {
+      await FirebaseAnalyticsService().trackCartAction(
+        'checkout_failed',
+        courseId: null,
+        price: null,
+      );
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("No new courses to purchase."),
-          duration: Duration(seconds: 3),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.noNewCoursesToPurchase),
+          duration: const Duration(seconds: 3),
         ),
       );
       return;
+    }
+
+    // Track successful checkout initiation
+    for (final item in selectedItems) {
+      await FirebaseAnalyticsService().trackCartAction(
+        'checkout_initiated',
+        courseId: item.index.toString(),
+        price: double.tryParse(item.price.replaceAll('\$', '')),
+      );
     }
 
     Navigator.pushReplacement(

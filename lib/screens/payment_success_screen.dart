@@ -3,6 +3,7 @@ import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:provider/provider.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
@@ -55,7 +56,11 @@ class PaymentSuccessScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               ElevatedButton.icon(
-                onPressed: () {
+                onPressed: () async {
+                  await FirebaseAnalyticsService().trackButtonClick(
+                    'continue_shopping',
+                    extras: {'screen': 'payment_success'},
+                  );
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -86,7 +91,11 @@ class PaymentSuccessScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(
-                onPressed: () {
+                onPressed: () async {
+                  await FirebaseAnalyticsService().trackButtonClick(
+                    'go_to_my_course',
+                    extras: {'screen': 'payment_success'},
+                  );
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (_) => const MyCoursePage()),

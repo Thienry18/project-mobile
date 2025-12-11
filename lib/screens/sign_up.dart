@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/screens/sign_in.dart';
+import 'package:projek_mobile/screens/build_profile.dart';
 import 'package:projek_mobile/widgets/login_tab_bar.dart';
 import 'package:projek_mobile/widgets/social_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
@@ -9,6 +10,8 @@ import 'package:projek_mobile/widgets/custom_shape_clipper.dart' as clipper;
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // <-- tambah ini
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -79,21 +82,81 @@ class _SignUpState extends State<SignUp> {
       return;
     }
 
-    try {
-      await _auth.register(email, password);
+    // Track the button click
+    await FirebaseAnalyticsService().trackButtonClick(
+      'sign_up_button',
+      extras: {'screen': 'sign_up', 'email_entered': email.isNotEmpty},
+    );
 
-      // >>> simpan username agar Profile bisa tampilkan "Your Name" -> username
+    bool ok = false;
+    try {
+      // Try to create user with Firebase Auth first
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      ok = true;
+    } on FirebaseAuthException catch (e) {
+      // If email already in use on Firebase, inform user and abort
+      if (e.code == 'email-already-in-use') {
+        _showError('This email is already registered (Firebase).');
+        await FirebaseAnalyticsService().logSignUp(
+          method: 'email',
+          success: false,
+          errorMessage: 'email-already-in-use',
+        );
+        return;
+      }
+      // Otherwise, log and allow fallback to local DB
+      // ignore: avoid_print
+      print('Firebase signUp error: ${e.code} ${e.message}');
+    } catch (e) {
+      // ignore: avoid_print
+      print('Firebase signUp error: $e');
+    }
+
+    try {
+      if (ok) {
+        // Ensure local DB also contains this user so app flows that read local DB work
+        try {
+          await _auth.register(email, password);
+        } catch (e) {
+          // If local DB already had the user, ignore; otherwise rethrow
+          if (e.toString().contains('Email already registered')) {
+            // ignore
+          } else {
+            rethrow;
+          }
+        }
+      } else {
+        // Fallback to local registration when Firebase wasn't used/successful
+        await _auth.register(email, password);
+      }
+
+      // Save username and email into SharedPreferences for later steps
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_username', username);
+      await prefs.setString('user_email', email.toLowerCase());
+      await prefs.setBool('is_logged_in', true);
 
-      _showOk("Registration successful. Please sign in.");
-      if (!mounted) return;
+      await FirebaseAnalyticsService().logSignUp(
+        method: 'email',
+        success: true,
+      );
+
+      _showOk("Registration successful. Continue to build your profile.");
+      // if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const SignIn()),
+        MaterialPageRoute(builder: (_) => const BuildProfile()),
       );
     } catch (e) {
-      _showError(e.toString().replaceFirst('Exception: ', ''));
+      await FirebaseAnalyticsService().logSignUp(
+        method: 'email',
+        success: false,
+        errorMessage: e.toString(),
+      );
+      _showError(e.toString());
     }
   }
 
@@ -171,6 +234,13 @@ class _SignUpState extends State<SignUp> {
                           setState(() {
                             _agreeToTerms = value ?? false;
                           });
+                          FirebaseAnalyticsService().trackButtonClick(
+                            'agree_terms_toggled',
+                            extras: {
+                              'screen': 'sign_up',
+                              'value': _agreeToTerms,
+                            },
+                          );
                         },
                         fillColor: WidgetStateProperty.resolveWith<Color>((
                           states,
@@ -241,7 +311,11 @@ class _SignUpState extends State<SignUp> {
                         style: AppTextStyles.body,
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
+                          await FirebaseAnalyticsService().trackButtonClick(
+                            'go_to_sign_in',
+                            extras: {'screen': 'sign_up'},
+                          );
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -254,7 +328,7 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const SocialButton(),
+                  const SocialButton(screen: 'sign_up'),
                 ],
               ),
             ),

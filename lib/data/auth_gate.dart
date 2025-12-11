@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:projek_mobile/screens/auth/sign_in.dart';
+// database imports not required here; AuthGate uses SharedPreferences
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/screens/input_pin.dart';
 
 // Onboarding step-1 kamu bernama FavScreen (bukan "Onboarding")
 import 'package:projek_mobile/screens/onboarding.dart' show FavScreen;
 
 // Halaman utama aplikasi — di sini aku arahkan ke ExplorePage.
 // Ganti ke widget home kamu jika berbeda (mis. HomeRoot, MainTab, dsb).
-import 'package:projek_mobile/screens/explore_page.dart';
+// explore_page not needed here
 
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
@@ -26,12 +29,20 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _check() async {
-    final prefs = await SharedPreferences.getInstance();
-    final flag = prefs.getBool('is_logged_in') ?? false;
-    setState(() {
-      _loading = false;
-      _loggedIn = flag;
-    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final isLogged = prefs.getBool('is_logged_in') ?? false;
+      setState(() {
+        _loading = false;
+        _loggedIn = isLogged;
+      });
+    } catch (e) {
+      // fail safe: consider not logged in
+      setState(() {
+        _loading = false;
+        _loggedIn = false;
+      });
+    }
   }
 
   @override
@@ -41,13 +52,11 @@ class _AuthGateState extends State<AuthGate> {
     }
 
     if (_loggedIn) {
-      // >>>>>> Halaman utama saat user SUDAH login
-      return const ExplorePage(selectedCategory: 'Python');
-      // Jika kamu punya widget home lain, ganti baris di atas,
-      // mis. return const MainHome();
+      // Jika sudah login, minta PIN terlebih dahulu
+      return const SignIn();
     }
 
-    // >>>>>> Onboarding step-1 saat user BELUM login
+    // Jika belum login, tampilkan onboarding/landing (FavScreen)
     return const FavScreen();
   }
 }

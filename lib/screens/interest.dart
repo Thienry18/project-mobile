@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/screens/set_pin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 
@@ -140,12 +142,28 @@ class InterestState extends State<Interest> {
                   onPressed: () {
                     if (selectedInterest != null) {
                       categoryselected = selectedInterest!;
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SetPinScreen(),
-                        ),
-                      );
+                      // persist interest into DB for current user (if logged in)
+                      () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        final email = prefs.getString('user_email');
+                        if (email != null && email.isNotEmpty) {
+                          final auth = AuthRepository();
+                          try {
+                            await auth.updateProfile(
+                              currentEmail: email,
+                              pin: null,
+                              interest: selectedInterest,
+                            );
+                          } catch (_) {}
+                        }
+                        if (!mounted) return;
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SetPinScreen(),
+                          ),
+                        );
+                      }();
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

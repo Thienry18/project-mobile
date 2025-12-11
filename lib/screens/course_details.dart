@@ -1,7 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/data/cart_data.dart';
+import 'package:projek_mobile/database/database_cart.dart';
+import 'package:projek_mobile/database/database_user.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
@@ -37,12 +40,34 @@ class CourseDetailScreen extends StatefulWidget {
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
   bool isFavorite = false;
 
-  void showShareOptions(BuildContext context, String courseTitle) {
+  @override
+  void initState() {
+    super.initState();
+    _logCourseView();
+  }
+
+  Future<void> _logCourseView() async {
+    await FirebaseAnalyticsService().logCartOperation(
+      operation: 'view',
+      courseId: widget.title.hashCode.toString(),
+      title: widget.title,
+      price: double.tryParse(widget.price.replaceAll('\$', '')) ?? 0.0,
+    );
+  }
+
+  void showShareOptions(BuildContext context, String courseTitle) async {
     final random = Random();
     final code = String.fromCharCodes(
       List.generate(6, (index) => random.nextInt(26) + 97),
     );
     final fakeUrl = 'https://courses.com/$code';
+
+    await FirebaseAnalyticsService().logCartOperation(
+      operation: 'share',
+      courseId: widget.title.hashCode.toString(),
+      title: courseTitle,
+      price: double.tryParse(widget.price.replaceAll('\$', '')) ?? 0.0,
+    );
 
     Share.share(
       'Check out this course: $courseTitle\n$fakeUrl',
@@ -63,7 +88,15 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                 isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: isFavorite ? Colors.red : null,
               ),
-              onPressed: () {
+              onPressed: () async {
+                final action = isFavorite ? 'remove_favorite' : 'add_favorite';
+                await FirebaseAnalyticsService().logCartOperation(
+                  operation: action,
+                  courseId: widget.title.hashCode.toString(),
+                  title: widget.title,
+                  price:
+                      double.tryParse(widget.price.replaceAll('\$', '')) ?? 0.0,
+                );
                 setState(() {
                   isFavorite = !isFavorite;
                 });
@@ -344,7 +377,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             height: 42,
             width: 50,
             child: OutlinedButton(
-              onPressed: () {
+              onPressed: () async {
                 final course = Course(
                   title: widget.title,
                   images: widget.imageUrl,
@@ -359,21 +392,34 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   subtitle: 'Indonesian',
                 );
 
-                if (!cartCourses.any((c) => c.title == course.title)) {
-                  cartCourses.add(course);
+                try {
+                  final userId =
+                      await DatabaseUser.getOrCreateDemoUserIdForApp();
+                  await DatabaseCart.upsertCourseForUser(userId, course);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Added to cart'),
                       duration: Duration(seconds: 2),
                     ),
                   );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Already in cart'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
+                } catch (e) {
+                  // fallback to in-memory and notify
+                  if (!cartCourses.any((c) => c.title == course.title)) {
+                    cartCourses.add(course);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Added to cart (offline)'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Already in cart'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
                 }
               },
               style: OutlinedButton.styleFrom(

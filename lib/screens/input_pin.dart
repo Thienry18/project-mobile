@@ -3,10 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
-import 'package:projek_mobile/screens/success.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/screens/explore_page.dart';
 
 class InputPin extends StatelessWidget {
   const InputPin({super.key});
@@ -63,12 +65,9 @@ class InputPin extends StatelessWidget {
                         return SizedBox(
                           width: 80,
                           height: 80,
-                          child: StatefulBuilder(
-                            builder: (context, setState) {
-                              provider.pinFocusNodes[index].addListener(() {
-                                setState(() {});
-                              });
-
+                          child: AnimatedBuilder(
+                            animation: provider.pinFocusNodes[index],
+                            builder: (context, _) {
                               return CustomTextField(
                                 controller: provider.pinControllers[index],
                                 focusNode: provider.pinFocusNodes[index],
@@ -92,7 +91,6 @@ class InputPin extends StatelessWidget {
                                 ],
                                 onChanged: (value) {
                                   provider.onPinChanged(value, index, context);
-                                  (context as Element).markNeedsBuild();
                                 },
                               );
                             },
@@ -109,15 +107,37 @@ class InputPin extends StatelessWidget {
                       ),
                       onPressed:
                           provider.isPinComplete()
-                              ? () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Success(),
-                                  ),
-                                );
-                                provider.pinControllers.forEach(
-                                  (controller) => controller.clear(),
+                              ? () async {
+                                final entered = provider.getPin();
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                final email = prefs.getString('user_email');
+                                final auth = AuthRepository();
+                                if (email != null && email.isNotEmpty) {
+                                  final user = await auth.getUserByEmail(email);
+                                  final storedPin =
+                                      (user ?? {})['pin'] as String? ?? '';
+                                  if (storedPin.isNotEmpty &&
+                                      storedPin == entered) {
+                                    // Mark user as logged in for future app launches
+                                    await prefs.setBool('is_logged_in', true);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => const ExplorePage(
+                                              selectedCategory: 'all',
+                                            ),
+                                      ),
+                                    );
+                                    provider.pinControllers.forEach(
+                                      (controller) => controller.clear(),
+                                    );
+                                    return;
+                                  }
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Invalid PIN.')),
                                 );
                               }
                               : () {},

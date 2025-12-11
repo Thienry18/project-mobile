@@ -11,6 +11,7 @@ import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/edit_profile.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
+import 'package:projek_mobile/screens/language_selection.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/payment_method.dart';
 import 'package:projek_mobile/screens/security.dart';
@@ -20,6 +21,7 @@ import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/toggle_item.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -87,6 +89,8 @@ class _ProfileState extends State<Profile> {
       avatarProvider = const AssetImage("assets/images/default_profile.png");
     }
 
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -94,7 +98,7 @@ class _ProfileState extends State<Profile> {
         foregroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          "Profile",
+          l10n.profile,
           style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
@@ -150,7 +154,7 @@ class _ProfileState extends State<Profile> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          "Basic",
+                          l10n.basic,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             color:
@@ -202,27 +206,6 @@ class _ProfileState extends State<Profile> {
                         ),
                       );
                       if (updated == true) {
-                        await _loadUserProfile(); // refresh SP → UI
-                      }
-                    } else {
-                      // fallback: kalau belum ada user_profile JSON, tetap boleh buka
-                      final updated = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => EditProfileScreen(
-                                userProfile: UserProfile(
-                                  username: displayUsername ?? '',
-                                  fullName: displayUsername ?? '',
-                                  dob: '',
-                                  gender: '',
-                                  phoneNumber: '',
-                                  country: '',
-                                ),
-                              ),
-                        ),
-                      );
-                      if (updated == true) {
                         await _loadUserProfile();
                       }
                     }
@@ -232,7 +215,7 @@ class _ProfileState extends State<Profile> {
                 MenuItem(
                   icon: Icons.payment_outlined,
                   iconColor: const Color(0XFF696969),
-                  title: "Payment Methods",
+                  title: l10n.paymentMethods,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -244,7 +227,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 ToggleItem(
                   icon: Icons.dark_mode_outlined,
-                  title: "Dark Mode",
+                  title: l10n.darkMode,
                   value: themeNotifier.isDarkMode,
                   onChanged: (val) {
                     themeNotifier.toggleTheme(val);
@@ -252,7 +235,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 ToggleItem(
                   icon: Icons.notifications_none,
-                  title: "Notification",
+                  title: l10n.notification,
                   value: isNotificationEnabled,
                   onChanged: (val) {
                     setState(() {
@@ -263,12 +246,26 @@ class _ProfileState extends State<Profile> {
                 MenuItem(
                   icon: Icons.shield_outlined,
                   iconColor: const Color(0XFF696969),
-                  title: "Security",
+                  title: l10n.security,
                   onTap:
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SecurityScreen(),
+                        ),
+                      ),
+                ),
+
+                // Language selection
+                MenuItem(
+                  icon: Icons.language_outlined,
+                  iconColor: const Color(0XFF696969),
+                  title: l10n.language,
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LanguageSelectionScreen(),
                         ),
                       ),
                 ),

@@ -10,6 +10,7 @@ import 'package:projek_mobile/widgets/profile_image.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/data/auth_repository.dart';
 
 class BuildProfile extends StatefulWidget {
   const BuildProfile({super.key});
@@ -60,6 +61,21 @@ class _BuildProfile extends State<BuildProfile> {
         'country': user.country,
       }),
     );
+
+    // Also persist into app DB via AuthRepository if there's an active email
+    final auth = AuthRepository();
+    final currentEmail = prefs.getString('user_email');
+    if (currentEmail != null && currentEmail.isNotEmpty) {
+      await auth.updateProfile(
+        currentEmail: currentEmail,
+        username: username,
+        fullname: fullName,
+        dob: dob,
+        gender: gender,
+        phoneNumber: phoneNumber,
+        country: country,
+      );
+    }
 
     Navigator.pushReplacement(
       context,

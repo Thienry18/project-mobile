@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:projek_mobile/data/cart_data.dart';
 import 'package:projek_mobile/data/category.dart';
-import 'package:projek_mobile/data/explore_data.dart';
-import 'package:projek_mobile/data/interest_data.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
-import 'package:projek_mobile/providers/explore_provider.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_course.dart';
+import 'package:projek_mobile/data/db_helper.dart';
+import 'package:projek_mobile/database/database_cart.dart';
+import 'package:projek_mobile/database/database_user.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/contact.dart';
 import 'package:projek_mobile/screens/course_details.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/notification_page.dart';
 import 'package:projek_mobile/screens/profile.dart';
-import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
+import 'package:projek_mobile/services/course_service.dart';
+import 'package:projek_mobile/providers/locale_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
@@ -37,26 +42,83 @@ class _ExplorePageState extends State<ExplorePage> {
   Set<int> favoriteCourses = {};
   Set<int> selectedIndexes = {0};
 
+  // Local state
+  bool isLoading = false;
+  List<Course> trending = [];
+  List<Course> recommended = [];
+  List<Course> all = [];
+
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
-      final p = context.read<ExploreProvider>();
       final initialCat =
           widget.selectedCategory.isEmpty ? 'Python' : widget.selectedCategory;
-      return p.loadByCategory(initialCat);
+      return _loadByCategory(initialCat);
     });
+  }
+
+  Future<void> _loadByCategory(String category) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Try API first
+      final courseService = CourseService();
+      final lang = context.read<LocaleProvider>().locale.languageCode;
+
+      // Fetch data (CourseService computes trending/recommended if backend doesn't)
+      final allCourses = await courseService.getAllCourses(lang: lang);
+      final trendingCourses = await courseService.getTrendingCourses();
+      final recommendedCourses = await courseService.getRecommendedCourses(
+        category,
+      );
+
+      all = allCourses;
+      trending = trendingCourses;
+      recommended = recommendedCourses;
+    } catch (e) {
+      // API failed -> fallback to local DB
+      print('Error fetching from API: $e');
+      print('Falling back to local database');
+
+      try {
+        // If API fails, try DatabaseService
+        final db = await DatabaseService.instance.database;
+        all = await DatabaseCourse.getAll(db);
+        trending = await DatabaseCourse.getTrendingTop5(db);
+        recommended = await DatabaseCourse.getRecommendedForYou(db, category);
+
+        // If DatabaseService is empty, try legacy DbHelper
+        if (all.isEmpty) {
+          final legacyDb = DbHelper.instance;
+          all = await legacyDb.getAll();
+          trending = await legacyDb.getTrendingTop5();
+          recommended = await legacyDb.getRecommendedForYou(category);
+        }
+      } catch (dbError) {
+        print('Error fetching from database: $dbError');
+        // Keep empty lists as last resort
+        all = [];
+        trending = [];
+        recommended = [];
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = context.watch<ThemeNotifier>().isDarkMode;
-    final p = context.watch<ExploreProvider>();
 
-    final List<Course> trending = p.trending;
-    final List<Course> recommended = p.recommended;
-    final List<Course> allCourses = p.all;
+    final List<Course> trendingLocal = trending;
+    final List<Course> recommendedLocal = recommended;
+    final List<Course> allCourses = all;
 
     final List<Course> filteredCourses =
         selectedIndexes.isNotEmpty
@@ -348,7 +410,7 @@ class _ExplorePageState extends State<ExplorePage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child:
-              p.isLoading
+              isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ListView(
                     children: [
@@ -380,14 +442,14 @@ class _ExplorePageState extends State<ExplorePage> {
 
                       _buildSectionHeader("Trending Now"),
                       const SizedBox(height: 12),
-                      autoSlideCourseBanner(courses: trending),
+                      autoSlideCourseBanner(courses: trendingLocal),
 
                       const SizedBox(height: 30),
 
                       if (widget.selectedCategory.isNotEmpty) ...[
                         _buildSectionHeader("Recommended for You"),
                         const SizedBox(height: 12),
-                        _buildCourseCardList(trending),
+                        _buildCourseCardList(trendingLocal),
                       ],
 
                       const SizedBox(height: 30),
@@ -431,9 +493,13 @@ class _ExplorePageState extends State<ExplorePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) => const Scaffold(
+                                        (context) => Scaffold(
                                           body: Center(
-                                            child: Text("Coming Soon"),
+                                            child: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              ).comingSoon,
+                                            ),
                                           ),
                                         ),
                                   ),
@@ -450,7 +516,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        _buildCourseCardList(recommended),
+                        _buildCourseCardList(recommendedLocal),
                       ],
 
                       const SizedBox(height: 20),
@@ -549,28 +615,55 @@ class _ExplorePageState extends State<ExplorePage> {
     bool isBestseller = false,
   }) {
     final isFavorited = favoriteCourses.contains(index);
-    final allCourses = context.read<ExploreProvider>().all;
+    final allCourses = all;
 
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (_) => CourseDetailScreen(
-                  title: title,
-                  imageUrl: imageUrl,
-                  price: price,
-                  rating: rating,
-                  duration: duration,
-                  isBestseller: isBestseller,
-                  instructor: instructor,
-                  recommendedCourses: [
-                    ...context.read<ExploreProvider>().recommended,
-                  ],
-                ),
-          ),
+      onTap: () async {
+        // Log that the course card was opened from Explore
+        await FirebaseAnalyticsService().trackCourseAction(
+          'open',
+          index.toString(),
+          price: double.tryParse(price.replaceAll('\$', '')),
         );
+
+        // Load full course data from app database before navigating
+        final courseFromDb = await DatabaseCourse.getCourseByIdForApp(index);
+        if (courseFromDb != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (_) => CourseDetailScreen(
+                    title: courseFromDb.title,
+                    imageUrl: courseFromDb.images,
+                    price: courseFromDb.price,
+                    rating: courseFromDb.rating,
+                    duration: courseFromDb.duration,
+                    isBestseller: courseFromDb.isBestseller,
+                    instructor: courseFromDb.instructor,
+                    recommendedCourses: [...recommended],
+                  ),
+            ),
+          );
+        } else {
+          // Fallback to using the provided data if DB lookup fails
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (_) => CourseDetailScreen(
+                    title: title,
+                    imageUrl: imageUrl,
+                    price: price,
+                    rating: rating,
+                    duration: duration,
+                    isBestseller: isBestseller,
+                    instructor: instructor,
+                    recommendedCourses: [...recommended],
+                  ),
+            ),
+          );
+        }
       },
       child: Card(
         child: Container(
@@ -649,22 +742,32 @@ class _ExplorePageState extends State<ExplorePage> {
                 bottom: 30,
                 right: 8,
                 child: InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    // Use DB-backed cart: get or create a demo user, then upsert/remove
+                    final userId =
+                        await DatabaseUser.getOrCreateDemoUserIdForApp();
                     setState(() {
                       if (isFavorited) {
                         favoriteCourses.remove(index);
-                        cartCourses.removeWhere(
-                          (course) => course.index == index,
-                        );
                       } else {
                         favoriteCourses.add(index);
-                        final course = allCourses.firstWhere(
-                          (c) => c.index == index,
-                          orElse: () => allCourses.first,
-                        );
-                        cartCourses.add(course);
                       }
                     });
+
+                    if (favoriteCourses.contains(index)) {
+                      // add to cart in DB (best-effort)
+                      final course = allCourses.firstWhere(
+                        (c) => c.index == index,
+                        orElse: () => allCourses.first,
+                      );
+                      await DatabaseCart.upsertCourseForUser(userId, course);
+                    } else {
+                      // remove from cart in DB
+                      await DatabaseCart.removeByUserCourseForUser(
+                        userId,
+                        index,
+                      );
+                    }
                   },
                   child: Tooltip(
                     message: isFavorited ? 'Remove' : 'Add',

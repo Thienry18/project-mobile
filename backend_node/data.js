@@ -1,0 +1,122 @@
+export const courses = [
+    {
+        id: 1,
+        title: '100 Days of Code: The Complete Python Pro Bootcamp',
+        description: 'Master Python by building 100 projects in 100 days. Learn data science, automation, build websites, games and apps!',
+        instructor: 'Angela Yu',
+        price: '$38.69',
+        duration: '55h 21m',
+        category: 'Python',
+        rating: 4.7,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/udemy_course.jpg'
+    },
+    {
+        id: 2,
+        title: 'Machine Learning A-Z: AI, Python & R + ChatGPT Prize [2025]',
+        description: 'Learn Machine Learning using Python & R. With ChatGPT integration, this course covers everything from basics to advanced ML concepts.',
+        instructor: 'Kirill Eremenko',
+        price: '$36.29',
+        duration: '42h 44m',
+        category: 'Python',
+        rating: 4.5,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/encrypted.jpeg'
+    },
+    {
+        id: 3,
+        title: 'The Complete JavaScript Course 2025: From Zero to Expert!',
+        description: 'The most comprehensive JavaScript course. Modern practices, projects, and advanced concepts.',
+        instructor: 'Jonas Schmedtmann',
+        price: '$42.99',
+        duration: '68h 15m',
+        category: 'JavaScript',
+        rating: 4.8,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/javascript_code.jpg'
+    },
+    {
+        id: 4,
+        title: 'Java Programming Masterclass for Software Developers',
+        description: 'Comprehensive Java programming course for beginners to advanced developers.',
+        instructor: 'Tim Buchalka',
+        price: '$34.50',
+        duration: '80h 10m',
+        category: 'Java',
+        rating: 4.6,
+        isBestseller: false,
+        thumbnail: 'assets/images/card_image/reactjs_code.jpg'
+    },
+    {
+        id: 5,
+        title: 'Data Science and Machine Learning Bootcamp with R',
+        description: 'Master Data Science, Machine Learning, and R Programming through real-world projects.',
+        instructor: 'Jose Portilla',
+        price: '$39.99',
+        duration: '58h 30m',
+        category: 'R',
+        rating: 4.7,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/R.jpg'
+    },
+    {
+        id: 6,
+        title: 'The Complete Web Developer Bootcamp 2025',
+        description: 'Learn web development from scratch. HTML, CSS, JavaScript, Node.js and more.',
+        instructor: 'Colt Steele',
+        price: '$49.99',
+        duration: '56h 20m',
+        category: 'Web Development',
+        rating: 4.9,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/web_bootcamp.jpeg'
+    },
+    {
+        id: 7,
+        title: 'Complete SQL Bootcamp 2025: Go from Zero to Hero',
+        description: 'Master SQL database development with hands-on exercises and real-world projects.',
+        instructor: 'Jose Portilla',
+        price: '$34.99',
+        duration: '41h 15m',
+        category: 'SQL',
+        rating: 4.8,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/sql_bootcamp.jpeg'
+    },
+    {
+        id: 8,
+        title: 'The Complete iOS App Development Bootcamp 2025',
+        description: 'Learn iOS development and Swift programming through building real apps.',
+        instructor: 'Angela Yu',
+        price: '$45.99',
+        duration: '75h 5m',
+        category: 'iOS Development',
+        rating: 4.7,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/ios_development.jpeg'
+    },
+    {
+        id: 9,
+        title: 'The Complete MERN Stack Developer Course 2025',
+        description: 'Build full-stack web applications with MongoDB, Express, React, and Node.js.',
+        instructor: 'Andrei Neagoie',
+        price: '$38.79',
+        duration: '70h 35m',
+        category: 'MERN Stack',
+        rating: 4.6,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/stack_dev.jpeg'
+    },
+    {
+        id: 10,
+        title: 'React Native - The Practical Guide [2025 Edition]',
+        description: 'Build native mobile apps with React Native. Complete guide with practical projects.',
+        instructor: 'Maximilian Schwarzmüller',
+        price: '$44.99',
+        duration: '50h 5m',
+        category: 'React Native',
+        rating: 4.8,
+        isBestseller: true,
+        thumbnail: 'assets/images/card_image/react_guide.jpeg'
+    }
+];

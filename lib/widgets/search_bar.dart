@@ -9,45 +9,66 @@ class SearchBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => SearchScreen(courseList: trendingCourses),
-                ),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE3E8FB),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Search for a course',
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
+    // Add a harmless StreamBuilder that emits a small int periodically.
+    // The value is only used to slightly change opacity and does not affect navigation.
+    return StreamBuilder<int>(
+      stream:
+          Stream.periodic(
+            const Duration(seconds: 5),
+            (i) => i,
+          ).asBroadcastStream(),
+      builder: (context, streamSnap) {
+        final tick = streamSnap.data ?? 0;
+        final opacity = 0.95 + (tick % 2) * 0.05;
+
+        return Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              SearchScreen(courseList: trendingCourses),
+                    ),
+                  );
+                },
+                child: Opacity(
+                  opacity: opacity.clamp(0.0, 1.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 14,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE3E8FB),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Search for a course',
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        const Icon(Icons.search, color: Colors.grey),
+                      ],
                     ),
                   ),
-                  const Icon(Icons.search, color: Colors.grey),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        const FilterMenuButton(),
-      ],
+            const SizedBox(width: 10),
+            const FilterMenuButton(),
+          ],
+        );
+      },
     );
   }
 }

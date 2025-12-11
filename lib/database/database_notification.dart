@@ -1,4 +1,8 @@
 import 'package:sqflite/sqflite.dart';
+<<<<<<< HEAD
+=======
+import 'package:projek_mobile/database/database_service.dart';
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 
 class DatabaseNotification {
   static const table = 'notifications';
@@ -32,6 +36,18 @@ class DatabaseNotification {
     );
   }
 
+<<<<<<< HEAD
+=======
+  static Future<int> insertNotificationForApp(Map<String, dynamic> data) async {
+    final db = await DatabaseService.instance.database;
+    final res = await insertNotification(db, data);
+    try {
+      await DatabaseService.instance.emitNotifications();
+    } catch (_) {}
+    return res;
+  }
+
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<List<Map<String, dynamic>>> getUserNotifications(
     Database db,
     int userId,
@@ -53,11 +69,56 @@ class DatabaseNotification {
     );
   }
 
+<<<<<<< HEAD
+=======
+  static Future<int> markAsReadForApp(int id) async {
+    final db = await DatabaseService.instance.database;
+    final res = await markAsRead(db, id);
+    try {
+      await DatabaseService.instance.emitNotifications();
+    } catch (_) {}
+    return res;
+  }
+
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   static Future<int> deleteNotification(Database db, int id) async {
     return await db.delete(table, where: 'id = ?', whereArgs: [id]);
+  }
+
+<<<<<<< HEAD
+  static Future<void> clearAll(Database db, int userId) async {
+    await db.delete(table, where: 'user_id = ?', whereArgs: [userId]);
+  }
+=======
+  static Future<int> deleteNotificationForApp(int id) async {
+    final db = await DatabaseService.instance.database;
+    final res = await deleteNotification(db, id);
+    try {
+      await DatabaseService.instance.emitNotifications();
+    } catch (_) {}
+    return res;
   }
 
   static Future<void> clearAll(Database db, int userId) async {
     await db.delete(table, where: 'user_id = ?', whereArgs: [userId]);
   }
+
+  static Future<void> clearAllForApp(int userId) async {
+    final db = await DatabaseService.instance.database;
+    final res = await clearAll(db, userId);
+    try {
+      await DatabaseService.instance.emitNotifications();
+    } catch (_) {}
+    return res;
+  }
+
+  /// Reactive stream that emits notifications for a given user id
+  static Stream<List<Map<String, dynamic>>> watchNotificationsForUser(
+    int userId,
+  ) {
+    return DatabaseService.instance.notificationsStream.map((rows) {
+      return rows.where((r) => (r['user_id'] as int?) == userId).toList();
+    });
+  }
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
+import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:projek_mobile/screens/input_pin.dart';
 import 'package:projek_mobile/screens/sign_up.dart';
 import 'package:projek_mobile/screens/forgot_password.dart';
@@ -10,6 +11,7 @@ import 'package:projek_mobile/widgets/custom_shape_clipper.dart' as clipper;
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -43,18 +45,49 @@ class _SignInState extends State<SignIn> {
 
     if (email.isEmpty || password.isEmpty) {
       _showError('Email and password must not be empty.');
+      await FirebaseAnalyticsService().trackButtonClick(
+        'sign_in_button',
+        extras: {'screen': 'sign_in', 'error': 'empty_fields'},
+      );
       return;
     }
 
-    final ok = await _auth.verifyCredentials(email, password);
+    await FirebaseAnalyticsService().trackButtonClick(
+      'sign_in_button',
+      extras: {'screen': 'sign_in', 'email': email.isNotEmpty},
+    );
+
+    bool ok = false;
+    // Try Firebase Auth first
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      ok = true;
+    } on FirebaseAuthException catch (e) {
+      // ignore firebase auth failure here and fallback to local DB
+      // print for debugging
+      // ignore: avoid_print
+      print('Firebase signIn error: ${e.code} ${e.message}');
+    } catch (e) {
+      // ignore other errors
+      // ignore: avoid_print
+      print('Firebase signIn error: $e');
+    }
+
+    // Fallback to local DB verification
+    if (!ok) {
+      ok = await _auth.verifyCredentials(email, password);
+    }
+
     if (!ok) {
       _showError('Invalid email or password.');
       return;
     }
 
-    // Mark logged in + simpan email untuk ditampilkan di Profile
+    // Simpan email sementara; PIN verification will set 'is_logged_in'
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('is_logged_in', true);
     await prefs.setString('user_email', email.toLowerCase());
 
     // Lanjut flow kamu ke InputPin (seperti sebelumnya)
@@ -150,6 +183,13 @@ class _SignInState extends State<SignIn> {
                                 setState(() {
                                   _agreeToTerms = value ?? false;
                                 });
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'remember_me_toggled',
+                                  extras: {
+                                    'screen': 'sign_in',
+                                    'value': _agreeToTerms,
+                                  },
+                                );
                               },
                               fillColor: WidgetStateProperty.resolveWith<Color>(
                                 (states) {
@@ -178,6 +218,10 @@ class _SignInState extends State<SignIn> {
                             ),
                             InkWell(
                               onTap: () {
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'forgot_password',
+                                  extras: {'screen': 'sign_in'},
+                                );
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -214,6 +258,10 @@ class _SignInState extends State<SignIn> {
                             ),
                             InkWell(
                               onTap: () {
+                                FirebaseAnalyticsService().trackButtonClick(
+                                  'go_to_sign_up',
+                                  extras: {'screen': 'sign_in'},
+                                );
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -226,7 +274,7 @@ class _SignInState extends State<SignIn> {
                           ],
                         ),
                         const SizedBox(height: 34),
-                        const SocialButton(),
+                        const SocialButton(screen: 'sign_in'),
                       ],
                     ),
                   ),

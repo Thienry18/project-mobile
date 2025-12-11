@@ -52,9 +52,7 @@ class Course {
       images: map['images'] as String,
       title: map['title'] as String,
       duration: map['duration'] as String,
-      rating:
-          (map['rating_text'] as String?) ??
-          (map['rating_number'] != null ? '${map['rating_number']}' : '0.0'),
+      rating: map['rating_text'] as String,
       price: map['price'] as String,
       isBestseller: (map['is_bestseller'] as int) == 1,
       index: map['idx'] as int,

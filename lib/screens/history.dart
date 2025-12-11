@@ -1,8 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_mycourse.dart';
+import 'package:projek_mobile/database/database_history.dart';
+import 'package:projek_mobile/database/database_user.dart';
+import 'package:projek_mobile/providers/history_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -21,48 +25,169 @@ class _HistoryScreenState extends State<HistoryScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadHistory();
+    // Attach a listener to HistoryNotifier to refresh when DB changes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        final notifier = Provider.of<HistoryNotifier>(context, listen: false);
+        notifier.addListener(() async {
+          await _loadHistory();
+        });
+      } catch (_) {
+        // provider not registered; ignore
+      }
+    });
   }
 
   Future<void> _loadHistory() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString('purchase_history');
-    if (data != null) {
+    try {
+      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final db = await DatabaseService.instance.database;
+      // Load both mycourse (purchased snapshot) and history (additional records)
+      final mycourseRows = await DatabaseMyCourse.getMyCourses(db, userId);
+      final historyRows = await DatabaseHistory.getHistory(db, userId);
+
+      // Normalize rows into a common shape and combine
+      final combined = <Map<String, dynamic>>[];
+
+      final myCourseIds = <int>{};
+      for (final r in mycourseRows) {
+        // normalize price to double for consistent UI rendering
+        double price = 0.0;
+        final rawPrice = r['price'];
+        if (rawPrice is num) {
+          price = rawPrice.toDouble();
+        } else if (rawPrice is String) {
+          price =
+              double.tryParse(rawPrice.replaceAll(RegExp(r'[^0-9\.]'), '')) ??
+              0.0;
+        }
+
+        final courseId =
+            (r['course_id'] is num)
+                ? (r['course_id'] as num).toInt()
+                : (r['course_id'] is String)
+                ? int.tryParse(r['course_id']) ?? 0
+                : 0;
+
+        myCourseIds.add(courseId);
+
+        combined.add({
+          'id': r['id'],
+          'course_id': courseId,
+          'title': r['title'],
+          'image': r['image'],
+          'rating': r['rating'] ?? '0',
+          'price': price,
+          'status': r['status'] ?? 'completed',
+          'isBestseller': false,
+          'timestamp': r['purchased_at'] ?? 0,
+        });
+      }
+
+      for (final r in historyRows) {
+        double price = 0.0;
+        final rawPrice = r['price'];
+        if (rawPrice is num) {
+          price = rawPrice.toDouble();
+        } else if (rawPrice is String) {
+          price =
+              double.tryParse(rawPrice.replaceAll(RegExp(r'[^0-9\.]'), '')) ??
+              0.0;
+        }
+
+        final histCourseId =
+            (r['course_id'] is num)
+                ? (r['course_id'] as num).toInt()
+                : (r['course_id'] is String)
+                ? int.tryParse(r['course_id']) ?? 0
+                : 0;
+
+        // If we already have this course in mycourse (snapshot of purchase),
+        // skip adding a duplicate history entry for completed purchases so the
+        // user sees a single record.
+        if (histCourseId != 0 &&
+            myCourseIds.contains(histCourseId) &&
+            (r['status'] ?? 'completed') == 'completed') {
+          continue;
+        }
+
+        combined.add({
+          'id': r['id'],
+          'course_id': histCourseId,
+          'title': r['title'],
+          'image': r['image'],
+          'rating': r['rating'] ?? '0',
+          'price': price,
+          'status': r['status'] ?? 'completed',
+          'isBestseller': false,
+          'timestamp': r['occurred_at'] ?? 0,
+        });
+      }
+
+      // Sort by timestamp desc
+      combined.sort(
+        (a, b) => (b['timestamp'] as int).compareTo(a['timestamp'] as int),
+      );
+
       setState(() {
-        historyData = List<Map<String, dynamic>>.from(jsonDecode(data));
+        historyData = combined;
       });
+    } catch (e) {
+      // ignore: avoid_print
+      print('Failed to load purchase history from DB: $e');
     }
   }
 
   void _confirmDeleteHistory(BuildContext context) {
     showDialog(
       context: context,
-      builder:
-          (ctx) => AlertDialog(
-            title: const Text("Clear Purchase History"),
-            content: const Text(
-              "Are you sure you want to clear your history? This action cannot be undone.",
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return AlertDialog(
+          title: Text(l10n.clearPurchaseHistory),
+          content: const Text(
+            "Are you sure you want to clear your history? This action cannot be undone.",
+          ),
+          actions: [
+            TextButton(
+              child: Text(l10n.cancel),
+              onPressed: () => Navigator.of(ctx).pop(),
             ),
-            actions: [
-              TextButton(
-                child: const Text("Cancel"),
-                onPressed: () => Navigator.of(ctx).pop(),
+            TextButton(
+              child: Text(
+                AppLocalizations.of(ctx)!.delete,
+                style: const TextStyle(color: Colors.red),
               ),
-              TextButton(
-                child: const Text("Clear", style: TextStyle(color: Colors.red)),
-                onPressed: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  await prefs.remove('purchase_history');
+              onPressed: () async {
+                try {
+                  final userId =
+                      await DatabaseUser.getOrCreateDemoUserIdForApp();
+                  final db = await DatabaseService.instance.database;
+                  // Clear both mycourse and history entries for the user
+                  await db.delete(
+                    'mycourse',
+                    where: 'user_id = ?',
+                    whereArgs: [userId],
+                  );
+                  await DatabaseHistory.clearHistoryForUser(db, userId);
                   setState(() {
                     historyData.clear();
                   });
-                  Navigator.of(ctx).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("History cleared.")),
-                  );
-                },
-              ),
-            ],
-          ),
+                } catch (e) {
+                  // ignore: avoid_print
+                  print('Failed to clear purchase history: $e');
+                }
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.historyCleared),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -124,13 +249,37 @@ class _HistoryScreenState extends State<HistoryScreen>
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        item['image'],
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.cover,
-                        errorBuilder:
-                            (context, error, stackTrace) => Container(
+                      child: Builder(
+                        builder: (context) {
+                          final img = (item['image'] ?? '').toString();
+                          if (img.startsWith('http')) {
+                            return Image.network(
+                              img,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (context, error, stackTrace) => Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: Colors.grey,
+                                    alignment: Alignment.center,
+                                    child: const Icon(
+                                      Icons.broken_image,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                            );
+                          } else if (img.isNotEmpty) {
+                            // treat as local asset path
+                            return Image.asset(
+                              img,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            );
+                          } else {
+                            return Container(
                               width: 60,
                               height: 60,
                               color: Colors.grey,
@@ -139,7 +288,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                                 Icons.broken_image,
                                 color: Colors.white,
                               ),
-                            ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     const SizedBox(width: 12),

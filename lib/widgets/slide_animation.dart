@@ -43,10 +43,14 @@ class _AutoSlideCourseBannerWidgetState
   @override
   void initState() {
     super.initState();
-    _startAutoSwitch();
+    // Only start auto-switch when there are at least 2 items
+    if (widget.courses.isNotEmpty) {
+      _startAutoSwitch();
+    }
   }
 
   void _startAutoSwitch() {
+    if (widget.courses.length < 2) return;
     _timer = Timer.periodic(widget.duration, (_) {
       setState(() {
         _currentIndex = (_currentIndex + 1) % widget.courses.length;
@@ -62,7 +66,22 @@ class _AutoSlideCourseBannerWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final course = widget.courses[_currentIndex];
+    if (widget.courses.isEmpty) {
+      // Placeholder when there are no courses to show
+      return SizedBox(
+        height: widget.height ?? 200,
+        child: Center(
+          child: Text(
+            'No courses available',
+            style: GoogleFonts.poppins(color: Colors.grey),
+          ),
+        ),
+      );
+    }
+
+    final course =
+        widget.courses[_currentIndex.clamp(0, widget.courses.length - 1)];
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final double width = constraints.maxWidth;
