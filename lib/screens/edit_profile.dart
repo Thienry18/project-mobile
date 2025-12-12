@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:projek_mobile/utils/permission_helper.dart';
 import 'package:projek_mobile/models/user_profile.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:provider/provider.dart';
@@ -93,7 +94,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {});
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickFromGallery() async {
+    final ok = await PermissionHelper.requestStoragePermission(context);
+    if (!ok) return;
     final pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 85,
@@ -103,11 +106,63 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       setState(() {
         _imageFile = file;
       });
-      // Update provider supaya avatar global langsung berubah
       if (mounted) {
         context.read<ProfileImageProvider>().setImage(file);
       }
     }
+  }
+
+  Future<void> _pickFromCamera() async {
+    final ok = await PermissionHelper.requestCameraPermission(context);
+    if (!ok) return;
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 85,
+    );
+    if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+      });
+      if (mounted) {
+        context.read<ProfileImageProvider>().setImage(file);
+      }
+    }
+  }
+
+  Future<void> _showImageSourceSheet() async {
+    showModalBottomSheet(
+      context: context,
+      builder:
+          (ctx) => SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo_camera),
+                  title: Text(AppLocalizations.of(ctx).takePhoto),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _pickFromCamera();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: Text(AppLocalizations.of(ctx).chooseFromGallery),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _pickFromGallery();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.close),
+                  title: Text(AppLocalizations.of(ctx).cancel),
+                  onTap: () => Navigator.of(ctx).pop(),
+                ),
+              ],
+            ),
+          ),
+    );
   }
 
   void _showSnack(String msg, {bool error = false}) {
@@ -246,7 +301,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     CircleAvatar(radius: 55, backgroundImage: avatarProvider),
                     const SizedBox(height: 8),
                     GestureDetector(
-                      onTap: _pickImage,
+                      onTap: _showImageSourceSheet,
                       child: Text(
                         AppLocalizations.of(context).uploadChangePhoto,
                         style: GoogleFonts.poppins(

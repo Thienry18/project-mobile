@@ -17,14 +17,9 @@
   "german": "German (Deutsch)",
   "premium": "프리미엄",
   "cart": "장바구니",
-<<<<<<< HEAD
   "basic": "기본",
   "buildYourProfile": "프로필 작성",
   "descBuildProfile": "프로필을 작성하여 더욱 맞춤화된 경험을 제공받으세요.",
-=======
-  "basic": "기본"
-  ,
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "comingSoon": "곧 출시됩니다",
   "signIn": "로그인",
   "signUp": "회원가입",
@@ -45,16 +40,11 @@
   "discount20": "DISCOUNT20 - $16.3 절약",
   "freeship": "FREESHIP - 무료 배송",
   "historyCleared": "기록이 삭제되었습니다.",
-<<<<<<< HEAD
   "failedToDeleteItems": "항목 삭제에 실패했습니다",
-=======
-    "failedToDeleteItems": "항목 삭제에 실패했습니다",
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "noNewCoursesToPurchase": "구매할 새로운 과정이 없습니다.",
   "courseVideosTitle": "강의 비디오",
   "moduleTitle": "모듈 {number} - 소개",
   "video": "비디오",
-<<<<<<< HEAD
   "resource": "자료",
   "username": "사용자명",
   "fullName": "전체 이름",
@@ -200,7 +190,14 @@
   "previousClicked": "이전 클릭됨",
   "nextClicked": "다음 클릭됨",
   "back": "뒤로"
-=======
-  "resource": "자료"
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
+  ,
+  "completed": "완료",
+  "cancelled": "취소됨",
+  "historyEmptyDescription": "마음에 드는 강좌를 찾아 장바구니에 추가한 다음, 새로운 것을 배울 준비가 되었을 때 결제하세요."
+  ,
+  "takePhoto": "사진 촬영",
+  "chooseFromGallery": "갤러리에서 선택",
+  "permissionNotGrantedTitle": "권한 필요",
+  "permissionNotGrantedMessage": "이 기능에는 권한이 필요합니다. 설정에서 권한을 부여하세요.",
+  "openSettings": "설정 열기"
 }

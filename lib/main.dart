@@ -1,10 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:projek_mobile/data/auth_gate.dart';
-import 'package:projek_mobile/screens/database_test_screen.dart';
-=======
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/providers/locale_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,13 +9,11 @@ import 'package:projek_mobile/providers/pin_provider.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/providers/verify_code_provider.dart';
-
 import 'package:projek_mobile/data/explore_repository.dart';
 import 'package:projek_mobile/database/database_service.dart';
 import 'package:projek_mobile/providers/history_provider.dart';
 import 'package:projek_mobile/providers/explore_provider.dart';
 import 'package:projek_mobile/data/explore_data.dart' show trendingCourses;
-import 'package:projek_mobile/data/auth_gate.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 // Note: Auth flow is handled by `lib/data/auth_gate.dart` when used.

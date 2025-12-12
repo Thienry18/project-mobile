@@ -18,11 +18,8 @@
   "premium": "Premium",
   "cart": "Einkaufswagen",
   "basic": "Basis",
-<<<<<<< HEAD
   "buildYourProfile": "Erstellen Sie Ihr Profil",
   "descBuildProfile": "Nehmen Sie sich Zeit, um Ihr Profil auszufüllen, damit wir eine persönlichere und nahtlosere Erfahrung für Sie schaffen können.",
-=======
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "comingSoon": "Demnächst verfügbar",
   "signIn": "Anmelden",
   "signUp": "Registrieren",
@@ -48,7 +45,6 @@
   "courseVideosTitle": "Kursvideos",
   "moduleTitle": "Modul {number} - Einführung",
   "video": "Video",
-<<<<<<< HEAD
   "resource": "Ressource",
   "username": "Benutzername",
   "fullName": "Vollständiger Name",
@@ -193,7 +189,14 @@
   "previousClicked": "Zurück angeklickt",
   "nextClicked": "Weiter angeklickt",
   "back": "Zurück"
-=======
-  "resource": "Ressource"
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
+  ,
+  "completed": "Abgeschlossen",
+  "cancelled": "Abgebrochen",
+  "historyEmptyDescription": "Durchsuchen Sie Kurse, die Ihnen gefallen, fügen Sie sie Ihrem Warenkorb hinzu und bezahlen Sie, wenn Sie bereit sind, etwas Neues zu lernen."
+  ,
+  "takePhoto": "Foto aufnehmen",
+  "chooseFromGallery": "Aus Galerie auswählen",
+  "permissionNotGrantedTitle": "Berechtigung erforderlich",
+  "permissionNotGrantedMessage": "Diese Funktion erfordert eine Berechtigung. Bitte erteilen Sie sie in den Einstellungen.",
+  "openSettings": "Einstellungen öffnen"
 }

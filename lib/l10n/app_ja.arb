@@ -5,13 +5,10 @@
   "paymentMethods": "支払い方法",
   "darkMode": "ダークモード",
   "notification": "通知",
-<<<<<<< HEAD
   "addNewCard": "新しいカードを追加",
   "certificate": "証明書",
   "contact": "連絡先",
   "videoPlay": "ビデオを再生",
-=======
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "security": "セキュリティ",
   "signOut": "ログアウト",
   "language": "言語",
@@ -24,14 +21,9 @@
   "german": "German (Deutsch)",
   "premium": "プレミアム",
   "cart": "カート",
-<<<<<<< HEAD
   "basic": "基本",
   "buildYourProfile": "プロフィールを作成",
   "descBuildProfile": "プロフィールに入力して、より個人的でシームレスな体験をお楽しみください。",
-=======
-  "basic": "基本"
-  ,
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "comingSoon": "近日公開",
   "signIn": "サインイン",
   "signUp": "サインアップ",
@@ -57,7 +49,6 @@
   "courseVideosTitle": "コースビデオ",
   "moduleTitle": "モジュール {number} - イントロダクション",
   "video": "ビデオ",
-<<<<<<< HEAD
   "resource": "リソース",
   "username": "ユーザー名",
   "fullName": "フルネーム",
@@ -198,7 +189,14 @@
   "previousClicked": "前へがクリックされました",
   "nextClicked": "次へがクリックされました",
   "back": "戻る"
-=======
-  "resource": "リソース"
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
+  ,
+  "completed": "完了",
+  "cancelled": "キャンセル",
+  "historyEmptyDescription": "気に入ったコースを閲覧してカートに追加し、新しいことを学ぶ準備ができたらチェックアウトしてください。"
+  ,
+  "takePhoto": "写真を撮る",
+  "chooseFromGallery": "ギャラリーから選択",
+  "permissionNotGrantedTitle": "権限が必要です",
+  "permissionNotGrantedMessage": "この機能には権限が必要です。設定で権限を付与してください。",
+  "openSettings": "設定を開く"
 }
