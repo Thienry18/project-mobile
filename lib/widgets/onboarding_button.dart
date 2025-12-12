@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavButton extends StatelessWidget {
   const FavButton({
@@ -57,7 +58,10 @@ class FavButton extends StatelessWidget {
                       ),
                       minimumSize: const Size(105, 30),
                     ),
-                    child: Text("Back", style: AppTextStyles.button),
+                    child: Text(
+                      AppLocalizations.of(context).back,
+                      style: AppTextStyles.button,
+                    ),
                   ),
                 ),
               )
@@ -75,7 +79,9 @@ class FavButton extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  (step != 3) ? "Next" : "Start",
+                  (step != 3)
+                      ? AppLocalizations.of(context).next
+                      : AppLocalizations.of(context).start,
                   style: AppTextStyles.button,
                 ),
                 const SizedBox(width: 5),

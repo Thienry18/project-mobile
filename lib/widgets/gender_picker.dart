@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GenderPicker extends StatelessWidget {
   final String gender;
@@ -24,7 +25,10 @@ class GenderPicker extends StatelessWidget {
                 value: 'Male',
                 groupValue: gender,
                 onChanged: onChanged,
-                title: Text('Male', style: AppTextStyles.subheading),
+                title: Text(
+                  AppLocalizations.of(context).male,
+                  style: AppTextStyles.subheading,
+                ),
                 secondary: Icon(Icons.male, color: Colors.white, size: 30),
                 fillColor: MaterialStateProperty.all(Color(0XFF7A8EDA)),
                 contentPadding: EdgeInsets.symmetric(
@@ -48,7 +52,10 @@ class GenderPicker extends StatelessWidget {
                 groupValue: gender,
                 onChanged: onChanged,
                 fillColor: MaterialStateProperty.all(Color(0xFF7A8EDA)),
-                title: Text('Female', style: AppTextStyles.subheading),
+                title: Text(
+                  AppLocalizations.of(context).female,
+                  style: AppTextStyles.subheading,
+                ),
                 secondary: Icon(Icons.female, color: Colors.white, size: 30),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 0,

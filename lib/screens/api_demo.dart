@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/services/api_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ApiDemoScreen extends StatefulWidget {
   const ApiDemoScreen({super.key});
@@ -37,12 +38,12 @@ class _ApiDemoScreenState extends State<ApiDemoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('API Demo')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).apiDemo)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text('Status: $_status'),
+            Text('${AppLocalizations.of(context).statusLabel} $_status'),
             const SizedBox(height: 12),
             Expanded(
               child: ListView.builder(
@@ -51,7 +52,11 @@ class _ApiDemoScreenState extends State<ApiDemoScreen> {
                   final c = _courses[i];
                   return ListTile(
                     title: Text(c['title'] ?? c['name'] ?? 'Untitled'),
-                    subtitle: Text('Instructor: ${c['instructor'] ?? '-'}'),
+                    subtitle: Text(
+                      AppLocalizations.of(
+                        context,
+                      ).instructorLabel(c['instructor'] ?? '-'),
+                    ),
                     trailing: Text(c['price'] ?? '-'),
                   );
                 },
