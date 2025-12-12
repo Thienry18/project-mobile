@@ -23,6 +23,16 @@
   "comingSoon": "即将推出",
   "signIn": "登录",
   "signUp": "注册",
+  "signUpDescription": "使用您的电子邮件注册并继续使用我们的应用程序。",
+  "enterUsername": "输入您的用户名",
+  "enterEmail": "输入您的电子邮件",
+  "enterPassword": "输入您的密码",
+  "reEnterPassword": "重新输入您的密码",
+  "agreeToTermsText": "创建此账户，即表示我承认我已阅读并同意",
+  "termsOfService": "服务条款",
+  "and": " 和 ",
+  "privacyPolicy": "隐私政策",
+  "emailAlreadyRegistered": "此电子邮件已被注册 (Firebase)。",
   "forgotPassword": "忘记密码",
   "insertPin": "输入 PIN",
   "forgotPin": "忘记 PIN",
@@ -206,5 +216,9 @@
   "chooseFromGallery": "从相册选择",
   "permissionNotGrantedTitle": "需要权限",
   "permissionNotGrantedMessage": "此功能需要权限。请在设置中授予权限。",
-  "openSettings": "打开设置"
+  "openSettings": "打开设置",
+  "whatInterestsYou": "你对什么感兴趣？",
+  "selectInterestsDescription": "选择最让你兴奋的技术主题，我们将围绕你真正想探索的内容构建你的旅程。",
+  "continueButton": "继续",
+  "selectAtLeastOneInterest": "请至少选择一个兴趣。"
 }

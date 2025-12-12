@@ -27,6 +27,16 @@
   "comingSoon": "近日公開",
   "signIn": "サインイン",
   "signUp": "サインアップ",
+  "signUpDescription": "メールアドレスで登録してアプリを引き続きご利用ください。",
+  "enterUsername": "ユーザー名を入力してください",
+  "enterEmail": "メールアドレスを入力してください",
+  "enterPassword": "パスワードを入力してください",
+  "reEnterPassword": "パスワードを再入力してください",
+  "agreeToTermsText": "このアカウントを作成することで、利用規約とプライバシーポリシーを読み、同意したことを認めます",
+  "termsOfService": "利用規約",
+  "and": " と ",
+  "privacyPolicy": "プライバシーポリシー",
+  "emailAlreadyRegistered": "このメールアドレスは既に登録されています (Firebase)。",
   "forgotPassword": "パスワードを忘れた",
   "insertPin": "PINを入力",
   "forgotPin": "PINを忘れた",
@@ -205,5 +215,9 @@
   "chooseFromGallery": "ギャラリーから選択",
   "permissionNotGrantedTitle": "権限が必要です",
   "permissionNotGrantedMessage": "この機能には権限が必要です。設定で権限を付与してください。",
-  "openSettings": "設定を開く"
+  "openSettings": "設定を開く",
+  "whatInterestsYou": "何に興味がありますか？",
+  "selectInterestsDescription": "最もワクワクする技術トピックを選択してください。それに基づいて、あなたが本当に探求したいものを中心とした旅を構築します。",
+  "continueButton": "続ける",
+  "selectAtLeastOneInterest": "少なくとも1つの興味を選択してください。"
 }

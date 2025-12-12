@@ -10,6 +10,7 @@ import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SetPinScreen extends StatelessWidget {
   const SetPinScreen({super.key});
@@ -44,10 +45,13 @@ class SetPinScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              Text('Set Your PIN', style: AppTextStyles.heading),
+              Text(
+                AppLocalizations.of(context).setYourPIN,
+                style: AppTextStyles.heading,
+              ),
               const SizedBox(height: 8),
               Text(
-                'Set a secure PIN to protect your account and ensure only you can access it.',
+                AppLocalizations.of(context).pinDescription,
                 style: GoogleFonts.poppins(color: const Color(0xff324EAF)),
               ),
               const SizedBox(height: 30),
@@ -112,7 +116,7 @@ class SetPinScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 70),
                     CustomButton(
-                      text: "Continue",
+                      text: AppLocalizations.of(context).continueButton,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 80,
                         vertical: 15,

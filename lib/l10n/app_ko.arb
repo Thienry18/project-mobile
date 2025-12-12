@@ -23,6 +23,16 @@
   "comingSoon": "곧 출시됩니다",
   "signIn": "로그인",
   "signUp": "회원가입",
+  "signUpDescription": "이메일로 등록하고 앱을 계속 사용하세요.",
+  "enterUsername": "사용자 이름을 입력하세요",
+  "enterEmail": "이메일을 입력하세요",
+  "enterPassword": "비밀번호를 입력하세요",
+  "reEnterPassword": "비밀번호를 다시 입력하세요",
+  "agreeToTermsText": "이 계정을 만들면 이용 약관과 개인정보 보호 정책을 읽고 동의했음을 인정합니다",
+  "termsOfService": "이용 약관",
+  "and": " 및 ",
+  "privacyPolicy": "개인정보 보호 정책",
+  "emailAlreadyRegistered": "이 이메일은 이미 등록되어 있습니다 (Firebase).",
   "forgotPassword": "비밀번호를 잊으셨나요",
   "insertPin": "PIN 입력",
   "forgotPin": "PIN 분실",
@@ -206,5 +216,9 @@
   "chooseFromGallery": "갤러리에서 선택",
   "permissionNotGrantedTitle": "권한 필요",
   "permissionNotGrantedMessage": "이 기능에는 권한이 필요합니다. 설정에서 권한을 부여하세요.",
-  "openSettings": "설정 열기"
+  "openSettings": "설정 열기",
+  "whatInterestsYou": "무엇에 관심이 있나요?",
+  "selectInterestsDescription": "가장 흥미를 느끼는 기술 주제를 선택하세요. 그러면 우리가 당신이 정말로 탐구하고 싶은 것을 중심으로 여정을 구축할 것입니다.",
+  "continueButton": "계속",
+  "selectAtLeastOneInterest": "적어도 하나의 관심사를 선택하세요."
 }
