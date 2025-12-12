@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:projek_mobile/widgets/build_step_circle.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Interest extends StatefulWidget {
   const Interest({super.key});
@@ -62,10 +63,13 @@ class InterestState extends State<Interest> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('What Interests You?', style: AppTextStyles.heading),
+            Text(
+              AppLocalizations.of(context)!.whatInterestsYou,
+              style: AppTextStyles.heading,
+            ),
             const SizedBox(height: 10),
             Text(
-              'Select the tech topics that excite you the most, and we’ll build your journey around what you truly want to explore.',
+              AppLocalizations.of(context)!.selectInterestsDescription,
               style: AppTextStyles.subheading,
             ),
             const SizedBox(height: 25),
@@ -137,7 +141,7 @@ class InterestState extends State<Interest> {
               child: SizedBox(
                 width: 250,
                 child: CustomButton(
-                  text: 'Continue',
+                  text: AppLocalizations.of(context)!.continueButton,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   onPressed: () {
                     if (selectedInterest != null) {
@@ -166,8 +170,12 @@ class InterestState extends State<Interest> {
                       }();
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please select at least one interest.'),
+                        SnackBar(
+                          content: Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.selectAtLeastOneInterest,
+                          ),
                           backgroundColor: Colors.red,
                         ),
                       );

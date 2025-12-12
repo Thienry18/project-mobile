@@ -21,6 +21,16 @@
   "comingSoon": "Coming Soon",
   "signIn": "Sign In",
   "signUp": "Sign Up",
+  "signUpDescription": "Registration with your email and sign up to continue using our app.",
+  "enterUsername": "Enter your username",
+  "enterEmail": "Enter your email",
+  "enterPassword": "Enter your password",
+  "reEnterPassword": "Re-enter your password",
+  "agreeToTermsText": "By creating this account, I acknowledge that I have read and agree to the ",
+  "termsOfService": "Terms of Service",
+  "and": " and ",
+  "privacyPolicy": "Privacy Policy",
+  "emailAlreadyRegistered": "This email is already registered (Firebase).",
   "forgotPassword": "Forgot Password",
   "insertPin": "Insert PIN",
   "forgotPin": "Forgot PIN",
@@ -194,5 +204,9 @@
   "chooseFromGallery": "Choose from Gallery",
   "permissionNotGrantedTitle": "Permission required",
   "permissionNotGrantedMessage": "This feature requires permission. Please grant it in Settings.",
-  "openSettings": "Open Settings"
+  "openSettings": "Open Settings",
+  "whatInterestsYou": "What Interests You?",
+  "selectInterestsDescription": "Select the tech topics that excite you the most, and we'll build your journey around what you truly want to explore.",
+  "continueButton": "Continue",
+  "selectAtLeastOneInterest": "Please select at least one interest."
 }

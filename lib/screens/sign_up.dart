@@ -12,6 +12,7 @@ import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // <-- tambah ini
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -60,25 +61,23 @@ class _SignUpState extends State<SignUp> {
         email.isEmpty ||
         password.isEmpty ||
         confirm.isEmpty) {
-      _showError("Please fill in all fields.");
+      _showError(AppLocalizations.of(context).fillAllFields);
       return;
     }
     if (!_auth.isValidGmail(email)) {
-      _showError("Email must be a valid @gmail.com address.");
+      _showError(AppLocalizations.of(context).emailValidation);
       return;
     }
     if (!_auth.isValidPassword(password)) {
-      _showError(
-        "Password must be at least 8 chars and include uppercase, lowercase, and a symbol.",
-      );
+      _showError(AppLocalizations.of(context).passwordValidation);
       return;
     }
     if (password != confirm) {
-      _showError("Passwords do not match.");
+      _showError(AppLocalizations.of(context).passwordMismatch);
       return;
     }
     if (!_agreeToTerms) {
-      _showError("You must agree to the Terms and Privacy Policy.");
+      _showError(AppLocalizations.of(context).agreeTerms);
       return;
     }
 
@@ -99,7 +98,7 @@ class _SignUpState extends State<SignUp> {
     } on FirebaseAuthException catch (e) {
       // If email already in use on Firebase, inform user and abort
       if (e.code == 'email-already-in-use') {
-        _showError('This email is already registered (Firebase).');
+        _showError(AppLocalizations.of(context).emailAlreadyRegistered);
         await FirebaseAnalyticsService().logSignUp(
           method: 'email',
           success: false,
@@ -144,7 +143,7 @@ class _SignUpState extends State<SignUp> {
         success: true,
       );
 
-      _showOk("Registration successful. Continue to build your profile.");
+      _showOk(AppLocalizations.of(context).registrationSuccessful);
       // if (!mounted) return;
       Navigator.pushReplacement(
         context,
@@ -174,12 +173,17 @@ class _SignUpState extends State<SignUp> {
                 ),
               ],
             ),
-            Center(child: Text("Sign Up", style: AppTextStyles.heading)),
+            Center(
+              child: Text(
+                AppLocalizations.of(context).signUp,
+                style: AppTextStyles.heading,
+              ),
+            ),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                "Registration with your email and sign up to continue using our app.",
+                AppLocalizations.of(context).signUpDescription,
                 style: AppTextStyles.subheading,
                 textAlign: TextAlign.center,
               ),
@@ -192,13 +196,13 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   CustomTextField(
                     controller: _usernameController,
-                    labelText: 'Enter your username',
+                    labelText: AppLocalizations.of(context).enterUsername,
                     prefixIcon: const Icon(Icons.person, color: Colors.white),
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
                     controller: _emailController,
-                    labelText: 'Enter your email',
+                    labelText: AppLocalizations.of(context).enterEmail,
                     prefixIcon: const Icon(
                       Icons.email_outlined,
                       color: Colors.white,
@@ -208,7 +212,7 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(height: 16),
                   CustomTextField(
                     controller: _passwordController,
-                    labelText: 'Enter your password',
+                    labelText: AppLocalizations.of(context).enterPassword,
                     prefixIcon: const Icon(
                       Icons.lock_outline,
                       color: Colors.white,
@@ -218,7 +222,7 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(height: 16),
                   CustomTextField(
                     controller: _confirmPasswordController,
-                    labelText: 'Re-enter your password',
+                    labelText: AppLocalizations.of(context).reEnterPassword,
                     prefixIcon: const Icon(
                       Icons.lock_outline,
                       color: Colors.white,
@@ -265,21 +269,25 @@ class _SignUpState extends State<SignUp> {
                           text: TextSpan(
                             style: AppTextStyles.body,
                             children: [
-                              const TextSpan(
+                              TextSpan(
                                 text:
-                                    'By creating this account, I acknowledge that I have read and agree to the ',
+                                    AppLocalizations.of(
+                                      context,
+                                    ).agreeToTermsText,
                               ),
                               TextSpan(
-                                text: 'Terms of Service',
+                                text:
+                                    AppLocalizations.of(context).termsOfService,
                                 style: GoogleFonts.poppins(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
                                   decoration: TextDecoration.underline,
                                 ),
                               ),
-                              const TextSpan(text: ' and '),
+                              TextSpan(text: AppLocalizations.of(context).and),
                               TextSpan(
-                                text: 'Privacy Policy',
+                                text:
+                                    AppLocalizations.of(context).privacyPolicy,
                                 style: GoogleFonts.poppins(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
@@ -307,7 +315,7 @@ class _SignUpState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Already have an account?  ",
+                        AppLocalizations.of(context).alreadyHaveAccount,
                         style: AppTextStyles.body,
                       ),
                       InkWell(

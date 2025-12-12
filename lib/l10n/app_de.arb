@@ -23,6 +23,16 @@
   "comingSoon": "Demnächst verfügbar",
   "signIn": "Anmelden",
   "signUp": "Registrieren",
+  "signUpDescription": "Registrieren Sie sich mit Ihrer E-Mail-Adresse und fahren Sie fort, unsere App zu verwenden.",
+  "enterUsername": "Geben Sie Ihren Benutzernamen ein",
+  "enterEmail": "Geben Sie Ihre E-Mail-Adresse ein",
+  "enterPassword": "Geben Sie Ihr Passwort ein",
+  "reEnterPassword": "Geben Sie Ihr Passwort erneut ein",
+  "agreeToTermsText": "Mit der Erstellung dieses Kontos erkenne ich an, dass ich die ",
+  "termsOfService": "Nutzungsbedingungen",
+  "and": " und ",
+  "privacyPolicy": "Datenschutzrichtlinie",
+  "emailAlreadyRegistered": "Diese E-Mail-Adresse ist bereits registriert (Firebase).",
   "forgotPassword": "Passwort vergessen",
   "insertPin": "PIN eingeben",
   "forgotPin": "PIN vergessen",
@@ -205,5 +215,9 @@
   "chooseFromGallery": "Aus Galerie auswählen",
   "permissionNotGrantedTitle": "Berechtigung erforderlich",
   "permissionNotGrantedMessage": "Diese Funktion erfordert eine Berechtigung. Bitte erteilen Sie sie in den Einstellungen.",
-  "openSettings": "Einstellungen öffnen"
+  "openSettings": "Einstellungen öffnen",
+  "whatInterestsYou": "Was interessiert Sie?",
+  "selectInterestsDescription": "Wählen Sie die Technik-Themen aus, die Sie am meisten begeistern, und wir bauen Ihre Reise um das herum auf, was Sie wirklich erkunden möchten.",
+  "continueButton": "Weiter",
+  "selectAtLeastOneInterest": "Bitte wählen Sie mindestens ein Interesse aus."
 }

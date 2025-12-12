@@ -21,6 +21,16 @@
   "comingSoon": "Segera Hadir",
   "signIn": "Masuk",
   "signUp": "Daftar",
+  "signUpDescription": "Daftar dengan email Anda dan lanjutkan menggunakan aplikasi kami.",
+  "enterUsername": "Masukkan nama pengguna Anda",
+  "enterEmail": "Masukkan email Anda",
+  "enterPassword": "Masukkan kata sandi Anda",
+  "reEnterPassword": "Masukkan ulang kata sandi Anda",
+  "agreeToTermsText": "Dengan membuat akun ini, saya mengakui bahwa saya telah membaca dan menyetujui ",
+  "termsOfService": "Syarat Layanan",
+  "and": " dan ",
+  "privacyPolicy": "Kebijakan Privasi",
+  "emailAlreadyRegistered": "Email ini sudah terdaftar (Firebase).",
   "forgotPassword": "Lupa Kata Sandi",
   "insertPin": "Masukkan PIN",
   "forgotPin": "Lupa PIN",
@@ -206,5 +216,9 @@
   "chooseFromGallery": "Pilih dari Galeri",
   "permissionNotGrantedTitle": "Izin diperlukan",
   "permissionNotGrantedMessage": "Fitur ini membutuhkan izin. Harap berikan izin di Pengaturan.",
-  "openSettings": "Buka Pengaturan"
+  "openSettings": "Buka Pengaturan",
+  "whatInterestsYou": "Apa yang Menarik Bagi Anda?",
+  "selectInterestsDescription": "Pilih topik teknologi yang paling menarik bagi Anda, dan kami akan membangun perjalanan Anda berdasarkan apa yang benar-benar ingin Anda jelajahi.",
+  "continueButton": "Lanjutkan",
+  "selectAtLeastOneInterest": "Silakan pilih setidaknya satu minat."
 }
