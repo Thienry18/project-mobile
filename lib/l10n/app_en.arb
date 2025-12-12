@@ -190,5 +190,15 @@
   "previousClicked": "Previous clicked",
   "nextClicked": "Next clicked",
   "back": "Back"
+  ,
+  "completed": "Completed",
+  "cancelled": "Cancelled",
+  "historyEmptyDescription": "Browse courses you like, add them to your cart, and check out when you’re ready to learn something new."
+  ,
+  "takePhoto": "Take Photo",
+  "chooseFromGallery": "Choose from Gallery",
+  "permissionNotGrantedTitle": "Permission required",
+  "permissionNotGrantedMessage": "This feature requires permission. Please grant it in Settings.",
+  "openSettings": "Open Settings"
 }
 

@@ -189,4 +189,14 @@
   "previousClicked": "Zurück angeklickt",
   "nextClicked": "Weiter angeklickt",
   "back": "Zurück"
+  ,
+  "completed": "Abgeschlossen",
+  "cancelled": "Abgebrochen",
+  "historyEmptyDescription": "Durchsuchen Sie Kurse, die Ihnen gefallen, fügen Sie sie Ihrem Warenkorb hinzu und bezahlen Sie, wenn Sie bereit sind, etwas Neues zu lernen."
+  ,
+  "takePhoto": "Foto aufnehmen",
+  "chooseFromGallery": "Aus Galerie auswählen",
+  "permissionNotGrantedTitle": "Berechtigung erforderlich",
+  "permissionNotGrantedMessage": "Diese Funktion erfordert eine Berechtigung. Bitte erteilen Sie sie in den Einstellungen.",
+  "openSettings": "Einstellungen öffnen"
 }

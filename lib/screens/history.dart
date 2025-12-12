@@ -208,7 +208,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             ),
             const SizedBox(height: 12),
             Text(
-              'Browse courses you like, add them to your cart, and check out when you’re ready to learn something new.',
+              AppLocalizations.of(context).historyEmptyDescription,
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey.shade600),
             ),
@@ -223,9 +223,7 @@ class _HistoryScreenState extends State<HistoryScreen>
         historyData.where((item) => item['status'] == status).toList();
 
     if (filteredItems.isEmpty) {
-      return _buildEmptyContent(
-        "No ${status[0].toUpperCase() + status.substring(1)} Orders",
-      );
+      return _buildEmptyContent(AppLocalizations.of(context).noOrdersFound);
     }
 
     return Column(
@@ -328,9 +326,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                                     color: Colors.orange,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Text(
-                                    'Bestseller',
-                                    style: TextStyle(
+                                  child: Text(
+                                    AppLocalizations.of(context).bestseller,
+                                    style: const TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -346,7 +344,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          status[0].toUpperCase() + status.substring(1),
+                          status == 'completed'
+                              ? AppLocalizations.of(context).completed
+                              : AppLocalizations.of(context).cancelled,
                           style: TextStyle(
                             color:
                                 status == 'completed'

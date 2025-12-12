@@ -189,4 +189,14 @@
   "previousClicked": "前へがクリックされました",
   "nextClicked": "次へがクリックされました",
   "back": "戻る"
+  ,
+  "completed": "完了",
+  "cancelled": "キャンセル",
+  "historyEmptyDescription": "気に入ったコースを閲覧してカートに追加し、新しいことを学ぶ準備ができたらチェックアウトしてください。"
+  ,
+  "takePhoto": "写真を撮る",
+  "chooseFromGallery": "ギャラリーから選択",
+  "permissionNotGrantedTitle": "権限が必要です",
+  "permissionNotGrantedMessage": "この機能には権限が必要です。設定で権限を付与してください。",
+  "openSettings": "設定を開く"
 }

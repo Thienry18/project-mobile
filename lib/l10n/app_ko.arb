@@ -190,4 +190,14 @@
   "previousClicked": "이전 클릭됨",
   "nextClicked": "다음 클릭됨",
   "back": "뒤로"
+  ,
+  "completed": "완료",
+  "cancelled": "취소됨",
+  "historyEmptyDescription": "마음에 드는 강좌를 찾아 장바구니에 추가한 다음, 새로운 것을 배울 준비가 되었을 때 결제하세요."
+  ,
+  "takePhoto": "사진 촬영",
+  "chooseFromGallery": "갤러리에서 선택",
+  "permissionNotGrantedTitle": "권한 필요",
+  "permissionNotGrantedMessage": "이 기능에는 권한이 필요합니다. 설정에서 권한을 부여하세요.",
+  "openSettings": "설정 열기"
 }

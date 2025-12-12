@@ -32,8 +32,7 @@ class DatabaseCourse {
     );
   }
 
-  // ===================== INSERTIONS =====================
-
+  // ===================== INSERT SINGLE COURSE =====================
   static Future<int> insertCourse(
     Database db,
     Map<String, dynamic> data,
@@ -45,8 +44,12 @@ class DatabaseCourse {
     );
   }
 
-  Future<void> insertTrendingCourses(Database db, List<Course> courses) async {
-    // Cegah duplikasi data jika sudah ada
+  // ===================== INSERT TRENDING COURSES =====================
+  static Future<void> insertTrendingCourses(
+    Database db,
+    List<Course> courses,
+  ) async {
+    // Cegah duplikasi jika tabel sudah memiliki data
     final existing = await db.query(table);
     if (existing.isNotEmpty) {
       print('✅ Course data already exists, skipping insert.');
@@ -74,12 +77,14 @@ class DatabaseCourse {
     }
 
     print('✅ ${courses.length} trending courses inserted successfully.');
-    // Emit updated course list
+
+    // Emit data untuk listener Stream
     try {
       await DatabaseService.instance.emitCourses();
     } catch (_) {}
   }
 
+  // ===================== INSERT ALL WITH BATCH =====================
   static Future<void> insertAll(Database db, List<Course> list) async {
     await db.transaction((txn) async {
       final batch = txn.batch();
@@ -150,7 +155,7 @@ class DatabaseCourse {
     return Course.fromMap(rows.first);
   }
 
-  // Convenience wrappers using DatabaseService
+  // Convenience wrapper using DatabaseService
   static Future<Course?> getCourseByIdForApp(int idx) async {
     final db = await DatabaseService.instance.database;
     return getCourseById(db, idx);
@@ -171,19 +176,20 @@ class DatabaseCourse {
     return 0;
   }
 
-  // ===================== DELETIONS =====================
+  // ===================== DELETE =====================
 
   static Future<int> deleteCourse(Database db, int id) async {
     return await db.delete(table, where: 'idx = ?', whereArgs: [id]);
   }
 
-  // Convenience wrapper for app usage which emits after delete
   static Future<int> deleteCourseForApp(int id) async {
     final db = await DatabaseService.instance.database;
     final res = await deleteCourse(db, id);
+
     try {
       await DatabaseService.instance.emitCourses();
     } catch (_) {}
+
     return res;
   }
 }

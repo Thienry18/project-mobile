@@ -190,4 +190,14 @@
   "previousClicked": "Sebelumnya diklik",
   "nextClicked": "Selanjutnya diklik",
   "back": "Kembali"
+  ,
+  "completed": "Selesai",
+  "cancelled": "Dibatalkan",
+  "historyEmptyDescription": "Telusuri kursus yang Anda sukai, tambahkan ke keranjang, dan lakukan pembayaran saat Anda siap untuk belajar sesuatu yang baru."
+  ,
+  "takePhoto": "Ambil Foto",
+  "chooseFromGallery": "Pilih dari Galeri",
+  "permissionNotGrantedTitle": "Izin diperlukan",
+  "permissionNotGrantedMessage": "Fitur ini membutuhkan izin. Harap berikan izin di Pengaturan.",
+  "openSettings": "Buka Pengaturan"
 }

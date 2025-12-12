@@ -46,6 +46,7 @@ dependencies:
   image_picker: ^1.1.2
   share_plus: ^7.2.2
   webview_flutter: ^4.13.0
+  permission_handler: ^11.3.0
   sqflite: ^2.4.2
   path: ^1.9.1
   http: ^1.4.0

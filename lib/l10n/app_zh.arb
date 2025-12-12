@@ -190,4 +190,14 @@
   "previousClicked": "上一个已点击",
   "nextClicked": "下一个已点击",
   "back": "返回"
+  ,
+  "completed": "已完成",
+  "cancelled": "已取消",
+  "historyEmptyDescription": "浏览您喜欢的课程，将它们加入购物车，准备好学习新知识时再结账。"
+  ,
+  "takePhoto": "拍照",
+  "chooseFromGallery": "从相册选择",
+  "permissionNotGrantedTitle": "需要权限",
+  "permissionNotGrantedMessage": "此功能需要权限。请在设置中授予权限。",
+  "openSettings": "打开设置"
 }
