@@ -11,7 +11,10 @@ import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
+<<<<<<< HEAD
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+=======
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
 
 class BuildProfile extends StatefulWidget {
   const BuildProfile({super.key});

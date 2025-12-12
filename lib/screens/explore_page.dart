@@ -98,6 +98,10 @@ class _ExplorePageState extends State<ExplorePage> {
         }
       } catch (dbError) {
         print('Error fetching from database: $dbError');
+<<<<<<< HEAD
+=======
+        // Keep empty lists as last resort
+>>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
         all = [];
         trending = [];
         recommended = [];
