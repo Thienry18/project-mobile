@@ -17,12 +17,7 @@
   "german": "German (Deutsch)",
   "premium": "Premium",
   "cart": "Cart",
-<<<<<<< HEAD
   "basic": "Basic",
-=======
-  "basic": "Basic"
-  ,
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "comingSoon": "Coming Soon",
   "signIn": "Sign In",
   "signUp": "Sign Up",
@@ -30,11 +25,8 @@
   "insertPin": "Insert PIN",
   "forgotPin": "Forgot PIN",
   "buildProfile": "Build Profile",
-<<<<<<< HEAD
   "buildYourProfile": "Build Your Profile",
   "descBuildProfile": "Take a moment to fill in your profile so we can create a more personalized and seamless journey for you.",
-=======
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "history": "History",
   "notificationsDeleted": "Notifications deleted",
   "itemsDeletedFromCart": "Items deleted from cart",
@@ -43,10 +35,7 @@
   "cancel": "Cancel",
   "confirmDeleteTitle": "Confirm Delete",
   "confirmDeleteCartContent": "Are you sure you want to delete selected items from cart?",
-<<<<<<< HEAD
   "confirmDeleteNotifications": "Are you sure you want to delete selected notifications?",
-=======
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
   "delete": "Delete",
   "selectVoucher": "Select a Voucher",
   "discount20": "DISCOUNT20 - Save $16.3",
@@ -57,7 +46,6 @@
   "courseVideosTitle": "Course Videos",
   "moduleTitle": "Module {number} - Introduction",
   "video": "Video",
-<<<<<<< HEAD
   "resource": "Resource",
   "username": "Username",
   "fullName": "Full name",
@@ -116,8 +104,7 @@
   "resetDatabase": "Reset Database",
   "resettingDatabases": "Resetting databases...",
   "readyStatus": "Ready",
-  "databaseResetSuccess": "Databases reset successfully!"
-  ,
+  "databaseResetSuccess": "Databases reset successfully!",
   "bestseller": "Bestseller",
   "languageEnglish": "English",
   "availableSubtitle": "Available Subtitle: {subtitle}",
@@ -126,8 +113,7 @@
   "addedToCartOffline": "Added to cart (offline)",
   "alreadyInCart": "Already in cart",
   "buyCourse": "Buy Course",
-  "priceLabel": "Price"
-  ,
+  "priceLabel": "Price",
   "itemsLabel": "Items",
   "emptyCartDescription": "Add courses you're interested in to your wishlist and check out whenever you're ready to start learning.",
   "allNotifications": "All",
@@ -136,7 +122,6 @@
   "noNotificationDescription": "Fresh start! We'll let you know when there's something worth your attention.",
   "markAsRead": "Mark as Read",
   "markAsUnread": "Mark as Unread",
-  "myCourses": "My Courses",
   "reminderSet": "Reminder has been set!",
   "reminderSetOn": "Reminder set on: {datetime}",
   "startContinueCourse": "Start/Continue Course",
@@ -146,8 +131,7 @@
   "subtitles": "Subtitles",
   "moreOptions": "More options",
   "back": "Back",
-  "search": "Search"
-  ,
+  "search": "Search",
   "learnPrompt": "What would you want\nto learn today?",
   "trendingNow": "Trending Now",
   "recommendedForYou": "Recommended for You",
@@ -164,21 +148,17 @@
   "searchCourse": "Search Course",
   "account": "Account",
   "support": "Support",
-  "moreOptions": "More Options",
   "contactSupport": "Contact Support",
   "menu": "Menu",
-  "signOut": "Sign Out",
   "clearHistory": "Clear History",
   "clearHistoryConfirm": "Are you sure you want to clear your history? This action cannot be undone.",
-  "paymentMethods": "Payment Methods",
   "yourPaymentMethods": "Your Payment Methods",
   "paymentSuccessful": "Payment Successful!",
   "addNewCard": "Add new card",
   "certificate": "Certificate",
   "contact": "Contact",
   "videoPlay": "Play Video",
-  "areYouSureSignOut": "Are you sure you want to sign out?"
-  ,
+  "areYouSureSignOut": "Are you sure you want to sign out?",
   "save": "Save",
   "uploadChangePhoto": "Upload/Change Photo",
   "cardNumber": "Card Number",
@@ -195,26 +175,17 @@
   "cardAlreadyAdded": "This card has already been added.",
   "videoPlayer": "Video Player",
   "certificateOfAchievement": "Certificate of Achievement",
-  "viewCourseDetails": "View Course Details",
   "viewCourseClicked": "View Course clicked",
   "searchForACourse": "Search for a course",
   "subtitleClicked": "Subtitle clicked",
   "previousClicked": "Previous clicked",
   "nextClicked": "Next clicked",
-  "back": "Back"
-  ,
   "completed": "Completed",
   "cancelled": "Cancelled",
-  "historyEmptyDescription": "Browse courses you like, add them to your cart, and check out when you’re ready to learn something new."
-  ,
+  "historyEmptyDescription": "Browse courses you like, add them to your cart, and check out when you’re ready to learn something new.",
   "takePhoto": "Take Photo",
   "chooseFromGallery": "Choose from Gallery",
   "permissionNotGrantedTitle": "Permission required",
   "permissionNotGrantedMessage": "This feature requires permission. Please grant it in Settings.",
   "openSettings": "Open Settings"
 }
-
-=======
-  "resource": "Resource"
-}
->>>>>>> be7823f0cb885709fde4a5a2246c8ccdb8d51f57
