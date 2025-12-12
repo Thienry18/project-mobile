@@ -12,6 +12,7 @@ import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -44,7 +45,7 @@ class _SignInState extends State<SignIn> {
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      _showError('Email and password must not be empty.');
+      _showError(AppLocalizations.of(context).emailPasswordRequired);
       await FirebaseAnalyticsService().trackButtonClick(
         'sign_in_button',
         extras: {'screen': 'sign_in', 'error': 'empty_fields'},
@@ -82,7 +83,7 @@ class _SignInState extends State<SignIn> {
     }
 
     if (!ok) {
-      _showError('Invalid email or password.');
+      _showError(AppLocalizations.of(context).invalidCredentials);
       return;
     }
 
@@ -133,13 +134,18 @@ class _SignInState extends State<SignIn> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Center(child: Text("Welcome!", style: AppTextStyles.heading)),
+                  Center(
+                    child: Text(
+                      AppLocalizations.of(context).welcome,
+                      style: AppTextStyles.heading,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Text(
-                        "To keep connected with us please sign in with your personal info.",
+                        AppLocalizations.of(context).toKeepConnected,
                         style: AppTextStyles.subheading,
                         textAlign: TextAlign.center,
                       ),
