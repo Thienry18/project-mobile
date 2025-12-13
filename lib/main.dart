@@ -70,6 +70,7 @@ Future<void> main() async {
     print('NotificationHelper.init failed: $e');
   }
 
+  // .....
   // Prepare theme notifier and load saved pref before runApp
   final themeNotifier = ThemeNotifier();
   await themeNotifier.loadTheme();
