@@ -64,12 +64,12 @@ class InterestState extends State<Interest> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppLocalizations.of(context)!.whatInterestsYou,
+              AppLocalizations.of(context).whatInterestsYou,
               style: AppTextStyles.heading,
             ),
             const SizedBox(height: 10),
             Text(
-              AppLocalizations.of(context)!.selectInterestsDescription,
+              AppLocalizations.of(context).selectInterestsDescription,
               style: AppTextStyles.subheading,
             ),
             const SizedBox(height: 25),
@@ -141,7 +141,7 @@ class InterestState extends State<Interest> {
               child: SizedBox(
                 width: 250,
                 child: CustomButton(
-                  text: AppLocalizations.of(context)!.continueButton,
+                  text: AppLocalizations.of(context).continueButton,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   onPressed: () {
                     if (selectedInterest != null) {
@@ -174,7 +174,7 @@ class InterestState extends State<Interest> {
                           content: Text(
                             AppLocalizations.of(
                               context,
-                            )!.selectAtLeastOneInterest,
+                            ).selectAtLeastOneInterest,
                           ),
                           backgroundColor: Colors.red,
                         ),

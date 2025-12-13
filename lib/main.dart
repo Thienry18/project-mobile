@@ -15,6 +15,7 @@ import 'package:projek_mobile/providers/history_provider.dart';
 import 'package:projek_mobile/providers/explore_provider.dart';
 import 'package:projek_mobile/data/explore_data.dart' show trendingCourses;
 import 'package:firebase_core/firebase_core.dart';
+import 'utils/notification_helper.dart';
 
 // Note: Auth flow is handled by `lib/data/auth_gate.dart` when used.
 
@@ -58,6 +59,14 @@ Future<void> main() async {
   } catch (e) {
     // ignore: avoid_print
     print('DatabaseService: failed to open database at startup: $e');
+  }
+
+  // init local notifications plugin
+  try {
+    await NotificationHelper.init();
+  } catch (e) {
+    // ignore: avoid_print
+    print('NotificationHelper.init failed: $e');
   }
 
   // Prepare theme notifier and load saved pref before runApp

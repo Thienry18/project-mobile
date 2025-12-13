@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'location_helper.dart';
 
 class PermissionHelper {
   static Future<bool> requestCameraPermission(BuildContext context) async {
@@ -10,8 +11,8 @@ class PermissionHelper {
     if (res.isGranted) return true;
     await _showPermissionDialog(
       context,
-      AppLocalizations.of(context)!.permissionNotGrantedTitle,
-      AppLocalizations.of(context)!.permissionNotGrantedMessage,
+      AppLocalizations.of(context).permissionNotGrantedTitle,
+      AppLocalizations.of(context).permissionNotGrantedMessage,
     );
     return false;
   }
@@ -28,8 +29,8 @@ class PermissionHelper {
 
     await _showPermissionDialog(
       context,
-      AppLocalizations.of(context)!.permissionNotGrantedTitle,
-      AppLocalizations.of(context)!.permissionNotGrantedMessage,
+      AppLocalizations.of(context).permissionNotGrantedTitle,
+      AppLocalizations.of(context).permissionNotGrantedMessage,
     );
     return false;
   }
@@ -43,10 +44,14 @@ class PermissionHelper {
     if (res.isGranted) return true;
     await _showPermissionDialog(
       context,
-      AppLocalizations.of(context)!.permissionNotGrantedTitle,
-      AppLocalizations.of(context)!.permissionNotGrantedMessage,
+      AppLocalizations.of(context).permissionNotGrantedTitle,
+      AppLocalizations.of(context).permissionNotGrantedMessage,
     );
     return false;
+  }
+
+  static Future<bool> requestLocationPermission(BuildContext context) async {
+    return await LocationHelper.ensurePermission(context);
   }
 
   static Future<void> _showPermissionDialog(
@@ -54,7 +59,7 @@ class PermissionHelper {
     String title,
     String message,
   ) async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     await showDialog<void>(
       context: context,
       builder:

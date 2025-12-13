@@ -197,7 +197,7 @@ class _BuildProfile extends State<BuildProfile> {
 
                   Center(
                     child: CustomButton(
-                      text: l10n?.continueButton ?? 'Continue',
+                      text: l10n.continueButton,
                       onPressed: _handleContinue,
                       padding: EdgeInsets.symmetric(
                         vertical: 10,

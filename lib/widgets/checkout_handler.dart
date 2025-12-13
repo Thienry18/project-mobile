@@ -5,6 +5,7 @@ import 'package:projek_mobile/database/database_service.dart';
 import 'package:projek_mobile/database/database_mycourse.dart';
 import 'package:projek_mobile/database/database_user.dart';
 import 'package:projek_mobile/database/database_notification.dart';
+import 'package:projek_mobile/utils/notification_helper.dart';
 import 'package:projek_mobile/database/database_history.dart';
 import 'package:projek_mobile/database/database_cart.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,14 @@ class CheckoutHandler {
         'is_read': 0,
         'created_at': DateTime.now().millisecondsSinceEpoch,
       });
+      try {
+        // also show a local notification for demo
+        await NotificationHelper.showNotification(
+          id: DateTime.now().millisecondsSinceEpoch.remainder(100000),
+          title: 'Purchase complete',
+          body: 'Your purchase was successful',
+        );
+      } catch (_) {}
     } catch (e) {
       // ignore: avoid_print
       print('Could not insert notification into DB: $e');

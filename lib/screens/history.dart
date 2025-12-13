@@ -142,7 +142,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     showDialog(
       context: context,
       builder: (ctx) {
-        final l10n = AppLocalizations.of(ctx)!;
+        final l10n = AppLocalizations.of(ctx);
         return AlertDialog(
           title: Text(l10n.clearPurchaseHistory),
           content: const Text(
@@ -155,7 +155,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             ),
             TextButton(
               child: Text(
-                AppLocalizations.of(ctx)!.delete,
+                AppLocalizations.of(ctx).delete,
                 style: const TextStyle(color: Colors.red),
               ),
               onPressed: () async {
