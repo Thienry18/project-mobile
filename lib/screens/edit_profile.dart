@@ -240,8 +240,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         );
         try {
           await repo.updateProfile(profile);
-        } catch (_) {
-          // ignore Firestore failures
+        } catch (e, st) {
+          // Surface Firestore errors
+          // ignore: avoid_print
+          print('Firestore updateProfile error: $e');
+          // ignore: avoid_print
+          print(st);
+          _showSnack('Failed to update Firestore profile: $e', error: true);
         }
       }
 

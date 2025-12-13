@@ -1,6 +1,7 @@
 import 'package:projek_mobile/database/database_service.dart';
 import 'package:projek_mobile/database/database_user.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepository {
   // ================== PUBLIC HELPERS (VALIDATION) ==================
@@ -24,29 +25,62 @@ class AuthRepository {
   Future<Database> get _db async => await DatabaseService.instance.database;
 
   Future<void> register(String email, String password) async {
+    // First, create a Firebase Auth user so that subsequent Firestore writes
+    // from the client are authenticated. If Firebase creation succeeds but
+    // local DB insert fails, delete the Firebase user to keep state consistent.
+    UserCredential? created;
+    try {
+      created = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email.trim().toLowerCase(),
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      // Map common Firebase errors to friendly messages
+      if (e.code == 'email-already-in-use') {
+        throw Exception('Email already registered.');
+      }
+      throw Exception('Firebase Auth error: ${e.message}');
+    }
+
     final db = await _db;
     final exists = await DatabaseUser.getUserByEmail(
       db,
       email.trim().toLowerCase(),
     );
-    if (exists != null) throw Exception('Email already registered.');
+    if (exists != null) {
+      // rollback Firebase user
+      try {
+        final u = created.user;
+        if (u != null) await u.delete();
+      } catch (_) {}
+      throw Exception('Email already registered.');
+    }
 
-    await DatabaseUser.insertUser(db, {
-      'email': email.trim().toLowerCase(),
-      'password': password,
-      'username': '',
-      'fullname': '',
-      'day_of_birth': '',
-      'gender': '',
-      'phone_number': '',
-      'country': '',
-      'avatar_path': '',
-      'pin': null,
-    });
-    // Notify listeners that users changed
     try {
-      await DatabaseService.instance.emitUsers();
-    } catch (_) {}
+      await DatabaseUser.insertUser(db, {
+        'email': email.trim().toLowerCase(),
+        'password': password,
+        'username': '',
+        'fullname': '',
+        'day_of_birth': '',
+        'gender': '',
+        'phone_number': '',
+        'country': '',
+        'avatar_path': '',
+        'pin': null,
+      });
+      // Notify listeners that users changed
+      try {
+        await DatabaseService.instance.emitUsers();
+      } catch (_) {}
+    } catch (e) {
+      // rollback Firebase user if local DB fails
+      try {
+        final u = created.user;
+        if (u != null) await u.delete();
+      } catch (_) {}
+      rethrow;
+    }
   }
 
   Future<bool> verifyCredentials(String email, String password) async {
@@ -108,8 +142,24 @@ class AuthRepository {
     if (interest != null) updates['interest'] = interest;
 
     if (updates.isEmpty) return;
+    // Debug: log current target email and all users to help diagnose mismatches
+    try {
+      final all = await DatabaseUser.getAllUsers(db);
+      // ignore: avoid_print
+      print('AuthRepository.updateProfile: current=$current');
+      // ignore: avoid_print
+      print(
+        'AuthRepository.updateProfile: users=${all.map((u) => u['email']).toList()}',
+      );
+    } catch (_) {}
+
     final count = await DatabaseUser.updateUserByEmail(db, current, updates);
-    if (count == 0) throw Exception('User not found.');
+    if (count == 0) {
+      // additional debug info
+      // ignore: avoid_print
+      print('AuthRepository.updateProfile: update count=0 for email=$current');
+      throw Exception('User not found.');
+    }
     // Emit users snapshot for listeners (profile changed)
     try {
       await DatabaseService.instance.emitUsers();

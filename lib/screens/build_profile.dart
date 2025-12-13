@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/models/user_profile.dart';
@@ -9,10 +8,10 @@ import 'package:projek_mobile/widgets/gender_picker.dart';
 import 'package:projek_mobile/widgets/profile_image.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:projek_mobile/data/auth_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projek_mobile/data/user_profile_repository.dart';
+import 'package:projek_mobile/database/database_service.dart';
+import 'package:projek_mobile/database/database_user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BuildProfile extends StatefulWidget {
@@ -30,21 +29,35 @@ class _BuildProfile extends State<BuildProfile> {
   String phoneNumber = '';
   String country = '';
 
-  void _handleContinue() async {
-    final l10n = AppLocalizations.of(context);
+  Future<void> _handleContinue() async {
     if (username.isEmpty ||
         fullName.isEmpty ||
         dob.isEmpty ||
         gender.isEmpty ||
         phoneNumber.isEmpty ||
         country.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.pleaseCompleteFields)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please complete all fields.')),
+      );
       return;
     }
 
-    final user = UserProfile(
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Not authenticated — please sign in first.'),
+        ),
+      );
+      return;
+    }
+
+    // Debug: print current auth uid before writing to Firestore
+    // ignore: avoid_print
+    print('Attempting Firestore write for uid=${firebaseUser.uid}');
+    final repo = UserProfileRepository();
+    final profile = UserProfile(
+      uid: firebaseUser.uid,
       username: username,
       fullName: fullName,
       dob: dob,
@@ -53,54 +66,63 @@ class _BuildProfile extends State<BuildProfile> {
       country: country,
     );
 
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(
-      'user_profile',
-      jsonEncode({
-        'username': user.username,
-        'fullName': user.fullName,
-        'dob': user.dob,
-        'gender': user.gender,
-        'phoneNumber': user.phoneNumber,
-        'country': user.country,
-      }),
-    );
-
-    // Also persist into app DB via AuthRepository if there's an active email
-    final auth = AuthRepository();
-    final currentEmail = prefs.getString('user_email');
-    if (currentEmail != null && currentEmail.isNotEmpty) {
-      await auth.updateProfile(
-        currentEmail: currentEmail,
-        username: username,
-        fullname: fullName,
-        dob: dob,
-        gender: gender,
-        phoneNumber: phoneNumber,
-        country: country,
-      );
-    }
-
-    // If user authenticated with Firebase, also persist profile to Firestore
-    final firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      final repo = UserProfileRepository();
-      final profile = UserProfile(
-        uid: firebaseUser.uid,
-        username: username,
-        fullName: fullName,
-        dob: dob,
-        gender: gender,
-        phoneNumber: phoneNumber,
-        country: country,
-      );
-      try {
-        await repo.createProfile(profile);
-      } catch (_) {
-        // ignore Firestore failures for now; app still works with local DB
+    try {
+      await repo.createProfile(profile);
+    } catch (e, st) {
+      // Surface Firestore errors for debugging and abort navigation
+      // ignore: avoid_print
+      print('Firestore createProfile error: $e');
+      // ignore: avoid_print
+      print(st);
+      if (e is FirebaseException && e.code == 'permission-denied') {
+        try {
+          final db = await DatabaseService.instance.database;
+          final email = FirebaseAuth.instance.currentUser?.email ?? '';
+          await DatabaseUser.insertUser(db, {
+            'email': email,
+            'password': '',
+            'username': username,
+            'fullname': fullName,
+            'day_of_birth': dob,
+            'gender': gender,
+            'phone_number': phoneNumber,
+            'country': country,
+            'avatar_path': '',
+          });
+          try {
+            await DatabaseService.instance.emitUsers();
+          } catch (_) {}
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile saved locally (Firestore not available).'),
+            ),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const Interest()),
+          );
+          return;
+        } catch (dbErr) {
+          // ignore: avoid_print
+          print('Local DB fallback failed: $dbErr');
+          if (mounted)
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to save locally as fallback: $dbErr'),
+              ),
+            );
+          return;
+        }
       }
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to write profile to Firestore: $e')),
+        );
+      return;
     }
 
+    if (!mounted) return;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const Interest()),

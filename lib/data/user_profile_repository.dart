@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_profile.dart';
+import 'firestore_helper.dart';
 
 class UserProfileRepository {
   final FirebaseFirestore _firestore;
@@ -22,29 +23,59 @@ class UserProfileRepository {
   }
 
   Future<void> createProfile(UserProfile profile) async {
-    final uid = _auth.currentUser?.uid;
-    if (uid == null)
+    // Prefer explicit uid from the profile object; otherwise fall back to
+    // currently authenticated user. This makes the method more flexible and
+    // tolerant of callers that already supply a uid.
+    final uid = (profile.uid.isNotEmpty) ? profile.uid : _auth.currentUser?.uid;
+    if (uid == null) {
       throw FirebaseAuthException(
         code: 'NO_CURRENT_USER',
         message: 'No user logged in',
       );
+    }
+
     final now = Timestamp.now();
     final toSet =
         profile.toFirestore(forUpdate: false)
           ..['createdAt'] = now
           ..['updatedAt'] = now;
-    await _usersCollection.doc(uid).set(Map<String, dynamic>.from(toSet));
+
+    try {
+      // Ensure we write to `users/{uid}` so Firestore rules that require
+      // `request.auth.uid == userId` will permit the write when authenticated.
+      await FirestoreHelper.writeDocument(
+        'users',
+        toSet,
+        docId: uid,
+        merge: true,
+      );
+    } on FirebaseException catch (e) {
+      // Rethrow to allow UI to show a helpful dialog (we already include
+      // project/auth debug info in the helper).
+      rethrow;
+    }
   }
 
   Future<void> updateProfile(UserProfile profile) async {
-    final uid = _auth.currentUser?.uid;
-    if (uid == null)
+    final uid = (profile.uid.isNotEmpty) ? profile.uid : _auth.currentUser?.uid;
+    if (uid == null) {
       throw FirebaseAuthException(
         code: 'NO_CURRENT_USER',
         message: 'No user logged in',
       );
+    }
     final toUpdate = profile.toFirestore(forUpdate: true)
       ..['updatedAt'] = Timestamp.now();
-    await _usersCollection.doc(uid).update(Map<String, dynamic>.from(toUpdate));
+    // Use the helper to perform a merge write to users/{uid}.
+    try {
+      await FirestoreHelper.writeDocument(
+        'users',
+        toUpdate,
+        docId: uid,
+        merge: true,
+      );
+    } on FirebaseException catch (_) {
+      rethrow;
+    }
   }
 }
