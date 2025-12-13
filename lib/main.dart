@@ -16,6 +16,7 @@ import 'package:projek_mobile/providers/explore_provider.dart';
 import 'package:projek_mobile/data/explore_data.dart' show trendingCourses;
 import 'package:firebase_core/firebase_core.dart';
 import 'utils/notification_helper.dart';
+import 'package:projek_mobile/screens/profile_page.dart';
 
 // Note: Auth flow is handled by `lib/data/auth_gate.dart` when used.
 
@@ -129,6 +130,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeNotifier.themeMode,
+      routes: {'/profile': (ctx) => const ProfilePage()},
       home: const AuthGate(),
     );
   }

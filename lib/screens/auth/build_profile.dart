@@ -11,6 +11,8 @@ import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projek_mobile/data/user_profile_repository.dart';
 
 class BuildProfile extends StatefulWidget {
   const BuildProfile({super.key});
@@ -75,6 +77,24 @@ class _BuildProfile extends State<BuildProfile> {
         phoneNumber: phoneNumber,
         country: country,
       );
+    }
+
+    // Persist to Firestore for authenticated Firebase users
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null) {
+      final repo = UserProfileRepository();
+      final profile = UserProfile(
+        uid: firebaseUser.uid,
+        username: username,
+        fullName: fullName,
+        dob: dob,
+        gender: gender,
+        phoneNumber: phoneNumber,
+        country: country,
+      );
+      try {
+        await repo.createProfile(profile);
+      } catch (_) {}
     }
 
     Navigator.pushReplacement(
