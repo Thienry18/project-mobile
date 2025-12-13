@@ -26,6 +26,14 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs your location to provide location-based features.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This app needs contacts access to let you share and save contacts.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to photos to attach images and media.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs the microphone for audio recording and playback focus.</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

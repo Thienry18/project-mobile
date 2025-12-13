@@ -45,7 +45,7 @@ dependencies:
   video_player: ^2.7.2
   image_picker: ^1.1.2
   share_plus: ^7.2.2
-  webview_flutter: ^4.13.0
+  webview_flutter: ^4.10.11
   permission_handler: ^11.3.0
   sqflite: ^2.4.2
   path: ^1.9.1
@@ -56,6 +56,12 @@ dependencies:
   intl: ^0.19.0
   flutter_localizations:
     sdk: flutter
+  geolocator: ^9.0.2
+  flutter_local_notifications: ^19.5.0
+  file_picker: ^10.3.7
+  path_provider: ^2.0.15
+  flutter_contacts: ^1.1.9+2
+  just_audio: ^0.9.33
 
 
 dev_dependencies:

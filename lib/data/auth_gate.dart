@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projek_mobile/screens/auth/sign_in.dart';
 // database imports not required here; AuthGate uses SharedPreferences
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:projek_mobile/screens/input_pin.dart';
+// import 'package:projek_mobile/screens/input_pin.dart'; // not used
 
 // Onboarding step-1 kamu bernama FavScreen (bukan "Onboarding")
 import 'package:projek_mobile/screens/onboarding.dart' show FavScreen;
