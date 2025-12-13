@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/providers/profile_image_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/data/user_profile_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserProfile userProfile;
@@ -221,6 +223,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
       if ((avatarPath ?? '').isNotEmpty) {
         await prefs.setString('user_avatar_path', avatarPath!);
+      }
+
+      // Also update Firestore profile if user is authenticated via Firebase
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser != null) {
+        final repo = UserProfileRepository();
+        final profile = UserProfile(
+          uid: firebaseUser.uid,
+          username: _usernameController.text.trim(),
+          fullName: _fullnameController.text.trim(),
+          dob: _dobController.text,
+          gender: _genderController.text,
+          phoneNumber: _phoneController.text.trim(),
+          country: _countryController.text,
+        );
+        try {
+          await repo.updateProfile(profile);
+        } catch (_) {
+          // ignore Firestore failures
+        }
       }
 
       _showSnack(AppLocalizations.of(context).profileUpdatedSuccessfully);
