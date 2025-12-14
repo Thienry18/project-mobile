@@ -1,0 +1,11 @@
+name: flutter_gen
+version: 0.0.1
+description: Local compatibility package to satisfy package:flutter_gen imports
+publish_to: none
+
+environment:
+  sdk: ">=2.18.0 <4.0.0"
+
+dependencies:
+  projek_mobile:
+    path: ..

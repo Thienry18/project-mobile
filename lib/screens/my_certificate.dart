@@ -7,7 +7,7 @@ import 'package:projek_mobile/screens/certificate.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class CertificatePage extends StatefulWidget {
   const CertificatePage({super.key});

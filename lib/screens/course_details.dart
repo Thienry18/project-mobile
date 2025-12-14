@@ -10,7 +10,7 @@ import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final String title;

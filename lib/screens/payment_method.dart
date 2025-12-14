@@ -5,7 +5,7 @@ import 'package:projek_mobile/screens/add_new_card.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class PaymentMethodsScreen extends StatefulWidget {
   const PaymentMethodsScreen({super.key});

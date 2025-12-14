@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/providers/locale_provider.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class LanguageSelectionScreen extends StatelessWidget {
   const LanguageSelectionScreen({super.key});
