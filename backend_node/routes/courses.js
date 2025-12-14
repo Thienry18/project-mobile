@@ -1,13 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
+// Helper function to localize course data
+function localizeCourse(course, lang) {
+    const defaultLang = 'en';
+    const l = lang || defaultLang;
+    return {
+        ...course,
+        title: typeof course.title === 'object' ? (course.title[l] || course.title[defaultLang]) : course.title,
+        description: typeof course.description === 'object' ? (course.description[l] || course.description[defaultLang]) : course.description,
+        duration: typeof course.duration === 'object' ? (course.duration[l] || course.duration[defaultLang]) : course.duration,
+    };
+}
+
 // Get all courses
 router.get('/', async (req, res) => {
     try {
         await req.db.read();
         let courses = req.db.data.courses || [];
 
-        const { category, search } = req.query;
+        const { category, search, lang } = req.query;
 
         if (category) {
             courses = courses.filter(c =>
@@ -17,12 +29,16 @@ router.get('/', async (req, res) => {
 
         if (search) {
             const searchLower = search.toLowerCase();
-            courses = courses.filter(c =>
-                c.title.toLowerCase().includes(searchLower) ||
-                c.category.toLowerCase().includes(searchLower) ||
-                c.instructor.toLowerCase().includes(searchLower)
-            );
+            courses = courses.filter(c => {
+                const localized = localizeCourse(c, lang);
+                return localized.title.toLowerCase().includes(searchLower) ||
+                    c.category.toLowerCase().includes(searchLower) ||
+                    c.instructor.toLowerCase().includes(searchLower);
+            });
         }
+
+        // Localize the courses
+        courses = courses.map(c => localizeCourse(c, lang));
 
         res.json(courses);
     } catch (error) {
@@ -36,6 +52,8 @@ router.get('/trending', async (req, res) => {
         await req.db.read();
         const courses = req.db.data.courses || [];
 
+        const { lang } = req.query;
+
         const trending = courses
             .filter(c => c.isBestseller)
             .sort((a, b) => {
@@ -43,7 +61,8 @@ router.get('/trending', async (req, res) => {
                 const bRating = parseFloat(b.rating.split(' ')[0]);
                 return bRating - aRating;
             })
-            .slice(0, 5);
+            .slice(0, 5)
+            .map(c => localizeCourse(c, lang));
 
         res.json(trending);
     } catch (error) {
@@ -56,14 +75,17 @@ router.get('/recommended/:category', async (req, res) => {
     try {
         await req.db.read();
         const { category } = req.params;
+        const { lang } = req.query;
         const courses = req.db.data.courses || [];
 
         const recommended = courses
-            .filter(c =>
-                c.title.toLowerCase().includes(category.toLowerCase()) ||
-                c.category.toLowerCase().includes(category.toLowerCase())
-            )
-            .slice(0, 5);
+            .filter(c => {
+                const localized = localizeCourse(c, lang);
+                return localized.title.toLowerCase().includes(category.toLowerCase()) ||
+                    c.category.toLowerCase().includes(category.toLowerCase());
+            })
+            .slice(0, 5)
+            .map(c => localizeCourse(c, lang));
 
         res.json(recommended);
     } catch (error) {

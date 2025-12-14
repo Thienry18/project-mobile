@@ -161,7 +161,7 @@ class _SignInState extends State<SignIn> {
                     child: Column(
                       children: [
                         CustomTextField(
-                          labelText: 'Enter your email',
+                          labelText: AppLocalizations.of(context).enterEmail,
                           prefixIcon: const Icon(
                             Icons.email_outlined,
                             color: Colors.white,
@@ -171,7 +171,7 @@ class _SignInState extends State<SignIn> {
                         ),
                         const SizedBox(height: 16),
                         CustomTextField(
-                          labelText: 'Enter your password',
+                          labelText: AppLocalizations.of(context).enterPassword,
                           prefixIcon: const Icon(
                             Icons.lock_outline,
                             color: Colors.white,
@@ -236,7 +236,7 @@ class _SignInState extends State<SignIn> {
                                 );
                               },
                               child: Text(
-                                "Forgot Password?",
+                                AppLocalizations.of(context).forgotPassword,
                                 style: AppTextStyles.body.copyWith(
                                   decoration: TextDecoration.underline,
                                   decorationColor: const Color(0xff97a4d8),
@@ -247,7 +247,7 @@ class _SignInState extends State<SignIn> {
                         ),
                         const SizedBox(height: 18),
                         CustomButton(
-                          text: 'Sign In',
+                          text: AppLocalizations.of(context).signIn,
                           onPressed: _handleSignIn,
                           padding: const EdgeInsets.symmetric(
                             vertical: 10,
@@ -275,7 +275,10 @@ class _SignInState extends State<SignIn> {
                                   ),
                                 );
                               },
-                              child: Text("Sign Up", style: AppTextStyles.link),
+                              child: Text(
+                                AppLocalizations.of(context).signUp,
+                                style: AppTextStyles.link,
+                              ),
                             ),
                           ],
                         ),

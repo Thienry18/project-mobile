@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -23,19 +24,22 @@ class CustomBottomNav extends StatelessWidget {
       unselectedItemColor: Colors.grey,
       showUnselectedLabels: true,
       onTap: onTap,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.menu_book),
-          label: 'My Course',
+          icon: const Icon(Icons.explore),
+          label: AppLocalizations.of(context).explore,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.notifications_none),
-          label: 'Notifications',
+          icon: const Icon(Icons.menu_book),
+          label: AppLocalizations.of(context).myCourses,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          label: 'Profile',
+          icon: const Icon(Icons.notifications_none),
+          label: AppLocalizations.of(context).notification,
+        ),
+        BottomNavigationBarItem(
+          icon: const Icon(Icons.person_outline),
+          label: AppLocalizations.of(context).profile,
         ),
       ],
     );

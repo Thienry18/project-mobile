@@ -388,7 +388,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     final isDarkMode = Provider.of<ThemeNotifier>(context).isDarkMode;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
+        title: Text(AppLocalizations.of(context).history),
         centerTitle: false,
         elevation: 0,
         backgroundColor: isDarkMode ? Colors.black : const Color(0xff324eaf),
@@ -409,9 +409,15 @@ class _HistoryScreenState extends State<HistoryScreen>
           labelColor: Colors.white,
           unselectedLabelColor: Colors.grey,
           indicatorColor: Colors.white,
-          tabs: const [
-            Tab(icon: Icon(Icons.check_circle), text: 'Completed'),
-            Tab(icon: Icon(Icons.cancel), text: 'Cancelled'),
+          tabs: [
+            Tab(
+              icon: const Icon(Icons.check_circle),
+              text: AppLocalizations.of(context).completed,
+            ),
+            Tab(
+              icon: const Icon(Icons.cancel),
+              text: AppLocalizations.of(context).cancelled,
+            ),
           ],
         ),
       ),
