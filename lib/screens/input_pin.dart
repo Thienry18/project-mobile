@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 import 'package:projek_mobile/widgets/custom_button.dart';
 import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
@@ -36,10 +37,13 @@ class InputPin extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              Text('Input Your PIN', style: AppTextStyles.heading),
+              Text(
+                AppLocalizations.of(context).insertPin,
+                style: AppTextStyles.heading,
+              ),
               const SizedBox(height: 10),
               Text(
-                'Enter your PIN to verify your identity and securely access your account.',
+                AppLocalizations.of(context).pinDescription,
                 style: GoogleFonts.poppins(color: const Color(0xff324EAF)),
               ),
               const SizedBox(height: 80),
@@ -100,7 +104,7 @@ class InputPin extends StatelessWidget {
                     ),
                     const SizedBox(height: 70),
                     CustomButton(
-                      text: "Continue",
+                      text: AppLocalizations.of(context).continueButton,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 80,
                         vertical: 5,

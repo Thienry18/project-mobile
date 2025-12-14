@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 import 'package:projek_mobile/screens/sign_in.dart';
 import 'package:projek_mobile/screens/sign_up.dart';
 
@@ -26,7 +27,7 @@ class LoginTabBar extends StatelessWidget {
                     }
                   },
                   child: Text(
-                    'Sign In',
+                    AppLocalizations.of(context).signIn,
                     style: AppTextStyles.subheading.copyWith(
                       color: isSignIn ? Color(0xff3df96a) : Color(0xff324eaf),
                     ),
@@ -53,7 +54,7 @@ class LoginTabBar extends StatelessWidget {
                     );
                   },
                   child: Text(
-                    'Sign Up',
+                    AppLocalizations.of(context).signUp,
                     style: AppTextStyles.subheading.copyWith(
                       color: !isSignIn ? Color(0xff3df96a) : Color(0xff324eaf),
                     ),
