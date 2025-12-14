@@ -457,7 +457,7 @@ final List<Course> trendingCourses = [
     subtitle: 'Indonesian',
   ),
   Course(
-    images: 'assets/images/card_image/c#_beginner.jpeg',
+    images: 'assets/images/card_image/c_sharp_beginner.jpeg',
     title: 'C# for Beginners - Learn C# Programming with Real-World Projects',
     duration: '25h 0m',
     rating: '4.4 (15,000)',

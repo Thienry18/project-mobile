@@ -49,9 +49,9 @@ class UserProfileRepository {
         docId: uid,
         merge: true,
       );
-    } on FirebaseException catch (e) {
-      // Rethrow to allow UI to show a helpful dialog (we already include
-      // project/auth debug info in the helper).
+    } on FirebaseException {
+      // Rethrow to allow UI to show a helpful dialog (helper already
+      // includes project/auth debug info).
       rethrow;
     }
   }

@@ -54,9 +54,11 @@ dependencies:
   firebase_auth: ^6.1.2
   firebase_analytics: ^12.0.4
   cloud_firestore: ^6.1.0
-  intl: ^0.19.0
+  intl: ^0.20.2
   flutter_localizations:
     sdk: flutter
+  flutter_gen:
+    path: ./flutter_gen_pkg
   geolocator: ^9.0.2
   flutter_local_notifications: ^19.5.0
   file_picker: ^10.3.7
@@ -158,7 +160,7 @@ flutter:
     - assets/images/card_image/java_beginner.jpeg
     - assets/images/card_image/js_beginner.jpeg
     - assets/images/card_image/c++_beginner.jpeg
-    - assets/images/card_image/c#_beginner.jpeg
+    - assets/images/card_image/c_sharp_beginner.jpeg
     - assets/images/card_image/php_beginner.jpeg
     - assets/images/card_image/swift_beginner.jpeg
     - assets/images/card_image/kotlin_beginner.jpeg

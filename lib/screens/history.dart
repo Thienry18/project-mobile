@@ -6,7 +6,7 @@ import 'package:projek_mobile/database/database_mycourse.dart';
 import 'package:projek_mobile/database/database_history.dart';
 import 'package:projek_mobile/database/database_user.dart';
 import 'package:projek_mobile/providers/history_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});

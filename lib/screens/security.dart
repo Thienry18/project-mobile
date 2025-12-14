@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/screens/change_password.dart';
 import 'package:projek_mobile/screens/change_pin.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class SecurityScreen extends StatelessWidget {
   const SecurityScreen({super.key});

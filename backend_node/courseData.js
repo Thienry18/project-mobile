@@ -450,7 +450,7 @@ export const initialCourses = [
         category: "C#",
         rating: 4.4,
         isBestseller: false,
-        thumbnail: "assets/images/card_image/c#_beginner.jpeg"
+        thumbnail: "assets/images/card_image/c_sharp_beginner.jpeg"
     },
     {
         id: 37,

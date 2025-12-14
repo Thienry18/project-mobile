@@ -12,7 +12,7 @@ import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // <-- tambah ini
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});

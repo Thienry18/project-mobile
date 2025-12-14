@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projek_mobile/screens/certificate.dart';
 import 'package:video_player/video_player.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 import 'package:projek_mobile/widgets/share_button.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 

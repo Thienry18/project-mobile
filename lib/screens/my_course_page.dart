@@ -23,7 +23,7 @@ import 'package:projek_mobile/database/database_service.dart';
 import 'package:projek_mobile/database/database_mycourse.dart';
 import 'package:projek_mobile/database/database_user.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
