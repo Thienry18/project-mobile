@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:projek_mobile/screens/input_pin.dart'; // not used
 
 // Onboarding step-1 kamu bernama FavScreen (bukan "Onboarding")
-import 'package:projek_mobile/screens/onboarding.dart' show FavScreen;
+// (import removed — FavScreen not used here)
 
 // Halaman utama aplikasi — di sini aku arahkan ke ExplorePage.
 // Ganti ke widget home kamu jika berbeda (mis. HomeRoot, MainTab, dsb).
@@ -57,6 +57,6 @@ class _AuthGateState extends State<AuthGate> {
     }
 
     // Jika belum login, tampilkan onboarding/landing (FavScreen)
-    return const FavScreen();
+    return const SignIn();
   }
 }

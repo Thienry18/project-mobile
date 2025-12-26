@@ -11,6 +11,8 @@ import 'package:projek_mobile/screens/cart.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';
+import 'package:projek_mobile/services/ad_service.dart';
+import 'package:projek_mobile/widgets/banner_ad_widget.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final String title;
@@ -126,7 +128,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                 width: double.infinity,
               ),
             ),
+            const SizedBox(height: 12),
+            BannerAdWidget(adUnitId: AdService.bannerUnitId),
             const SizedBox(height: 16),
+            // Rewarded offer: let user watch to preview a module
+            _buildWatchForPreview(context),
+            const SizedBox(height: 8),
             Text(
               widget.title,
               style: AppTextStyles.heading.copyWith(fontSize: 20),
@@ -453,7 +460,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             child: SizedBox(
               height: 48,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  // show interstitial if available
+                  await AdService.instance.showInterstitial();
                   final course = Course(
                     title: widget.title,
                     images: widget.imageUrl,
@@ -499,6 +508,34 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // Add a small helper: Watch a rewarded ad to preview a module
+  Widget _buildWatchForPreview(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: ElevatedButton(
+        onPressed: () async {
+          final ok = await AdService.instance.showRewarded(
+            onEarned: (reward) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Reward received: ${reward.amount} ${reward.type}',
+                  ),
+                ),
+              );
+            },
+          );
+          if (!ok) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No ad available right now')),
+            );
+          }
+        },
+        child: const Text('Watch to preview a module (reward)'),
       ),
     );
   }

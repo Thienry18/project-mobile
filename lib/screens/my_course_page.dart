@@ -24,6 +24,8 @@ import 'package:projek_mobile/database/database_mycourse.dart';
 import 'package:projek_mobile/database/database_user.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';
+import 'package:projek_mobile/services/ad_service.dart';
+import 'package:projek_mobile/widgets/banner_ad_widget.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
@@ -185,6 +187,9 @@ class _MyCoursePageState extends State<MyCoursePage> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 8),
+          BannerAdWidget(adUnitId: AdService.bannerUnitId),
+          const SizedBox(height: 8),
           if (_scheduledDateTime != null)
             Container(
               width: double.infinity,
@@ -334,7 +339,8 @@ class _MyCoursePageState extends State<MyCoursePage> {
                 bottom: 8,
                 right: 12,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await AdService.instance.showInterstitial();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -399,14 +405,18 @@ class _MyCoursePageState extends State<MyCoursePage> {
             label: AppLocalizations.of(context).viewCertificate,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => const CertificateImageScreen(
-                        imagePath: 'assets/images/certificate.jpg',
-                      ),
-                ),
+              AdService.instance.showRewarded(
+                onEarned: (reward) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => const CertificateImageScreen(
+                            imagePath: 'assets/images/certificate.jpg',
+                          ),
+                    ),
+                  );
+                },
               );
             },
           ),

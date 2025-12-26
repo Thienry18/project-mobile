@@ -16,7 +16,7 @@ import 'package:projek_mobile/widgets/custom_bottom_bar.dart';
 import 'package:projek_mobile/data/my_course_data.dart';
 import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:projek_mobile/l10n/app_localizations.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -87,19 +87,19 @@ class _CartPageState extends State<CartPage> {
       context: context,
       builder:
           (_) => AlertDialog(
-            title: Text(AppLocalizations.of(context)!.confirmDeleteTitle),
+            title: Text(AppLocalizations.of(context).confirmDeleteTitle),
             content: Text(
-              AppLocalizations.of(context)!.confirmDeleteCartContent,
+              AppLocalizations.of(context).confirmDeleteCartContent,
             ),
             actions: [
               TextButton(
-                child: Text(AppLocalizations.of(context)!.cancel),
+                child: Text(AppLocalizations.of(context).cancel),
                 onPressed:
                     () => Navigator.of(context, rootNavigator: true).pop(),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: Text(AppLocalizations.of(context)!.delete),
+                child: Text(AppLocalizations.of(context).delete),
                 onPressed: () async {
                   Navigator.of(context, rootNavigator: true).pop();
                   // Ensure we have a user id
@@ -167,11 +167,11 @@ class _CartPageState extends State<CartPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          AppLocalizations.of(context)!.itemsDeletedFromCart,
+                          AppLocalizations.of(context).itemsDeletedFromCart,
                         ),
                         duration: const Duration(seconds: 4),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context)!.undo,
+                          label: AppLocalizations.of(context).undo,
                           onPressed: () async {
                             // Re-insert deleted items
                             if (deletedItems.isEmpty) return;
@@ -192,7 +192,7 @@ class _CartPageState extends State<CartPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          AppLocalizations.of(context)!.failedToDeleteItems,
+                          AppLocalizations.of(context).failedToDeleteItems,
                         ),
                       ),
                     );
@@ -230,7 +230,7 @@ class _CartPageState extends State<CartPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppLocalizations.of(context)!.selectVoucher,
+                AppLocalizations.of(context).selectVoucher,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -239,7 +239,7 @@ class _CartPageState extends State<CartPage> {
               const SizedBox(height: 12),
               ListTile(
                 leading: const Icon(Icons.local_offer, color: Colors.green),
-                title: Text(AppLocalizations.of(context)!.discount20),
+                title: Text(AppLocalizations.of(context).discount20),
                 onTap: () {
                   setState(() {
                     selectedPromo = "DISCOUNT20";
@@ -250,7 +250,7 @@ class _CartPageState extends State<CartPage> {
               ),
               ListTile(
                 leading: const Icon(Icons.card_giftcard, color: Colors.purple),
-                title: Text(AppLocalizations.of(context)!.freeship),
+                title: Text(AppLocalizations.of(context).freeship),
                 onTap: () {
                   setState(() {
                     selectedPromo = "FREESHIP";
@@ -283,7 +283,7 @@ class _CartPageState extends State<CartPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.noNewCoursesToPurchase),
+          content: Text(AppLocalizations.of(context).noNewCoursesToPurchase),
           duration: const Duration(seconds: 3),
         ),
       );

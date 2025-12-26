@@ -5,6 +5,8 @@ import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 import 'package:projek_mobile/screens/course_details.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
+import 'package:projek_mobile/services/ad_service.dart';
+import 'package:projek_mobile/widgets/banner_ad_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   final List<Course> courseList;
@@ -66,6 +68,29 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: ListView(
         children:
+            [
+              BannerAdWidget(adUnitId: AdService.bannerUnitId),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () async {
+                  final ok = await AdService.instance.showRewarded(
+                    onEarned: (r) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Reward: ${r.amount} ${r.type}'),
+                        ),
+                      );
+                    },
+                  );
+                  if (!ok)
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('No ad available')),
+                    );
+                },
+                child: const Text('Watch ad for extra results'),
+              ),
+              const SizedBox(height: 8),
+            ] +
             _filtered
                 .map(
                   (course) => ListTile(
@@ -93,6 +118,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           course.price.replaceAll('\$', ''),
                         ),
                       );
+                      await AdService.instance.showInterstitial();
                       Navigator.push(
                         context,
                         MaterialPageRoute(

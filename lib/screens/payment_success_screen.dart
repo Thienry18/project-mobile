@@ -6,6 +6,7 @@ import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';
+import 'package:projek_mobile/services/ad_service.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
   const PaymentSuccessScreen({super.key});
@@ -62,6 +63,7 @@ class PaymentSuccessScreen extends StatelessWidget {
                     'continue_shopping',
                     extras: {'screen': 'payment_success'},
                   );
+                  await AdService.instance.showInterstitial();
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -97,6 +99,7 @@ class PaymentSuccessScreen extends StatelessWidget {
                     'go_to_my_course',
                     extras: {'screen': 'payment_success'},
                   );
+                  await AdService.instance.showInterstitial();
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (_) => const MyCoursePage()),

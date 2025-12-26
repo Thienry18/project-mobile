@@ -22,6 +22,8 @@ import 'package:projek_mobile/widgets/category_chips.dart';
 import 'package:projek_mobile/services/course_service.dart';
 import 'package:projek_mobile/providers/locale_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:projek_mobile/services/ad_service.dart';
+import 'package:projek_mobile/widgets/banner_ad_widget.dart';
 import 'package:projek_mobile/widgets/custom_bottom_nav.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/widgets/sign_out_dialog.dart';
@@ -437,6 +439,31 @@ class _ExplorePageState extends State<ExplorePage> {
                           fit: BoxFit.cover,
                         ),
                       ),
+                      const SizedBox(height: 12),
+                      // Banner ad (test id)
+                      BannerAdWidget(adUnitId: AdService.bannerUnitId),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final ok = await AdService.instance.showRewarded(
+                            onEarned: (r) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Reward: ${r.amount} ${r.type}',
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          if (!ok)
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('No ad available')),
+                            );
+                        },
+                        child: const Text('Watch ad for reward'),
+                      ),
+                      const SizedBox(height: 20),
                       const SizedBox(height: 20),
 
                       _buildSectionHeader(
@@ -637,6 +664,8 @@ class _ExplorePageState extends State<ExplorePage> {
         // Load full course data from app database before navigating
         final courseFromDb = await DatabaseCourse.getCourseByIdForApp(index);
         if (courseFromDb != null) {
+          // show an interstitial (if loaded) for monetization
+          await AdService.instance.showInterstitial();
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -655,6 +684,7 @@ class _ExplorePageState extends State<ExplorePage> {
           );
         } else {
           // Fallback to using the provided data if DB lookup fails
+          await AdService.instance.showInterstitial();
           Navigator.push(
             context,
             MaterialPageRoute(
