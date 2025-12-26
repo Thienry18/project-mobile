@@ -16,6 +16,7 @@ import 'package:projek_mobile/providers/explore_provider.dart';
 import 'package:projek_mobile/data/explore_data.dart' show trendingCourses;
 import 'package:firebase_core/firebase_core.dart';
 import 'utils/notification_helper.dart';
+import 'package:projek_mobile/services/ad_service.dart';
 import 'package:projek_mobile/screens/profile_page.dart';
 
 // Note: Auth flow is handled by `lib/data/auth_gate.dart` when used.
@@ -25,6 +26,11 @@ Future<void> main() async {
   await Firebase.initializeApp();
   final analytics = FirebaseAnalytics.instance;
   await analytics.logAppOpen();
+
+  // Initialize Google Mobile Ads and preload ads
+  await AdService.instance.init();
+  AdService.instance.loadInterstitial();
+  AdService.instance.loadRewarded();
 
   // Note: do not reset the database on every startup. Use the
   // RESET_DB_ONCE dart-define to trigger a one-time reset when needed.

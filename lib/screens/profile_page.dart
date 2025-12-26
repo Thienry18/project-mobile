@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../data/user_profile_repository.dart';
 import '../models/user_profile.dart';
+import 'package:projek_mobile/services/ad_service.dart';
+import 'package:projek_mobile/widgets/banner_ad_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -189,6 +191,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         (v) => (v == null || v.isEmpty) ? 'Required' : null,
                   ),
                   const SizedBox(height: 16),
+                  BannerAdWidget(adUnitId: AdService.bannerUnitId),
+                  const SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: () => _onSubmit(profile),
                     child: Text(

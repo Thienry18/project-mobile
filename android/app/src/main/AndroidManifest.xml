@@ -15,6 +15,10 @@
         android:label="Codelab"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Google Mobile Ads App ID: required at app startup. Using Google's sample/test App ID. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

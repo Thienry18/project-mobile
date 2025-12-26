@@ -5,6 +5,8 @@ import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/video_play.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';
+import 'package:projek_mobile/services/ad_service.dart';
+import 'package:projek_mobile/widgets/banner_ad_widget.dart';
 
 class VideoPlayer extends StatelessWidget {
   final Course course;
@@ -40,6 +42,8 @@ class VideoPlayer extends StatelessWidget {
                 height: 220,
                 fit: BoxFit.cover,
               ),
+              const SizedBox(height: 12),
+              BannerAdWidget(adUnitId: AdService.bannerUnitId),
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -110,7 +114,8 @@ class VideoPlayer extends StatelessWidget {
           Row(
             children: [
               ElevatedButton.icon(
-                onPressed: () {
+                onPressed: () async {
+                  await AdService.instance.showInterstitial();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -135,6 +140,33 @@ class VideoPlayer extends StatelessWidget {
                 label: Text(AppLocalizations.of(context).resource),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.shade200,
+                  foregroundColor: Colors.black,
+                ),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final ok = await AdService.instance.showRewarded(
+                    onEarned: (reward) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'You earned ${reward.amount} ${reward.type}',
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                  if (!ok) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('No rewarded ad available')),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.redeem, size: 18),
+                label: const Text('Watch for bonus'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange.shade200,
                   foregroundColor: Colors.black,
                 ),
               ),
