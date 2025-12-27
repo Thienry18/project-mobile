@@ -30,6 +30,9 @@ import 'package:projek_mobile/widgets/sign_out_dialog.dart';
 import 'package:projek_mobile/widgets/slide_animation.dart';
 import 'package:projek_mobile/widgets/search_bar.dart';
 import 'package:projek_mobile/screens/my_certificate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/services/awesome_notification_service.dart';
+import 'package:projek_mobile/database/database_mycourse.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key, required this.selectedCategory});
@@ -57,6 +60,37 @@ class _ExplorePageState extends State<ExplorePage> {
           widget.selectedCategory.isEmpty ? 'Python' : widget.selectedCategory;
       return _loadByCategory(initialCat);
     });
+    _checkForCourseReminders();
+  }
+
+  Future<void> _checkForCourseReminders() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('user_email');
+      if (email == null) return;
+
+      final db = await DatabaseService.instance.database;
+      final user = await DatabaseUser.getUserByEmail(db, email);
+      if (user == null) return;
+
+      final userId = user['id'] as int;
+      final myCourses = await DatabaseMyCourse.getMyCourses(db, userId);
+
+      for (final course in myCourses) {
+        final progress = course['progress'] as double? ?? 0.0;
+        if (progress > 0.0 && progress < 1.0) {
+          final courseTitle = course['title'] as String;
+          final progressPercent = (progress * 100).round();
+          await AwesomeNotificationService.showCourseReminder(
+            courseTitle,
+            progressPercent,
+          );
+          break; // Show only one reminder
+        }
+      }
+    } catch (e) {
+      print('Error checking course reminders: $e');
+    }
   }
 
   Future<void> _loadByCategory(String category) async {
@@ -75,6 +109,9 @@ class _ExplorePageState extends State<ExplorePage> {
       final recommendedCourses = await courseService.getRecommendedCourses(
         category,
       );
+
+      // Check for new courses and show update notification
+      await _checkForNewCourses(allCourses);
 
       all = allCourses;
       trending = trendingCourses;
@@ -877,5 +914,27 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _checkForNewCourses(List<Course> courses) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final lastCourseCount = prefs.getInt('last_course_count') ?? 0;
+      final currentCourseCount = courses.length;
+
+      if (currentCourseCount > lastCourseCount && lastCourseCount > 0) {
+        // New courses available
+        final newCoursesCount = currentCourseCount - lastCourseCount;
+        await AwesomeNotificationService.showUpdateNotification(
+          'New Courses Available!',
+          'Check out $newCoursesCount new courses added to our collection.',
+        );
+      }
+
+      // Update stored count
+      await prefs.setInt('last_course_count', currentCourseCount);
+    } catch (e) {
+      print('Error checking for new courses: $e');
+    }
   }
 }

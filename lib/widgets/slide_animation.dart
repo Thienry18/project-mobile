@@ -73,7 +73,7 @@ class _AutoSlideCourseBannerWidgetState
         child: Center(
           child: Text(
             'No courses available',
-            style: GoogleFonts.poppins(color: Colors.grey),
+            style: TextStyle(fontFamily: 'Poppins', color: Colors.grey),
           ),
         ),
       );
@@ -116,7 +116,8 @@ class _AutoSlideCourseBannerWidgetState
                             course.title,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
                               color: Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -133,7 +134,8 @@ class _AutoSlideCourseBannerWidgetState
                               const SizedBox(width: 4),
                               Text(
                                 course.rating,
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
                                   color: Colors.white,
                                   fontSize: 12,
                                 ),
@@ -160,7 +162,8 @@ class _AutoSlideCourseBannerWidgetState
                           ),
                           child: Text(
                             'Bestseller',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF324EAF),

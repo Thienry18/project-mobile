@@ -52,7 +52,8 @@ class SearchBarWidget extends StatelessWidget {
                         Expanded(
                           child: Text(
                             AppLocalizations.of(context).searchForACourse,
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
                               fontSize: 12,
                               color: Colors.grey,
                             ),

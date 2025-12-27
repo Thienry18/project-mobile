@@ -38,7 +38,8 @@ class PasswordCriteria extends StatelessWidget {
         Flexible(
           child: Text(
             text,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
+              fontFamily: 'Poppins',
               fontSize: 11,
               color: isValid ? Colors.green : const Color(0xff7A8EDA),
             ),

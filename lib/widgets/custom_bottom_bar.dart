@@ -50,7 +50,8 @@ class CustomBottomBar extends StatelessWidget {
                   Expanded(
                     child: Text(
                       "Tap to apply your voucher and enjoy the discount!",
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
                         color: isDarkMode ? Colors.white : Color(0xFF815CFF),
                       ),
                     ),
@@ -102,7 +103,8 @@ class CustomBottomBar extends StatelessWidget {
                       children: [
                         Text(
                           "Total: \$${hasSelected ? finalTotal.toStringAsFixed(2) : '0.00'}",
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
                             color:
                                 isDarkMode ? Colors.white : Color(0XFF324EAF),
                             fontSize: 16,

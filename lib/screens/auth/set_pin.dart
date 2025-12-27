@@ -10,6 +10,7 @@ import 'package:projek_mobile/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/services/awesome_notification_service.dart';
 
 class SetPinScreen extends StatelessWidget {
   const SetPinScreen({super.key});
@@ -48,7 +49,10 @@ class SetPinScreen extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Set a secure PIN to protect your account and ensure only you can access it.',
-                style: GoogleFonts.poppins(color: const Color(0xff324EAF)),
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: const Color(0xff324EAF),
+                ),
               ),
               const SizedBox(height: 30),
               Center(
@@ -132,6 +136,15 @@ class SetPinScreen extends StatelessWidget {
                                       pin: pin,
                                     );
                                     await prefs.setBool('is_logged_in', true);
+                                    // Show welcome notification for new user
+                                    final user = await auth.getUserByEmail(
+                                      email,
+                                    );
+                                    final userName =
+                                        user?['username'] as String? ?? 'User';
+                                    await AwesomeNotificationService.showWelcomeNotification(
+                                      userName,
+                                    );
                                   } catch (_) {
                                     // ignore errors for now
                                   }

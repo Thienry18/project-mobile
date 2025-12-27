@@ -38,7 +38,8 @@ class CategoryChips extends StatelessWidget {
                 ),
                 child: Text(
                   categoryList[index],
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
                     color: isSelected ? Colors.white : Colors.grey,
                     fontWeight: FontWeight.w400,
                   ),

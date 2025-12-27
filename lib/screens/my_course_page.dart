@@ -26,6 +26,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';
 import 'package:projek_mobile/services/ad_service.dart';
 import 'package:projek_mobile/widgets/banner_ad_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projek_mobile/services/awesome_notification_service.dart';
 
 class MyCoursePage extends StatefulWidget {
   const MyCoursePage({super.key});
@@ -75,9 +77,40 @@ class _MyCoursePageState extends State<MyCoursePage> {
               .toList(),
         );
       });
+
+      // Check for newly completed courses and show certificate notifications
+      await _checkForCompletedCourses(rows);
     } catch (e) {
       // ignore: avoid_print
       print('Failed to load mycourse from DB: $e');
+    }
+  }
+
+  Future<void> _checkForCompletedCourses(
+    List<Map<String, dynamic>> courses,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final notifiedCourses =
+        prefs.getStringList('notified_completed_courses') ?? [];
+
+    for (final course in courses) {
+      final progress = course['progress'] as double? ?? 0.0;
+      final courseId = course['id'].toString();
+      final courseTitle = course['title'] as String? ?? 'Course';
+
+      if (progress >= 1.0 && !notifiedCourses.contains(courseId)) {
+        // Course is completed and we haven't notified yet
+        await AwesomeNotificationService.showCertificateNotification(
+          courseTitle,
+        );
+
+        // Mark as notified
+        notifiedCourses.add(courseId);
+        await prefs.setStringList(
+          'notified_completed_courses',
+          notifiedCourses,
+        );
+      }
     }
   }
 

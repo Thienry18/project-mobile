@@ -41,7 +41,8 @@ class MenuItem extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
+                  fontFamily: 'Poppins',
                   fontSize: 14,
                   color:
                       textColor ??

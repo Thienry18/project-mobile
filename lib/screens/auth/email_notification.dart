@@ -102,7 +102,8 @@ class EmailNotification extends StatelessWidget {
                           TextSpan(
                             text:
                                 "Didn't receive the email? Check your spam filter,\nor ",
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
                               fontSize: 11,
                               color: const Color(0xFF7A8EDA),
                               fontWeight: FontWeight.w700,
@@ -110,7 +111,8 @@ class EmailNotification extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: 'try another email address',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
                                   fontSize: 11,
                                   color: Colors.green,
                                   fontWeight: FontWeight.w700,

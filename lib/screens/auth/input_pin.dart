@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
+import 'package:projek_mobile/services/awesome_notification_service.dart';
 
 class InputPin extends StatelessWidget {
   const InputPin({super.key});
@@ -40,7 +41,10 @@ class InputPin extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 'Enter your PIN to verify your identity and securely access your account.',
-                style: GoogleFonts.poppins(color: const Color(0xff324EAF)),
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: const Color(0xff324EAF),
+                ),
               ),
               const SizedBox(height: 80),
               Center(
@@ -130,6 +134,15 @@ class InputPin extends StatelessWidget {
                                     );
                                     provider.pinControllers.forEach(
                                       (controller) => controller.clear(),
+                                    );
+                                    // Show welcome notification for returning user
+                                    final user = await auth.getUserByEmail(
+                                      email,
+                                    );
+                                    final userName =
+                                        user?['username'] as String? ?? 'User';
+                                    await AwesomeNotificationService.showWelcomeNotification(
+                                      userName,
                                     );
                                     return;
                                   }

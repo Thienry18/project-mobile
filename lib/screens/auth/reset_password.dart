@@ -129,7 +129,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     passwordProvider.getPasswordStrengthText(),
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 12,
                       color: isPasswordValid ? Colors.green : Colors.grey,
                     ),

@@ -32,7 +32,8 @@ class ToggleItem extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
+                fontFamily: 'Poppins',
                 fontSize: 14,
                 color:
                     Theme.of(context).brightness == Brightness.dark

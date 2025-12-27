@@ -18,6 +18,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'utils/notification_helper.dart';
 import 'package:projek_mobile/services/ad_service.dart';
 import 'package:projek_mobile/screens/profile_page.dart';
+import 'package:projek_mobile/services/awesome_notification_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Note: Auth flow is handled by `lib/data/auth_gate.dart` when used.
 
@@ -54,7 +56,10 @@ Future<void> main() async {
   }
 
   final repo = ExploreRepository();
-  await repo.seedIfEmpty(trendingCourses);
+  // Move seeding to after runApp to avoid blocking UI
+  Future.microtask(() async {
+    await repo.seedIfEmpty(trendingCourses);
+  });
 
   // Ensure the app database is opened and tables are created before the
   // UI starts. This reduces the chance of long DB operations happening
@@ -74,6 +79,33 @@ Future<void> main() async {
   } catch (e) {
     // ignore: avoid_print
     print('NotificationHelper.init failed: $e');
+  }
+
+  // init awesome notifications
+  try {
+    await AwesomeNotificationService.initialize();
+  } catch (e) {
+    // ignore: avoid_print
+    print('AwesomeNotificationService.initialize failed: $e');
+  }
+
+  // Check for promotional notifications (show once per day)
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final lastPromoDate = prefs.getString('last_promo_date');
+    final today = DateTime.now().toIso8601String().split('T')[0];
+
+    if (lastPromoDate != today) {
+      // Show promo notification once per day
+      await AwesomeNotificationService.showPromoNotification(
+        'Special Weekend Offer!',
+        'Get 30% off on all premium courses this weekend only!',
+      );
+      await prefs.setString('last_promo_date', today);
+    }
+  } catch (e) {
+    // ignore: avoid_print
+    print('Promo notification check failed: $e');
   }
 
   // .....
