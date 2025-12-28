@@ -12,6 +12,7 @@ class BannerAdWidget extends StatefulWidget {
 class _BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
+  bool _isFailed = false;
 
   @override
   void initState() {
@@ -27,6 +28,9 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
         },
         onAdFailedToLoad: (ad, err) {
           ad.dispose();
+          setState(() {
+            _isFailed = true;
+          });
         },
       ),
       request: const AdRequest(),
@@ -42,7 +46,39 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isLoaded) return const SizedBox(height: 0);
+    // Show a visible placeholder while loading or when failed so the
+    // layout indicates where the ad will appear (prevents invisible gap).
+    final placeholderHeight = _bannerAd?.size.height.toDouble() ?? 50.0;
+    if (!_isLoaded) {
+      if (_isFailed) {
+        return SizedBox(
+          width: double.infinity,
+          height: placeholderHeight,
+          child: Container(
+            color: Colors.grey.shade200,
+            alignment: Alignment.center,
+            child: const Text(
+              'Ad failed to load',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ),
+        );
+      }
+      return SizedBox(
+        width: double.infinity,
+        height: placeholderHeight,
+        child: Container(
+          color: Colors.grey.shade100,
+          alignment: Alignment.center,
+          child: const SizedBox(
+            width: 18,
+            height: 18,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
     final adHeight = _bannerAd?.size.height.toDouble() ?? 50.0;
     return SizedBox(
       width: double.infinity,
