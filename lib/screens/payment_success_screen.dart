@@ -7,6 +7,7 @@ import 'package:projek_mobile/firebase/firebase_analytics_service.dart';
 import 'package:provider/provider.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';
 import 'package:projek_mobile/services/ad_service.dart';
+import 'package:projek_mobile/widgets/banner_ad_widget.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
   const PaymentSuccessScreen({super.key});
@@ -42,6 +43,9 @@ class PaymentSuccessScreen extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
               const SizedBox(height: 30),
+              // Banner ad placed above CTAs
+              BannerAdWidget(adUnitId: AdService.bannerUnitId),
+              const SizedBox(height: 18),
               Text(
                 AppLocalizations.of(context).paymentSuccessful,
                 style: const TextStyle(

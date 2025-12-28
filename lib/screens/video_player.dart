@@ -111,7 +111,9 @@ class VideoPlayer extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: [
               ElevatedButton.icon(
                 onPressed: () async {
@@ -133,17 +135,6 @@ class VideoPlayer extends StatelessWidget {
                   foregroundColor: Colors.black,
                 ),
               ),
-              const SizedBox(width: 10),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.file_copy, size: 18),
-                label: Text(AppLocalizations.of(context).resource),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade200,
-                  foregroundColor: Colors.black,
-                ),
-              ),
-              const SizedBox(width: 10),
               ElevatedButton.icon(
                 onPressed: () async {
                   final ok = await AdService.instance.showRewarded(
