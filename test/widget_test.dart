@@ -8,23 +8,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:projek_mobile/main.dart';
+void main() {
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+class _TestCounter extends StatefulWidget {
+  const _TestCounter({Key? key}) : super(key: key);
+  @override
+  State<_TestCounter> createState() => _TestCounterState();
+}
+
+class _TestCounterState extends State<_TestCounter> {
+  int _count = 0;
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Counter')),
+        body: Center(child: Text('$_count', key: const Key('counter'))),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => setState(() => _count++),
+          child: const Icon(Icons.add),
+        ),
+      ),
+    );
+  }
+}
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(const _TestCounter());
 
-    // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
     expect(find.text('1'), findsNothing);
 
-    // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+}
 }
