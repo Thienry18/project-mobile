@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/providers/pin_provider.dart';
@@ -11,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:projek_mobile/services/awesome_notification_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SetPinScreen extends StatelessWidget {
   const SetPinScreen({super.key});
@@ -135,7 +136,25 @@ class SetPinScreen extends StatelessWidget {
                                       currentEmail: email,
                                       pin: pin,
                                     );
+                                    // Also persist PIN to Firestore for authenticated users
+                                    try {
+                                      final uid =
+                                          FirebaseAuth
+                                              .instance
+                                              .currentUser
+                                              ?.uid;
+                                      if (uid != null) {
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(uid)
+                                            .set({
+                                              'pin': pin,
+                                            }, SetOptions(merge: true));
+                                      }
+                                    } catch (_) {}
                                     await prefs.setBool('is_logged_in', true);
+                                    // Clear PIN inputs after persisting
+                                    provider.clearAll();
                                     // Show welcome notification for new user
                                     final user = await auth.getUserByEmail(
                                       email,

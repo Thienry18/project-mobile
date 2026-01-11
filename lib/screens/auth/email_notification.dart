@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:projek_mobile/constants/app_text_style.dart';
 import 'package:projek_mobile/screens/auth/forgot_password.dart';

@@ -42,7 +42,7 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _loadCartFromDb() async {
     try {
-      final uid = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final uid = await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
       _userId = uid;
       final db = await DatabaseService.instance.database;
       final rows = await DatabaseCart.getUserCart(db, uid);
@@ -106,7 +106,7 @@ class _CartPageState extends State<CartPage> {
                   try {
                     final uid =
                         _userId ??
-                        await DatabaseUser.getOrCreateDemoUserIdForApp();
+                        await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
                     _userId = uid;
 
                     final deletedItems = <Course>[];

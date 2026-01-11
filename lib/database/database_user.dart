@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:projek_mobile/database/database_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseUser {
   static const table = 'users';
@@ -97,6 +98,37 @@ class DatabaseUser {
 
   static Future<int> getOrCreateDemoUserIdForApp() async {
     final db = await DatabaseService.instance.database;
+    return await getOrCreateDemoUserId(db);
+  }
+
+  /// Resolve the application user id for the currently-signed-in app user.
+  ///
+  /// The method prefers a real user found by `user_email` saved in
+  /// `SharedPreferences`. If not found, it falls back to the demo user id.
+  static Future<int> getOrCreateUserIdForCurrentAppUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('user_email');
+    final db = await DatabaseService.instance.database;
+
+    if (email != null && email.isNotEmpty) {
+      final existing = await getUserByEmail(db, email.trim().toLowerCase());
+      if (existing != null) return existing['id'] as int;
+
+      // Create a minimal user row for this email so local tables can be
+      // associated with the correct account.
+      final data = {
+        'username': prefs.getString('user_username') ?? '',
+        'fullname': prefs.getString('user_username') ?? '',
+        'day_of_birth': '',
+        'gender': '',
+        'phone_number': '',
+        'country': '',
+        'email': email.trim().toLowerCase(),
+        'password': '',
+      };
+      return await insertUser(db, data);
+    }
+
     return await getOrCreateDemoUserId(db);
   }
 
