@@ -13,6 +13,7 @@ import 'package:projek_mobile/data/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';
+import 'package:projek_mobile/data/sync_service.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -90,6 +91,11 @@ class _SignInState extends State<SignIn> {
     // Simpan email sementara; PIN verification will set 'is_logged_in'
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_email', email.toLowerCase());
+
+    // Pull server-side profile/purchases into local DB so UI reflects server truth.
+    try {
+      await SyncService.syncCurrentUserFromFirestore();
+    } catch (_) {}
 
     // Lanjut flow kamu ke InputPin (seperti sebelumnya)
     if (!mounted) return;

@@ -11,6 +11,8 @@ import 'package:projek_mobile/screens/cart.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projek_mobile/services/ad_service.dart';
 import 'package:projek_mobile/widgets/banner_ad_widget.dart';
 
@@ -412,7 +414,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
                 try {
                   final userId =
-                      await DatabaseUser.getOrCreateDemoUserIdForApp();
+                      await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
                   await DatabaseCart.upsertCourseForUser(userId, course);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -420,6 +422,18 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       duration: const Duration(seconds: 2),
                     ),
                   );
+                  // If authenticated, also persist this as a user purchase marker
+                  try {
+                    final uid = FirebaseAuth.instance.currentUser?.uid;
+                    if (uid != null) {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(uid)
+                          .set({
+                            'purchases': FieldValue.arrayUnion([course.index]),
+                          }, SetOptions(merge: true));
+                    }
+                  } catch (_) {}
                 } catch (e) {
                   // fallback to in-memory and notify
                   if (!cartCourses.any((c) => c.title == course.title)) {
@@ -479,6 +493,20 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
                   if (!cartCourses.any((c) => c.title == course.title)) {
                     cartCourses.add(course);
+                    // Persist purchase marker for authenticated users
+                    try {
+                      final uid = FirebaseAuth.instance.currentUser?.uid;
+                      if (uid != null) {
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(uid)
+                            .set({
+                              'purchases': FieldValue.arrayUnion([
+                                course.index,
+                              ]),
+                            }, SetOptions(merge: true));
+                      }
+                    } catch (_) {}
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => CartPage()),

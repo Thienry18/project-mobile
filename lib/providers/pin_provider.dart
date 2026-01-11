@@ -23,6 +23,17 @@ class SetPinProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Clear all pin fields and unfocus nodes, notifying listeners.
+  void clearAll() {
+    for (final c in pinControllers) {
+      c.clear();
+    }
+    for (final n in pinFocusNodes) {
+      n.unfocus();
+    }
+    notifyListeners();
+  }
+
   String getPin() {
     return pinControllers.map((c) => c.text).join();
   }

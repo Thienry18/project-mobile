@@ -50,7 +50,7 @@ class _MyCoursePageState extends State<MyCoursePage> {
 
   Future<void> _loadStoredCourses() async {
     try {
-      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final userId = await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
       final db = await DatabaseService.instance.database;
       final rows = await DatabaseMyCourse.getMyCourses(db, userId);
       setState(() {

@@ -9,20 +9,17 @@ class FavScreen3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            FavBody(image: "assets/images/gif/start_coding.gif", step: 3),
-          ],
-        ),
-        floatingActionButton: FavButton(
-          step: 3,
-          back: FavScreen2(),
-          next: SignIn(),
-        ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          FavBody(image: "assets/images/gif/start_coding.gif", step: 3),
+        ],
+      ),
+      floatingActionButton: FavButton(
+        step: 3,
+        back: const FavScreen2(),
+        next: const SignIn(),
       ),
     );
   }

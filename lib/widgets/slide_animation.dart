@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/models/explore_model.dart';
 
 Widget autoSlideCourseBanner({
