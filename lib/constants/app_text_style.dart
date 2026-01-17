@@ -6,7 +6,7 @@ class AppTextStyles {
     fontFamily: 'Poppins',
     color: Color(0xff324eaf),
     fontWeight: FontWeight.bold,
-    fontSize: 26,
+    // fontSize: 26,0
   );
 
   static final TextStyle subheading = TextStyle(
