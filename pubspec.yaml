@@ -74,6 +74,8 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^5.0.0
+  mocktail: ^0.3.0
+  # cloud_firestore_mocks removed: tests use mocktail to mock cloud_firestore types
 
 flutter_icons:
   android: true
