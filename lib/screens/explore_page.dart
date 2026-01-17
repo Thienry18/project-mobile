@@ -820,7 +820,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   onTap: () async {
                     // Use DB-backed cart: get or create a demo user, then upsert/remove
                     final userId =
-                        await DatabaseUser.getOrCreateDemoUserIdForApp();
+                        await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
                     setState(() {
                       if (isFavorited) {
                         favoriteCourses.remove(index);

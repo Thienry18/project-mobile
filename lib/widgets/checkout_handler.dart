@@ -23,7 +23,7 @@ class CheckoutHandler {
 
     // Also insert a notification row into app_database.notifications for the demo user
     try {
-      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final userId = await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
       final db = await DatabaseService.instance.database;
       await DatabaseNotification.insertNotification(db, {
         'user_id': userId,
@@ -57,7 +57,7 @@ class CheckoutHandler {
     // No in-prefs my_courses; DB 'mycourse' table is the source of truth.
     // Also insert purchased courses into app_database.mycourse for the current/demo user
     try {
-      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final userId = await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
       final db = await DatabaseService.instance.database;
       for (final course in selectedItems) {
         await DatabaseMyCourse.addMyCourse(db, {

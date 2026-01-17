@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projek_mobile/screens/auth/sign_in.dart';
+import 'package:projek_mobile/screens/onboarding.dart';
+import 'package:projek_mobile/screens/auth/input_pin.dart';
 // database imports not required here; AuthGate uses SharedPreferences
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:projek_mobile/screens/input_pin.dart'; // not used
@@ -50,13 +51,12 @@ class _AuthGateState extends State<AuthGate> {
     if (_loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
+    // If the app believes the user is logged in (pref flag), require PIN first
     if (_loggedIn) {
-      // Jika sudah login, minta PIN terlebih dahulu
-      return const SignIn();
+      return const InputPin();
     }
 
-    // Jika belum login, tampilkan onboarding/landing (FavScreen)
-    return const SignIn();
+    // Not logged in: start onboarding/fav screen first
+    return const FavScreen();
   }
 }

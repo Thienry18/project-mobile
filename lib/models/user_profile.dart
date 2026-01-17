@@ -8,6 +8,8 @@ class UserProfile {
   final String sex; // 'male' | 'female'
   final String phoneNumber;
   final String country;
+  final String preferredLanguage;
+  final List<dynamic> purchases;
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
@@ -19,6 +21,8 @@ class UserProfile {
     String? sex,
     this.phoneNumber = '',
     this.country = '',
+    this.preferredLanguage = '',
+    List<dynamic>? purchases,
     Timestamp? createdAt,
     Timestamp? updatedAt,
     // Backwards-compatible legacy params used across the app
@@ -31,6 +35,7 @@ class UserProfile {
            (gender != null && gender.isNotEmpty)
                ? gender
                : (sex != null && sex.isNotEmpty ? sex : 'male'),
+       purchases = purchases ?? <dynamic>[],
        createdAt = createdAt ?? Timestamp.now(),
        updatedAt = updatedAt ?? Timestamp.now();
 
@@ -49,6 +54,11 @@ class UserProfile {
       sex: data['sex'] as String? ?? 'male',
       phoneNumber: data['phoneNumber'] as String? ?? '',
       country: data['country'] as String? ?? '',
+      preferredLanguage: data['preferredLanguage'] as String? ?? '',
+      purchases:
+          (data['purchases'] is List)
+              ? data['purchases'] as List<dynamic>
+              : <dynamic>[],
       createdAt:
           (data['createdAt'] is Timestamp)
               ? data['createdAt'] as Timestamp
@@ -68,6 +78,8 @@ class UserProfile {
       'sex': sex,
       'phoneNumber': phoneNumber,
       'country': country,
+      'preferredLanguage': preferredLanguage,
+      'purchases': purchases,
     };
     if (!forUpdate) map['createdAt'] = createdAt;
     map['updatedAt'] = updatedAt;

@@ -9,6 +9,7 @@ import 'package:projek_mobile/providers/theme_provider.dart';
 import 'package:projek_mobile/screens/cart.dart';
 import 'package:projek_mobile/screens/coming_soon.dart';
 import 'package:projek_mobile/screens/edit_profile.dart';
+import 'package:projek_mobile/data/sync_service.dart';
 import 'package:projek_mobile/screens/explore_page.dart';
 import 'package:projek_mobile/screens/my_course_page.dart';
 import 'package:projek_mobile/screens/language_selection.dart';
@@ -196,18 +197,31 @@ class _ProfileState extends State<Profile> {
                   iconColor: const Color(0XFF696969),
                   title: "Edit Profile",
                   onTap: () async {
-                    if (userProfile != null) {
-                      final updated = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) =>
-                                  EditProfileScreen(userProfile: userProfile!),
-                        ),
-                      );
-                      if (updated == true) {
-                        await _loadUserProfile();
-                      }
+                    // Ensure latest profile is pulled from Firestore first
+                    await SyncService.syncCurrentUserFromFirestore();
+                    await _loadUserProfile();
+
+                    UserProfile profileToEdit =
+                        userProfile ??
+                        UserProfile(
+                          username: displayUsername ?? '',
+                          fullName: displayUsername ?? '',
+                          dob: '',
+                          gender: '',
+                          phoneNumber: '',
+                          country: '',
+                        );
+
+                    final updated = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                EditProfileScreen(userProfile: profileToEdit),
+                      ),
+                    );
+                    if (updated == true) {
+                      await _loadUserProfile();
                     }
                   },
                 ),

@@ -40,7 +40,7 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   Future<void> _loadHistory() async {
     try {
-      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final userId = await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
       final db = await DatabaseService.instance.database;
       // Load both mycourse (purchased snapshot) and history (additional records)
       final mycourseRows = await DatabaseMyCourse.getMyCourses(db, userId);
@@ -161,7 +161,7 @@ class _HistoryScreenState extends State<HistoryScreen>
               onPressed: () async {
                 try {
                   final userId =
-                      await DatabaseUser.getOrCreateDemoUserIdForApp();
+                      await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
                   final db = await DatabaseService.instance.database;
                   // Clear both mycourse and history entries for the user
                   await db.delete(

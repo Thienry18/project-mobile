@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:projek_mobile/data/explore_data.dart';
 import 'package:projek_mobile/screens/search_screen.dart';
 import 'package:projek_mobile/l10n/app_localizations.dart';

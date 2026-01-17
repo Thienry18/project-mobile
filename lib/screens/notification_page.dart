@@ -43,7 +43,7 @@ class _NotificationPageState extends State<NotificationPage>
     // If there are legacy prefs notifications, migrate them into DB first
     final legacy = prefs.getString('notifications');
     try {
-      final userId = await DatabaseUser.getOrCreateDemoUserIdForApp();
+      final userId = await DatabaseUser.getOrCreateUserIdForCurrentAppUser();
       final db = await DatabaseService.instance.database;
 
       if (legacy != null) {
@@ -199,7 +199,7 @@ class _NotificationPageState extends State<NotificationPage>
                                     db2,
                                     {
                                       'user_id':
-                                          await DatabaseUser.getOrCreateDemoUserIdForApp(),
+                                          await DatabaseUser.getOrCreateUserIdForCurrentAppUser(),
                                       'course_id': null,
                                       'title': item['title'] ?? '',
                                       'message': item['message'] ?? '',
