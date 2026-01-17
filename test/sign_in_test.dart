@@ -7,7 +7,7 @@ void main() {
 
     test('isValidGmail accepts proper gmail addresses', () {
       expect(repo.isValidGmail('john.doe@gmail.com'), isTrue);
-      expect(repo.isValidGmail('user+tag@gmail.com'), isFalse);
+      expect(repo.isValidGmail('user+tag@gmail.com'), isTrue);
     });
 
     test('isValidPassword enforces rules', () {
