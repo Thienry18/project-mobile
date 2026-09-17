@@ -130,8 +130,6 @@ void main() {
         await service.buyCourse(uid: uid, courseData: courseData);
 
         verify(() => mockDocRef.update(any())).called(2);
-        // arrayUnion will naturally prevent true duplicates (same object)
-        // but allows adding the same data structure twice if objects differ
       },
     );
 
